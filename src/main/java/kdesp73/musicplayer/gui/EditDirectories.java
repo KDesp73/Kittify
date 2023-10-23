@@ -4,16 +4,20 @@
  */
 package kdesp73.musicplayer.gui;
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import kdesp73.databridge.connections.DatabaseConnection;
 import kdesp73.databridge.helpers.QueryBuilder;
-import kdesp73.musicplayer.Mp3File;
-import kdesp73.musicplayer.SongsList;
 import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.db.Queries;
+import kdesp73.themeLib.Theme;
+import kdesp73.themeLib.ThemeCollection;
+import kdesp73.themeLib.YamlFile;
 
 /**
  *
@@ -22,15 +26,21 @@ import kdesp73.musicplayer.db.Queries;
 public class EditDirectories extends javax.swing.JFrame {
 
     List<String> paths;
+    String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
+    Theme theme = new Theme(new YamlFile(themes_path + "kdesp.yml"));
 
     /**
      * Creates new form EditDirectories
      */
     public EditDirectories() {
         initComponents();
+        this.setTitle("Edit Directories");
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        this.rootPane.requestFocus();
+        
+//        ThemeCollection.applyTheme(this.rootPane, theme);
 
         refreshPaths();
 
@@ -68,6 +78,7 @@ public class EditDirectories extends javax.swing.JFrame {
         jScrollPane1.setViewportView(pathsList);
 
         editButton.setText("Edit");
+        editButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         editButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 editButtonMouseClicked(evt);
@@ -75,6 +86,7 @@ public class EditDirectories extends javax.swing.JFrame {
         });
 
         removeButton.setText("Remove");
+        removeButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         removeButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 removeButtonMouseClicked(evt);
@@ -176,29 +188,11 @@ public class EditDirectories extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditDirectories.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditDirectories.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditDirectories.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditDirectories.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
         }
-        //</editor-fold>
-
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
