@@ -4,9 +4,6 @@
  */
 package kdesp73.musicplayer.gui;
 
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.regex.Pattern;
@@ -22,7 +19,6 @@ import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.themeLib.Theme;
-import kdesp73.themeLib.ThemeCollection;
 import kdesp73.themeLib.YamlFile;
 
 /**
@@ -46,12 +42,11 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         this.rootPane.requestFocus();
 
+        addExtensions();
         refreshSongs();
 
-//        ThemeCollection.applyTheme(this.rootPane, theme);
-        addExtensions();
-
         currentSong = list.getSongs().get(0);
+        songsList.setFixedCellHeight(35);
     }
 
     private void addExtensions() {
@@ -143,9 +138,14 @@ public class MainFrame extends javax.swing.JFrame {
         slider.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         slider.setVisibleAmount(1);
         slider.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        slider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                sliderMouseDragged(evt);
+            }
+        });
 
         timeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        timeLabel.setText("2:34");
+        timeLabel.setText("00:00");
 
         javax.swing.GroupLayout sliderPanelLayout = new javax.swing.GroupLayout(sliderPanel);
         sliderPanel.setLayout(sliderPanelLayout);
@@ -285,7 +285,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(playerBackgroundLayout.createSequentialGroup()
                 .addGap(235, 235, 235)
                 .addComponent(controlsParentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(271, Short.MAX_VALUE))
+                .addGap(271, 271, 271))
         );
         playerBackgroundLayout.setVerticalGroup(
             playerBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -493,24 +493,28 @@ public class MainFrame extends javax.swing.JFrame {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         int index = songsList.getSelectedIndex();
         songsList.setSelectedIndex(++index);
-        
+
         currentSong.stop();
 
         currentSong = list.getSongs().get(index);
-        
+
         currentSong.play();
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
         if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
-            System.out.println("double clicked");
+            playing = true;
+            currentSong.stop();
+            currentSong = list.getSongs().get(songsList.getSelectedIndex());
+            currentSong.play();
+            playButton.setText("Pause");
         }
     }//GEN-LAST:event_songsListMouseClicked
 
     private void playButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseClicked
         currentSong = list.getSongs().get(songsList.getSelectedIndex());
         if (playing) {
-            currentSong.stop();
+            currentSong.pause();
             playButton.setText("Play");
         } else {
             currentSong.play();
@@ -520,19 +524,42 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_playButtonMouseClicked
 
     private void songsListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_songsListKeyPressed
-
+        if (evt.getKeyChar() == '\n') {
+            playing = true;
+            currentSong.stop();
+            currentSong = list.getSongs().get(songsList.getSelectedIndex());
+            currentSong.play();
+            playButton.setText("Pause");
+        }
     }//GEN-LAST:event_songsListKeyPressed
 
     private void prevButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevButtonMouseClicked
         int index = songsList.getSelectedIndex();
         songsList.setSelectedIndex(--index);
-        
+
         currentSong.stop();
 
         currentSong = list.getSongs().get(index);
-        
+
         currentSong.play();
     }//GEN-LAST:event_prevButtonMouseClicked
+
+    private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
+        int input_start = 0, input_end = 99;
+        int output_start = 0, output_end = 210;
+        
+        int output = output_start + ((output_end - output_start) / (input_end - input_start)) * (slider.getValue() - input_start);
+
+        timeLabel.setText(secondsToMinutes(output));
+        
+    }//GEN-LAST:event_sliderMouseDragged
+
+    private String secondsToMinutes(int seconds) {
+        int minutes = seconds / 60;
+        seconds %= 60;
+
+        return "" + ((minutes < 10) ? "0" + minutes : minutes) + ":" + ((seconds < 10) ? "0" + seconds : seconds);
+    }
 
     /**
      * @param args the command line arguments

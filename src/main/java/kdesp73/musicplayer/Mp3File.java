@@ -8,30 +8,31 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import kdesp73.musicplayer.files.FileOperations;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.advanced.AdvancedPlayer;
-import java.util.concurrent.TimeUnit;
+import javazoom.jl.player.advanced.PlaybackEvent;
+import javazoom.jl.player.advanced.PlaybackListener;
 
 /**
  *
  * @author konstantinos
  */
 public class Mp3File extends File {
+
     // Player
-    private AdvancedPlayer player;
+    private Player player;
     private boolean isPlaying = false;
-    private long pauseTime = 0;
+    private int pauseTime = 0;
 
     // File
     private int durationSeconds;
@@ -52,38 +53,43 @@ public class Mp3File extends File {
         this.name = FileOperations.getJustFilenameFromPath(pathname);
     }
 
-
     public void play() {
         String filename = this.getAbsolutePath();
         try {
             FileInputStream fis = new FileInputStream(filename);
             BufferedInputStream bis = new BufferedInputStream(fis);
-            player = new AdvancedPlayer(bis);
+            player = new Player(bis);
         } catch (FileNotFoundException | JavaLayerException e) {
             System.out.println("Problem playing file " + filename);
             System.out.println(e);
         }
 
-        // run in new thread to play in background
         new Thread() {
             public void run() {
                 try {
+//                    if (pauseTime > 0) {
+//                        player.play(pauseTime);
+//                    } else {
+//                        player.play();
+//                    }
                     player.play();
+
                 } catch (Exception e) {
                     System.out.println(e);
                 }
             }
         }.start();
-        
         isPlaying = true;
+
     }
 
     public void pause() {
         if (isPlaying) {
+            pauseTime = calculateFrameFromTime(getCurrentTime());
             player.close();
             isPlaying = false;
-            pauseTime = 0;
         }
+
     }
 
     public void stop() {
@@ -98,29 +104,36 @@ public class Mp3File extends File {
         if (isPlaying) {
             pause();
         }
-        pauseTime = seconds;
+        pauseTime = calculateFrameFromTime(seconds);
         play();
     }
 
-    public int getDurationSeconds() {
-        File file = new File(this.getAbsolutePath());
-        AudioInputStream audioInputStream = null;
+    private int getCurrentTime() {
+        int milli = player.getPosition();
+        int seconds = (int) (milli / 1000) % 60;
+
+        return seconds;
+    }
+
+    private int calculateFrameFromTime(int seconds) {
         try {
-            audioInputStream = AudioSystem.getAudioInputStream(file);
-        } catch (UnsupportedAudioFileException | IOException ex) {
-            Logger.getLogger(Mp3File.class.getName()).log(Level.SEVERE, null, ex);
+            Bitstream bitstream = new Bitstream(new FileInputStream(this.getAbsolutePath()));
+            int frame = 0;
+            long currentTime = 0;
+            while (currentTime < seconds * 1000) { // Convert seconds to milliseconds
+                bitstream.readFrame(); // Skip the frame
+                currentTime += bitstream.readFrame().ms_per_frame();
+                frame++;
+            }
+            return frame;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
+    }
 
-        if (audioInputStream == null) {
-            return -1;
-        }
+    public void getDurationInSeconds() {
 
-        AudioFormat format = audioInputStream.getFormat();
-        long frames = audioInputStream.getFrameLength();
-        double durationInSeconds = (frames + 0.0) / format.getFrameRate();
-
-        this.durationSeconds = (int) durationInSeconds;
-        return (int) durationInSeconds;
     }
 
     public Track getTrack() {
