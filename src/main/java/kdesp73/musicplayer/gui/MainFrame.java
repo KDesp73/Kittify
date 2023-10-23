@@ -4,11 +4,22 @@
  */
 package kdesp73.musicplayer.gui;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.UIManager;
-import static javax.swing.UIManager.setLookAndFeel;
-import javax.swing.UnsupportedLookAndFeelException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import kdesp73.databridge.connections.DatabaseConnection;
+import kdesp73.databridge.helpers.QueryBuilder;
+import kdesp73.musicplayer.Mp3File;
+import kdesp73.musicplayer.SongsList;
+import kdesp73.musicplayer.db.Database;
+import kdesp73.musicplayer.db.Queries;
+import kdesp73.musicplayer.files.FileOperations;
+import kdesp73.themeLib.Theme;
+import kdesp73.themeLib.ThemeCollection;
+import kdesp73.themeLib.YamlFile;
 
 /**
  *
@@ -16,13 +27,25 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class MainFrame extends javax.swing.JFrame {
 
+    SongsList list;
+    String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
+    Theme theme = new Theme(new YamlFile(themes_path + "kdesp.yml"));
+
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
-        
+
         setLocationRelativeTo(null);
+
+        refreshSongs();
+
+        ThemeCollection.applyTheme(this.rootPane, theme);
+
+        FileOperations.acceptedExtensions.add("mp3");
+        FileOperations.acceptedExtensions.add("wav");
+
     }
 
     /**
@@ -39,45 +62,202 @@ public class MainFrame extends javax.swing.JFrame {
         background = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jScrollBar1 = new javax.swing.JScrollBar();
+        songsList = new javax.swing.JList<>();
+        sortComboBox = new javax.swing.JComboBox<>();
+        sortbyLabel = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        controlsPanel = new javax.swing.JPanel();
+        sliderPanel = new javax.swing.JPanel();
+        slider = new javax.swing.JScrollBar();
+        timeLabel = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        addFileMenuItem = new javax.swing.JMenuItem();
+        addDirectoryMenuItem = new javax.swing.JMenuItem();
+        editMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        editDirectoriesMenuItem = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         background.setName("bg"); // NOI18N
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        songsList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(jList1);
+        songsList.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jScrollPane1.setViewportView(songsList);
 
         jScrollPane2.setViewportView(jScrollPane1);
 
-        jScrollBar1.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
-        jScrollBar1.setVisibleAmount(1);
+        sortComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "Time" }));
+        sortComboBox.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        sortComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortComboBoxActionPerformed(evt);
+            }
+        });
+
+        sortbyLabel.setText("Sort By:");
+        sortbyLabel.setName("fg"); // NOI18N
+
+        controlsPanel.setBackground(new java.awt.Color(153, 0, 51));
+
+        slider.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
+        slider.setVisibleAmount(1);
+
+        timeLabel.setText("2:34");
+
+        javax.swing.GroupLayout sliderPanelLayout = new javax.swing.GroupLayout(sliderPanel);
+        sliderPanel.setLayout(sliderPanelLayout);
+        sliderPanelLayout.setHorizontalGroup(
+            sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sliderPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(slider, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
+        );
+        sliderPanelLayout.setVerticalGroup(
+            sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sliderPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(slider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(timeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout controlsPanelLayout = new javax.swing.GroupLayout(controlsPanel);
+        controlsPanel.setLayout(controlsPanelLayout);
+        controlsPanelLayout.setHorizontalGroup(
+            controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlsPanelLayout.createSequentialGroup()
+                .addGap(239, 239, 239)
+                .addComponent(sliderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(267, Short.MAX_VALUE))
+        );
+        controlsPanelLayout.setVerticalGroup(
+            controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sliderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(123, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(56, 56, 56)
+                .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(77, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(439, Short.MAX_VALUE)
+                .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
+        );
+
+        jTabbedPane1.addTab("Player", jPanel1);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1019, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 626, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Info", jPanel2);
 
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);
         backgroundLayout.setHorizontalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundLayout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(312, 312, 312)
-                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 338, Short.MAX_VALUE))
+                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(sortbyLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sortComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1))
         );
         backgroundLayout.setVerticalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout.createSequentialGroup()
-                .addGap(0, 108, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63))
+            .addGroup(backgroundLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(backgroundLayout.createSequentialGroup()
+                        .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(sortbyLabel)
+                            .addComponent(sortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2))
+                    .addComponent(jTabbedPane1)))
         );
+
+        fileMenu.setText("File");
+
+        addFileMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        addFileMenuItem.setText("Add File");
+        addFileMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addFileMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(addFileMenuItem);
+
+        addDirectoryMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        addDirectoryMenuItem.setText("Add Directory");
+        addDirectoryMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addDirectoryMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(addDirectoryMenuItem);
+
+        menuBar.add(fileMenu);
+
+        editMenu.setText("Edit");
+
+        jMenuItem1.setText("Edit Files");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        editMenu.add(jMenuItem1);
+
+        editDirectoriesMenuItem.setText("Edit Directories");
+        editDirectoriesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editDirectoriesMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(editDirectoriesMenuItem);
+
+        menuBar.add(editMenu);
+
+        jMenu1.setText("About");
+        menuBar.add(jMenu1);
+
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -93,18 +273,121 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void refreshSongs() {
+        try {
+            list = new SongsList(Queries.getDirectories(), Queries.getFiles());
+        } catch (java.lang.StringIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+
+        DefaultListModel listModel = new DefaultListModel();
+        for (Mp3File song : list.getSongs()) {
+            listModel.addElement(song.getJustName());
+        }
+        songsList.setModel(listModel);
+    }
+
+    private void addFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFileMenuItemActionPerformed
+        String dir = "";
+        JFileChooser fc = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Sound Files", "mp3", "wav");
+
+        fc.setFileFilter(filter);
+
+        int choide = fc.showOpenDialog(this);
+
+        if (choide == JFileChooser.APPROVE_OPTION) {
+            File SelectedFile = fc.getSelectedFile();
+            dir = SelectedFile.getPath();
+        }
+
+        if (choide == JFileChooser.CANCEL_OPTION) {
+            return;
+        }
+
+        DatabaseConnection db = Database.connection();
+        db.executeUpdate(new QueryBuilder().insertInto("Files").columns("filepath").values(dir).build());
+
+        db.close();
+
+        refreshSongs();
+    }//GEN-LAST:event_addFileMenuItemActionPerformed
+
+    private void addDirectoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDirectoryMenuItemActionPerformed
+        String dir = "";
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        int choice = fc.showOpenDialog(this);
+
+        if (choice == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fc.getSelectedFile();
+            dir = selectedFile.getPath();
+        }
+
+        if (choice == JFileChooser.CANCEL_OPTION) {
+            return;
+        }
+
+        DatabaseConnection db = Database.connection();
+        db.executeUpdate(new QueryBuilder().insertInto("Directories").columns("directory").values(dir).build());
+
+        db.close();
+
+        refreshSongs();
+    }//GEN-LAST:event_addDirectoryMenuItemActionPerformed
+
+    private void sortComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortComboBoxActionPerformed
+        int selected = sortComboBox.getSelectedIndex();
+
+        switch (selected) {
+            case 0:
+                list.sortByName();
+                refreshSongs();
+                break;
+            case 1:
+                list.sortByTime();
+                refreshSongs();
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+    }//GEN-LAST:event_sortComboBoxActionPerformed
+
+    private void editDirectoriesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDirectoriesMenuItemActionPerformed
+        new EditDirectories().setVisible(true);
+    }//GEN-LAST:event_editDirectoriesMenuItemActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new EditFiles().setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(EditDirectories.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(EditDirectories.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(EditDirectories.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(EditDirectories.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new MainFrame().setVisible(true);
             }
@@ -112,10 +395,26 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addDirectoryMenuItem;
+    private javax.swing.JMenuItem addFileMenuItem;
     private javax.swing.JPanel background;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JScrollBar jScrollBar1;
+    private javax.swing.JPanel controlsPanel;
+    private javax.swing.JMenuItem editDirectoriesMenuItem;
+    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JScrollBar slider;
+    private javax.swing.JPanel sliderPanel;
+    private javax.swing.JList<String> songsList;
+    private javax.swing.JComboBox<String> sortComboBox;
+    private javax.swing.JLabel sortbyLabel;
+    private javax.swing.JLabel timeLabel;
     // End of variables declaration//GEN-END:variables
 }
