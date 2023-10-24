@@ -18,7 +18,7 @@ import kdesp73.musicplayer.files.FileOperations;
 public class SongsList {
 
     private ArrayList<Mp3File> list = new ArrayList<>();
-    
+
     public SongsList(SongsList copy) {
         this.list = copy.list;
     }
@@ -61,36 +61,18 @@ public class SongsList {
     public ArrayList<Mp3File> getSongs() {
         return list;
     }
-    
-    
+
     public void sortByName() {
-        for(int i = 0; i < list.size(); i++){
-            for(int j = i+1; j < list.size(); j++){
-                if(list.get(i).getJustName().compareTo(list.get(j).getJustName()) > 0){
-                    Mp3File temp = list.get(i);
-                    list.set(i, list.get(j));
-                    list.set(j, temp);
-                }
-            }
-        }
+        list.sort((o1, o2) -> o1.getJustName().compareTo(o2.getJustName()));
     }
 
     public void sortByTime() {
-        for(int i = 0; i < list.size(); i++){
-            for(int j = i+1; j < list.size(); j++){
-                if(list.get(i).getTimeOfImport().compareTo(list.get(j).getTimeOfImport()) > 0){
-                    Mp3File temp = list.get(i);
-                    list.set(i, list.get(j));
-                    list.set(j, temp);
-                }
-            }
-        }
+        list.sort((o1, o2) -> o2.getTimeOfImport().compareTo(o1.getTimeOfImport()));
     }
 
     @Override
     public String toString() {
         return "SongsList{" + "list=" + list + '}';
     }
-    
-    
+
 }

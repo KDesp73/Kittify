@@ -8,6 +8,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -49,7 +50,7 @@ public class Mp3File extends File {
         super(pathname);
 
         this.extension = FileOperations.getExtensionFromPath(this.getAbsolutePath());
-        this.timeOfImport = this.getTimeOfImport();
+        this.timeOfImport = this.calculateTimeOfImport();
         this.name = FileOperations.getJustFilenameFromPath(pathname);
     }
 
@@ -59,20 +60,27 @@ public class Mp3File extends File {
             FileInputStream fis = new FileInputStream(filename);
             BufferedInputStream bis = new BufferedInputStream(fis);
             player = new Player(bis);
+            
+//            fis.close();
+//            bis.close();
         } catch (FileNotFoundException | JavaLayerException e) {
             System.out.println("Problem playing file " + filename);
             System.out.println(e);
+        } catch (IOException ex) {
+            Logger.getLogger(Mp3File.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
 
         new Thread() {
             public void run() {
                 try {
-//                    if (pauseTime > 0) {
-//                        player.play(pauseTime);
-//                    } else {
-//                        player.play();
-//                    }
-                    player.play();
+                    if (pauseTime > 0) {
+                        player.play(pauseTime);
+                    } else {
+                        player.play();
+                    }
+//                    player.play();
 
                 } catch (Exception e) {
                     System.out.println(e);
@@ -97,7 +105,9 @@ public class Mp3File extends File {
             player.close();
             isPlaying = false;
             pauseTime = 0;
+            
         }
+        
     }
 
     public void seek(int seconds) {
@@ -169,13 +179,26 @@ public class Mp3File extends File {
     }
 
     public String getTimeOfImport() {
+        return this.timeOfImport;
+    }
+    
+    private String calculateTimeOfImport(){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         return formatter.format(date);
     }
 
     public String getJustName() {
-        return name;
+        if(track == null)
+            return name;
+        return null;
     }
+
+    @Override
+    public String toString() {
+        return "Mp3File{" + "timeOfImport=" + timeOfImport + ", name=" + name + '}';
+    }
+    
+    
 
 }

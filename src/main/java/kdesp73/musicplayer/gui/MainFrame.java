@@ -4,11 +4,16 @@
  */
 package kdesp73.musicplayer.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.databridge.connections.DatabaseConnection;
@@ -28,9 +33,10 @@ import kdesp73.themeLib.YamlFile;
 public class MainFrame extends javax.swing.JFrame {
 
     private SongsList list;
+    private String project_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/");
     private String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
     private Theme theme = new Theme(new YamlFile(themes_path + "kdesp.yml"));
-    private Mp3File currentSong;
+    private Mp3File currentSong = null;
     private boolean playing = false;
 
     /**
@@ -42,16 +48,22 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         this.rootPane.requestFocus();
 
+        // In that order
         addExtensions();
+        getSongs();
+        list.sortByName();
         refreshSongs();
 
         currentSong = list.getSongs().get(0);
         songsList.setFixedCellHeight(35);
+
+        GUIMethods.loadImage(optionsLabel, project_path + "/assets/ellipsis-vertical-solid-small.png");
     }
 
     private void addExtensions() {
         FileOperations.acceptedExtensions.add("mp3");
         FileOperations.acceptedExtensions.add("wav");
+        FileOperations.acceptedExtensions.add("mpeg");
     }
 
     /**
@@ -85,6 +97,7 @@ public class MainFrame extends javax.swing.JFrame {
         trackLabel = new javax.swing.JLabel();
         artistLabel = new javax.swing.JLabel();
         albumLabel = new javax.swing.JLabel();
+        optionsLabel = new javax.swing.JLabel();
         infoBackground = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -153,7 +166,7 @@ public class MainFrame extends javax.swing.JFrame {
             sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sliderPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(slider, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(slider, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -162,10 +175,12 @@ public class MainFrame extends javax.swing.JFrame {
             sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sliderPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(slider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(timeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(sliderPanelLayout.createSequentialGroup()
+                        .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(slider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         playButton.setText("Play");
@@ -251,6 +266,14 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
+        optionsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        optionsLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        optionsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                optionsLabelMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout controlsParentPanelLayout = new javax.swing.GroupLayout(controlsParentPanel);
         controlsParentPanel.setLayout(controlsParentPanelLayout);
         controlsParentPanelLayout.setHorizontalGroup(
@@ -259,11 +282,13 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sliderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(basicInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(controlsParentPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(basicInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(controlsParentPanelLayout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(optionsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         controlsParentPanelLayout.setVerticalGroup(
@@ -274,7 +299,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sliderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(controlsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(optionsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(15, 15, 15))
         );
 
@@ -400,12 +427,15 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void refreshSongs() {
+    private void getSongs() {
         try {
             list = new SongsList(Queries.getDirectories(), Queries.getFiles());
         } catch (java.lang.StringIndexOutOfBoundsException e) {
             e.printStackTrace();
         }
+    }
+
+    private void refreshSongs() {
 
         DefaultListModel listModel = new DefaultListModel();
         for (Mp3File song : list.getSongs()) {
@@ -468,15 +498,17 @@ public class MainFrame extends javax.swing.JFrame {
         int selected = sortComboBox.getSelectedIndex();
 
         switch (selected) {
-            case 0:
+            case 0 -> {
+                System.out.println("Sorting by name...");
                 list.sortByName();
                 refreshSongs();
-                break;
-            case 1:
+            }
+            case 1 -> {
+                System.out.println("Sorting by time...");
                 list.sortByTime();
                 refreshSongs();
-                break;
-            default:
+            }
+            default ->
                 throw new AssertionError();
         }
 
@@ -492,23 +524,35 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         int index = songsList.getSelectedIndex();
-        songsList.setSelectedIndex(++index);
+
+        if (index == list.getSongs().size() - 1) {
+            return;
+        }
+
+        songsList.setSelectedIndex(index + 1);
 
         currentSong.stop();
 
-        currentSong = list.getSongs().get(index);
-
+        selectSong(index + 1);
+//        currentSong = list.getSongs().get(index + 1);
         currentSong.play();
+        playing = true;
+        playButton.setText("Pause");
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
-        if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
+        if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
             playing = true;
             currentSong.stop();
-            currentSong = list.getSongs().get(songsList.getSelectedIndex());
+
+            selectSong();
+
+//            currentSong = list.getSongs().get(songsList.getSelectedIndex());
             currentSong.play();
             playButton.setText("Pause");
+
         }
+
     }//GEN-LAST:event_songsListMouseClicked
 
     private void playButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseClicked
@@ -525,40 +569,119 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void songsListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_songsListKeyPressed
         if (evt.getKeyChar() == '\n') {
-            playing = true;
             currentSong.stop();
-            currentSong = list.getSongs().get(songsList.getSelectedIndex());
+            playing = false;
+
+            selectSong();
+
+//            currentSong = list.getSongs().get(songsList.getSelectedIndex());
             currentSong.play();
+            playing = true;
             playButton.setText("Pause");
         }
     }//GEN-LAST:event_songsListKeyPressed
 
     private void prevButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevButtonMouseClicked
         int index = songsList.getSelectedIndex();
-        songsList.setSelectedIndex(--index);
+
+        if (index == 0) {
+            return;
+        }
+
+        songsList.setSelectedIndex(index - 1);
 
         currentSong.stop();
 
-        currentSong = list.getSongs().get(index);
+        selectSong(index - 1);
 
+//        currentSong = list.getSongs().get(index + 1);
         currentSong.play();
+        playing = true;
+        playButton.setText("Pause");
+
     }//GEN-LAST:event_prevButtonMouseClicked
 
     private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
         int input_start = 0, input_end = 99;
         int output_start = 0, output_end = 210;
-        
+
         int output = output_start + ((output_end - output_start) / (input_end - input_start)) * (slider.getValue() - input_start);
 
         timeLabel.setText(secondsToMinutes(output));
-        
+
     }//GEN-LAST:event_sliderMouseDragged
+
+    private void editAction() {
+        System.out.println("Edit pressed");
+    }
+
+    private void deleteAction() {
+        System.out.println("Delete pressed");
+    }
+
+    private void scrapeAction() {
+        System.out.println("Scrape pressed");
+    }
+
+    private void optionsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            System.out.println("Options clicked");
+
+            JPopupMenu options = new JPopupMenu();
+            JMenuItem edit = new JMenuItem("Edit");
+            JMenuItem delete = new JMenuItem("Delete");
+            JMenuItem scrape = new JMenuItem("Scrape");
+
+            ActionListener menuListener = new ActionListener() {
+                String selectedItem;
+
+                @Override
+                public void actionPerformed(ActionEvent event) {
+                    selectedItem = event.getActionCommand();
+                    if (null != selectedItem) {
+                        switch (selectedItem) {
+                            case "Edit" ->
+                                editAction();
+                            case "Delete" ->
+                                deleteAction();
+                            case "Scrape" ->
+                                scrapeAction();
+                            default -> {
+                            }
+                        }
+                    }
+                }
+            };
+
+            edit.addActionListener(menuListener);
+            options.add(edit);
+
+            delete.addActionListener(menuListener);
+            options.add(delete);
+
+            scrape.addActionListener(menuListener);
+            options.add(scrape);
+
+            if (songsList.getSelectedIndex() >= 0 && currentSong != null) {
+                options.show(evt.getComponent(), evt.getX(), evt.getY());
+            }
+        }
+    }//GEN-LAST:event_optionsLabelMouseClicked
 
     private String secondsToMinutes(int seconds) {
         int minutes = seconds / 60;
         seconds %= 60;
 
         return "" + ((minutes < 10) ? "0" + minutes : minutes) + ":" + ((seconds < 10) ? "0" + seconds : seconds);
+    }
+
+    private void selectSong(int index) {
+        trackLabel.setText(list.getSongs().get(index).getJustName());
+        currentSong = list.getSongs().get(index);
+    }
+
+    private void selectSong() {
+        selectSong(songsList.getSelectedIndex());
     }
 
     /**
@@ -600,6 +723,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton nextButton;
+    private javax.swing.JLabel optionsLabel;
     private javax.swing.JButton playButton;
     private javax.swing.JPanel playerBackground;
     private javax.swing.JButton prevButton;
