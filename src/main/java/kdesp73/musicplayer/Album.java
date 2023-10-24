@@ -5,6 +5,9 @@
 package kdesp73.musicplayer;
 
 import java.util.ArrayList;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  *
@@ -16,8 +19,7 @@ public class Album {
 	private String artist;
 	private String mbid;
 	private String coverURL;
-	private String coverPath;
-	private ArrayList<String> tracks;
+	private ArrayList<String> tracks = new ArrayList<>();
 	private String name;
 	private String URL;
 	private String content;
@@ -27,8 +29,30 @@ public class Album {
 	}
 	
 	public Album(String json) {
+		JSONObject root = (JSONObject) JSONValue.parse(json);
 		
+		JSONObject album = (JSONObject) root.get("album");
+		
+		this.artist = (String) album.get("artist");
+		this.mbid = (String) album.get("mbid");
+		
+		JSONArray image = (JSONArray) album.get("image");
+		
+		this.coverURL = (String) ((JSONObject) image.get(4)).get("#text");
 	
+		JSONObject tracks = (JSONObject) album.get("tracks");
+		JSONArray track = (JSONArray) tracks.get("track");
+		
+		for(int i = 0; i < track.size(); i++){
+			JSONObject o = (JSONObject) track.get(i);
+			this.tracks.add((String) o.get("name"));
+		}
+		
+		this.name = (String) album.get("name");
+		
+		JSONObject wiki = (JSONObject) album.get("wiki");
+		this.content = (String) wiki.get("content");
+		
 	}
 
 	public String getArtist() {
@@ -87,13 +111,6 @@ public class Album {
 		this.content = content;
 	}
 
-	public String getCoverPath() {
-		return coverPath;
-	}
-
-	public void setCoverPath(String coverPath) {
-		this.coverPath = coverPath;
-	}
 
 	
 	

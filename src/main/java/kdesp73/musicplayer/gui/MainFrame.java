@@ -4,6 +4,7 @@
  */
 package kdesp73.musicplayer.gui;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -71,13 +72,13 @@ public final class MainFrame extends javax.swing.JFrame {
 		updateSongs();
 
 		currentIndex = Queries.getLastPlayed();
-		
+
 		if (!list.getSongs().isEmpty()) {
 			currentSong = list.getSongs().get(currentIndex);
 		}
-		
+
 		selectSong(currentIndex);
-		
+
 		songsList.setFixedCellHeight(35);
 
 		GUIMethods.loadImage(optionsLabel, project_path + "/assets/ellipsis-vertical-solid-small.png");
@@ -478,7 +479,7 @@ public final class MainFrame extends javax.swing.JFrame {
 			default:
 				throw new AssertionError();
 		}
-		refreshSongs();
+		refreshList();
 	}
 
 	private void getSongs() {
@@ -489,7 +490,7 @@ public final class MainFrame extends javax.swing.JFrame {
 		}
 	}
 
-	private void refreshSongs() {
+	public void refreshList() {
 
 		DefaultListModel listModel = new DefaultListModel();
 		for (Mp3File song : list.getSongs()) {
@@ -557,19 +558,19 @@ public final class MainFrame extends javax.swing.JFrame {
 			case 0 -> {
 				System.out.println("Sorting by name...");
 				list.sortByName();
-				refreshSongs();
+				refreshList();
 				sort_by = "Name";
 			}
 			case 1 -> {
 				System.out.println("Sorting by artist...");
 				list.sortByArtist();
-				refreshSongs();
+				refreshList();
 				sort_by = "Artist";
 			}
 			case 2 -> {
 				System.out.println("Sorting by album...");
 				list.sortByAlbum();
-				refreshSongs();
+				refreshList();
 				sort_by = "Album";
 			}
 			default ->
@@ -600,7 +601,6 @@ public final class MainFrame extends javax.swing.JFrame {
 		currentSong.stop();
 
 		selectSong(index + 1);
-//        currentSong = list.getSongs().get(index + 1);
 		currentSong.play();
 		playing = true;
 		playButton.setText("Pause");
@@ -615,7 +615,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 			selectSong();
 
-//            currentSong = list.getSongs().get(songsList.getSelectedIndex());
 			currentSong.play();
 			playButton.setText("Pause");
 
@@ -642,7 +641,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 			selectSong();
 
-//            currentSong = list.getSongs().get(songsList.getSelectedIndex());
 			currentSong.play();
 			playing = true;
 			playButton.setText("Pause");
@@ -662,7 +660,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		selectSong(index - 1);
 
-//        currentSong = list.getSongs().get(index + 1);
 		currentSong.play();
 		playing = true;
 		playButton.setText("Pause");
@@ -683,20 +680,18 @@ public final class MainFrame extends javax.swing.JFrame {
 		new EditSongInfo(this).setVisible(true);
 	}
 
-	private void deleteAction() {
-		System.out.println("Delete pressed");
-	}
-
 	private void scrapeAction() {
-		System.out.println("Scrape pressed");
+		String artist = currentSong.getTrack().getArtist();
+		String title = currentSong.getTrack().getName();
 	}
 
     private void optionsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseClicked
 		if (evt.getButton() == MouseEvent.BUTTON1) {
 			JPopupMenu options = new JPopupMenu();
 			JMenuItem edit = new JMenuItem("Edit");
-			JMenuItem delete = new JMenuItem("Delete");
 			JMenuItem scrape = new JMenuItem("Scrape");
+
+			options.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 			ActionListener menuListener = new ActionListener() {
 				String selectedItem;
@@ -708,8 +703,6 @@ public final class MainFrame extends javax.swing.JFrame {
 						switch (selectedItem) {
 							case "Edit" ->
 								editAction();
-							case "Delete" ->
-								deleteAction();
 							case "Scrape" ->
 								scrapeAction();
 							default -> {
@@ -721,9 +714,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 			edit.addActionListener(menuListener);
 			options.add(edit);
-
-			delete.addActionListener(menuListener);
-			options.add(delete);
 
 			scrape.addActionListener(menuListener);
 			options.add(scrape);
@@ -749,12 +739,35 @@ public final class MainFrame extends javax.swing.JFrame {
 	}
 
 	public void updateSongInfo(int index) {
-		trackLabel.setText(list.getSongs().get(index).getTrack().getName());
-		artistLabel.setText(list.getSongs().get(index).getArtist().getName());
-		albumLabel.setText(list.getSongs().get(index).getAlbum().getName());
+		String path = list.getSongs().get(index).getAbsolutePath();
+		String title = list.getSongs().get(index).getTrack().getName();
+		String artist = list.getSongs().get(index).getTrack().getArtist();
+		String album = list.getSongs().get(index).getTrack().getAlbum();
+		String cover = list.getSongs().get(index).getCoverPath();
+		
+		path = path.replaceAll(Pattern.quote("\'"), "\'\'");
+		title = title.replaceAll(Pattern.quote("\'"), "\'\'");
+		artist = artist.replaceAll(Pattern.quote("\'"), "\'\'");
+		album = album.replaceAll(Pattern.quote("\'"), "\'\'");
 
-		File albumCover = new File(list.getSongs().get(index).getAlbum().getCoverPath());
+		trackLabel.setText(title);
+		artistLabel.setText((artist.isBlank() || artist.isEmpty()) ? "Unkown Artist" : artist);
+		albumLabel.setText((album.isBlank() || album.isEmpty()) ? "Unkown Album" : album);
 
+		DatabaseConnection db = Database.connection();
+		QueryBuilder builder = new QueryBuilder();
+
+		db.executeUpdate("UPDATE Songs SET title = \'" + title + "\', artist = \'" + artist + "\', album = \'" + album + "\', image_path = \'" + cover + "\' WHERE path = \'" + path + "\'");
+		db.close();
+		
+		if(cover == null) {
+			System.out.println("Cover is null");
+			GUIMethods.loadImage(albumImageLabel, project_path + "/assets/album-image-placeholder.png");
+			return;
+		}
+		
+		File albumCover = new File(cover);
+		
 		if (albumCover.isFile()) {
 			BufferedImage img = null;
 
@@ -779,7 +792,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	private void selectSong() {
 		selectSong(songsList.getSelectedIndex());
-		GUIMethods.loadImage(albumImageLabel, currentSong.getAlbum().getCoverPath());
 	}
 
 	/**

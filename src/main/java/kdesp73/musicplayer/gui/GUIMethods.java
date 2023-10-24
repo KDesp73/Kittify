@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -15,9 +16,27 @@ import org.imgscalr.Scalr;
 
 import kdesp73.themeLib.*;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class GUIMethods {
+	
+	public static BufferedImage imageFromURL(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            BufferedImage image = ImageIO.read(url);
+
+            if (image != null) {
+                return image;
+            } else {
+                System.out.println("Failed to load the image from the URL.");
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static void loadImage(JLabel imageLabel, String dir) {
         imageLabel.setIcon(new ImageIcon(dir));

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ import kdesp73.musicplayer.files.FileOperations;
  * @author konstantinos
  */
 public class SongsList {
+	private HashSet<String> paths = new HashSet<>();
 
     private ArrayList<Mp3File> list = new ArrayList<>();
 
@@ -29,21 +31,109 @@ public class SongsList {
         this.list = copy.list;
     }
 
+	
+	// Import Algorithm                                                                       //
+	// ------------------------------------------------------------------------------- //
+	// 1. Load all songs from database                                             //
+	// 2. Add them to list                                                                    //
+	// 3. Load all files from directories                                               //
+	// 4. Add file only if path doesn't already exist                           //
+	// 5. Add everything in database if it doesn't already exist       //
     public SongsList(List<String> paths) {
-        for (String path : paths) {
-            try {
-                List<String> dirs = FileOperations.findFiles(path);
-                for (String dir : dirs) {
-                    list.add(new Mp3File(dir));
-                }
-
-            } catch (IOException ex) {
-                Logger.getLogger(SongsList.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
+		list.addAll(loadSongsFromDB());
+		
+		ArrayList<Mp3File> newFiles = loadFiles(paths);
+		
+		for(Mp3File f : newFiles){
+			if(!this.paths.contains(f.getAbsolutePath())){
+				list.add(f);
+			}
+		}
+		
         addToDatabase();
     }
+	
+	// Import Algorithm                                                                       //
+	// ------------------------------------------------------------------------------- //
+	// 1. Load all songs from database                                             //
+	// 2. Add them to list                                                                    //
+	// 3. Load all files from directories and additional files              //
+	// 4. Add file only if path doesn't already exist                           //
+	// 5. Add everything in database if it doesn't already exist       //
+	
+	public SongsList(List<String> paths, List<String> files) {
+		list.addAll(loadSongsFromDB());
+		
+		ArrayList<Mp3File> newFiles = loadFiles(paths);
+		
+		for(Mp3File f : newFiles){
+			if(!this.paths.contains(f.getAbsolutePath())){
+				System.out.println("New file: " + f.getAbsolutePath());
+				list.add(f);
+			}
+		}
+		
+        
+        addToDatabase();
+    }
+
+	private ArrayList<Mp3File> loadFiles(List<String> paths) {
+		ArrayList<Mp3File> tempList = new ArrayList<>();
+		for (String path : paths) {
+			try {
+				List<String> dirs = FileOperations.findFiles(path);
+				for (String dir : dirs) {
+					tempList.add(new Mp3File(dir));
+				}
+				
+			} catch (IOException ex) {
+				Logger.getLogger(SongsList.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		
+		return tempList;
+	}
+	
+	private ArrayList<Mp3File> loadFiles(List<String> paths, List<String> files) {
+		ArrayList<Mp3File> tempList = new ArrayList<>(); 
+		for (String path : paths) {
+			try {
+				List<String> dirs = FileOperations.findFiles(path);
+				for (String dir : dirs) {
+					tempList.add(new Mp3File(dir));
+				}
+			} catch (IOException ex) {
+				Logger.getLogger(SongsList.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		
+		for (String file : files) {
+			tempList.add(new Mp3File(file));
+		}
+		
+		return tempList;
+	}
+	
+	private ArrayList<Mp3File> loadSongsFromDB(){
+		ArrayList dbSongs = new ArrayList<>();
+		
+		DatabaseConnection db = Database.connection();
+		
+		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Songs").build());
+		
+		try {
+			while(rs.next()){
+				Mp3File file = new Mp3File(rs.getString("title"), rs.getString("artist"), rs.getString("album"), rs.getString("path"));
+
+				dbSongs.add(file);
+				paths.add(rs.getString("path"));
+			}
+		} catch (SQLException ex) {
+			Logger.getLogger(SongsList.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+		return dbSongs;
+	}
 
     private void addToDatabase() {
         DatabaseConnection db = Database.connection();
@@ -68,24 +158,6 @@ public class SongsList {
         db.close();
     }
 
-    public SongsList(List<String> paths, List<String> files) {
-        for (String path : paths) {
-            try {
-                List<String> dirs = FileOperations.findFiles(path);
-                for (String dir : dirs) {
-                    list.add(new Mp3File(dir));
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(SongsList.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        for (String file : files) {
-            list.add(new Mp3File(file));
-        }
-        
-        addToDatabase();
-    }
     
     public void addSong(Mp3File file) {
         list.add(file);
@@ -99,10 +171,10 @@ public class SongsList {
         list.sort((o1, o2) -> o1.getTrack().getName().compareTo(o2.getTrack().getName()));
     }
     public void sortByArtist() {
-        list.sort((o1, o2) -> o1.getArtist().getName().compareTo(o2.getArtist().getName()));
+        list.sort((o1, o2) -> o1.getTrack().getArtist().compareTo(o2.getTrack().getArtist()));
     }
     public void sortByAlbum() {
-        list.sort((o1, o2) -> o1.getAlbum().getName().compareTo(o2.getAlbum().getName()));
+        list.sort((o1, o2) -> o1.getTrack().getAlbum().compareTo(o2.getTrack().getAlbum()));
     }
 
     public void sortByTime() {
