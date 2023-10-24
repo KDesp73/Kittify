@@ -15,7 +15,8 @@ public class API {
     }
 
     public String GET(String lastfmMethod, String tags) throws IOException, InterruptedException {
-        try {
+		tags = setupString(tags);
+		try {
             String apiKey = readFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/data/api_key.txt");
             String apiUrl = "http://ws.audioscrobbler.com/2.0/?method=" + lastfmMethod + tags + "&api_key=" + apiKey + "&format=json";
 

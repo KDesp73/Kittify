@@ -25,6 +25,7 @@ import kdesp73.themeLib.YamlFile;
  */
 public class EditFiles extends javax.swing.JFrame {
 
+    MainFrame frame;
     List<String> files;
     String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
     Theme theme = new Theme(new YamlFile(themes_path + "kdesp.yml"));
@@ -32,17 +33,20 @@ public class EditFiles extends javax.swing.JFrame {
     /**
      * Creates new form EditDirectories
      */
-    public EditFiles() {
+    public EditFiles(MainFrame f) {
         initComponents();
         this.setTitle("Edit Files");
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.rootPane.requestFocus();
+        this.frame = f;
         
 //        ThemeCollection.applyTheme(this.rootPane, theme);
         
         refreshFiles();
+		
+		pathsList.setFixedCellHeight(35);
 
     }
 
@@ -151,11 +155,14 @@ public class EditFiles extends javax.swing.JFrame {
 
         DatabaseConnection db = Database.connection();
 
-        db.executeUpdate(new QueryBuilder().deleteFrom("Directories").where("directory = \'" + files.get(selected) + "\'").build());
+        db.executeUpdate(new QueryBuilder().deleteFrom("Files").where("filepath = \'" + files.get(selected) + "\'").build());
+        db.executeUpdate(new QueryBuilder().deleteFrom("Songs").where("path = \'" + files.get(selected) + "\'").build());
         files.remove(selected);
         refreshFiles();
 
         db.close();
+        
+        frame.updateSongs();
     }//GEN-LAST:event_removeButtonMouseClicked
 
     private void editButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editButtonMouseClicked
@@ -180,26 +187,11 @@ public class EditFiles extends javax.swing.JFrame {
         refreshFiles();
 
         db.close();
+        
+        this.frame.updateSongs();
 
     }//GEN-LAST:event_editButtonMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
-        } catch (Exception ex) {
-            System.err.println("Failed to initialize LaF");
-        }
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EditFiles().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel background;

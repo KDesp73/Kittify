@@ -22,6 +22,9 @@ public class GUIMethods {
     public static void loadImage(JLabel imageLabel, String dir) {
         imageLabel.setIcon(new ImageIcon(dir));
     }
+    public static void loadImage(JLabel imageLabel, BufferedImage image) {
+        imageLabel.setIcon(new ImageIcon(image));
+    }
 
     private static boolean openWebpage(URI uri) {
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;

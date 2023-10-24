@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.player.Player;
@@ -39,19 +40,29 @@ public class Mp3File extends File {
     private int durationSeconds;
     private String timeOfImport;
     private String extension;
-    private String name;
 
     // API
-    private Track track;
-    private Album album;
-    private Artist artist;
+    private Track track = new Track();
+    private Album album = new Album();
+    private Artist artist = new Artist();
 
+    public Mp3File(String title, String artist, String album, String path){
+        super(path);
+        
+        this.track.setName(title);
+        this.artist.setName(artist);
+        this.album.setName(album);
+        
+    }
+    
     public Mp3File(String pathname) {
         super(pathname);
 
         this.extension = FileOperations.getExtensionFromPath(this.getAbsolutePath());
         this.timeOfImport = this.calculateTimeOfImport();
-        this.name = FileOperations.getJustFilenameFromPath(pathname);
+        
+        this.track.setName(FileOperations.getJustFilenameFromPath(pathname));
+        this.album.setCoverPath(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/album-image-placeholder.png");
     }
 
     public void play() {
@@ -188,16 +199,12 @@ public class Mp3File extends File {
         return formatter.format(date);
     }
 
-    public String getJustName() {
-        if(track == null)
-            return name;
-        return null;
-    }
-
     @Override
     public String toString() {
-        return "Mp3File{" + "timeOfImport=" + timeOfImport + ", name=" + name + '}';
+        return "Mp3File{" + "track=" + track + ", album=" + album + ", artist=" + artist + '}';
     }
+
+    
     
     
 

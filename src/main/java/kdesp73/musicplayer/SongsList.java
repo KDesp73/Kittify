@@ -5,10 +5,16 @@
 package kdesp73.musicplayer;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import kdesp73.databridge.connections.DatabaseConnection;
+import kdesp73.databridge.helpers.QueryBuilder;
+import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.files.FileOperations;
 
 /**
@@ -35,6 +41,31 @@ public class SongsList {
                 Logger.getLogger(SongsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
+        addToDatabase();
+    }
+
+    private void addToDatabase() {
+        DatabaseConnection db = Database.connection();
+        QueryBuilder builder = new QueryBuilder();
+        for (Mp3File file : list) {
+            boolean dontAdd = false;
+            ResultSet rs = db.executeQuery(builder.select("path").from("Songs").build());
+            try {
+                while (rs.next()) {
+                    if (rs.getString(1).equals(file.getAbsolutePath())) {
+                        dontAdd = true;
+                        break;
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SongsList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            if(!dontAdd)
+                db.executeUpdate(builder.insertInto("Songs").columns("path", "title").values(file.getAbsolutePath().replaceAll(Pattern.quote("\'"), "\'\'"), file.getTrack().getName().replaceAll(Pattern.quote("\'"), "\'\'")).build());
+        }
+        db.close();
     }
 
     public SongsList(List<String> paths, List<String> files) {
@@ -52,8 +83,10 @@ public class SongsList {
         for (String file : files) {
             list.add(new Mp3File(file));
         }
+        
+        addToDatabase();
     }
-
+    
     public void addSong(Mp3File file) {
         list.add(file);
     }
@@ -63,7 +96,13 @@ public class SongsList {
     }
 
     public void sortByName() {
-        list.sort((o1, o2) -> o1.getJustName().compareTo(o2.getJustName()));
+        list.sort((o1, o2) -> o1.getTrack().getName().compareTo(o2.getTrack().getName()));
+    }
+    public void sortByArtist() {
+        list.sort((o1, o2) -> o1.getArtist().getName().compareTo(o2.getArtist().getName()));
+    }
+    public void sortByAlbum() {
+        list.sort((o1, o2) -> o1.getAlbum().getName().compareTo(o2.getAlbum().getName()));
     }
 
     public void sortByTime() {
