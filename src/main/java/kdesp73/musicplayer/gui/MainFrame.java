@@ -7,15 +7,12 @@ package kdesp73.musicplayer.gui;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -23,13 +20,20 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.databridge.connections.DatabaseConnection;
 import kdesp73.databridge.helpers.QueryBuilder;
+import kdesp73.musicplayer.player.AudioPlayer;
 import kdesp73.musicplayer.Mp3File;
+import kdesp73.musicplayer.player.Mp3Player;
 import kdesp73.musicplayer.SongsList;
+import kdesp73.musicplayer.api.API;
+import kdesp73.musicplayer.api.LastFmMethods;
+import kdesp73.musicplayer.api.Pair;
+import kdesp73.musicplayer.api.Track;
 import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
@@ -45,11 +49,12 @@ public final class MainFrame extends javax.swing.JFrame {
 	private String project_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/");
 	private String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 	private Theme theme = new Theme(new YamlFile(themes_path + "kdesp.yml"));
-	private boolean playing = false;
 
 	public int currentIndex = 0;
 	public Mp3File currentSong = null;
 	public SongsList list;
+
+	public AudioPlayer player = new Mp3Player(null);
 
 	/**
 	 * Creates new form MainFrame
@@ -71,13 +76,12 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		updateSongs();
 
-		currentIndex = Queries.getLastPlayed();
-
 		if (!list.getSongs().isEmpty()) {
+			currentIndex = Queries.getLastPlayed();
 			currentSong = list.getSongs().get(currentIndex);
+			selectSong(currentIndex);
+			player = new Mp3Player(currentSong);
 		}
-
-		selectSong(currentIndex);
 
 		songsList.setFixedCellHeight(35);
 
@@ -464,7 +468,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	public void updateSongs() {
 		addExtensions();
-		getSongs();
+		initList();
 
 		switch (Queries.getSortBy()) {
 			case "Name":
@@ -482,7 +486,7 @@ public final class MainFrame extends javax.swing.JFrame {
 		refreshList();
 	}
 
-	private void getSongs() {
+	private void initList() {
 		try {
 			list = new SongsList(Queries.getDirectories(), Queries.getFiles());
 		} catch (java.lang.StringIndexOutOfBoundsException e) {
@@ -502,7 +506,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private void addFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFileMenuItemActionPerformed
 		String dir = "";
 		JFileChooser fc = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Sound Files", "mp3", "wav");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Sound Files", "mp3");
 
 		fc.setFileFilter(filter);
 
@@ -556,19 +560,16 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		switch (selected) {
 			case 0 -> {
-				System.out.println("Sorting by name...");
 				list.sortByName();
 				refreshList();
 				sort_by = "Name";
 			}
 			case 1 -> {
-				System.out.println("Sorting by artist...");
 				list.sortByArtist();
 				refreshList();
 				sort_by = "Artist";
 			}
 			case 2 -> {
-				System.out.println("Sorting by album...");
 				list.sortByAlbum();
 				refreshList();
 				sort_by = "Album";
@@ -598,51 +599,44 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		songsList.setSelectedIndex(index + 1);
 
-		currentSong.stop();
+		player.stop();
 
 		selectSong(index + 1);
-		currentSong.play();
-		playing = true;
+
+		player.play();
+
 		playButton.setText("Pause");
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
 		if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
-			playing = true;
-			if (currentSong != null) {
-				currentSong.stop();
-			}
+			player.stop();
 
 			selectSong();
 
-			currentSong.play();
+			player.play();
 			playButton.setText("Pause");
-
 		}
-
     }//GEN-LAST:event_songsListMouseClicked
 
     private void playButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseClicked
 		currentSong = list.getSongs().get(currentIndex);
-		if (playing) {
-			currentSong.pause();
+		if (player.isPlaying()) {
+			player.pause();
 			playButton.setText("Play");
 		} else {
-			currentSong.play();
+			player.play();
 			playButton.setText("Pause");
 		}
-		playing = !playing;
     }//GEN-LAST:event_playButtonMouseClicked
 
     private void songsListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_songsListKeyPressed
 		if (evt.getKeyChar() == '\n') {
-			currentSong.stop();
-			playing = false;
+			player.stop();
 
 			selectSong();
 
-			currentSong.play();
-			playing = true;
+			player.play();
 			playButton.setText("Pause");
 		}
     }//GEN-LAST:event_songsListKeyPressed
@@ -656,19 +650,19 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		songsList.setSelectedIndex(index - 1);
 
-		currentSong.stop();
+		player.stop();
 
 		selectSong(index - 1);
 
-		currentSong.play();
-		playing = true;
+		player.play();
+
 		playButton.setText("Pause");
 
     }//GEN-LAST:event_prevButtonMouseClicked
 
     private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
 		int input_start = 0, input_end = 99;
-		int output_start = 0, output_end = 210;
+		int output_start = 0, output_end = (currentSong == null) ? 0 : (int) currentSong.getDurationInSeconds();
 
 		int output = output_start + ((output_end - output_start) / (input_end - input_start)) * (slider.getValue() - input_start);
 
@@ -683,6 +677,26 @@ public final class MainFrame extends javax.swing.JFrame {
 	private void scrapeAction() {
 		String artist = currentSong.getTrack().getArtist();
 		String title = currentSong.getTrack().getName();
+		
+		if(artist == null || "Unknown Artist".equals(artist)) {
+			// Search
+		}else {
+			Pair<String, Integer> response = null;
+			try {
+				response = new API().GET(LastFmMethods.Track.getInfo, LastFmMethods.Track.tags(artist, title));
+			} catch (IOException | InterruptedException ex) {
+				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			
+			if(response.second != 200) {
+				JOptionPane.showMessageDialog(this, "API Reponse Code: " + response.second, response.second.toString(), JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			currentSong.setTrack(new Track(response.first));
+		}
+		
+		
 	}
 
     private void optionsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseClicked
@@ -736,6 +750,8 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		currentSong = list.getSongs().get(index);
 		currentIndex = index;
+
+		player.setFile(currentSong);
 	}
 
 	public void updateSongInfo(int index) {
@@ -744,11 +760,17 @@ public final class MainFrame extends javax.swing.JFrame {
 		String artist = list.getSongs().get(index).getTrack().getArtist();
 		String album = list.getSongs().get(index).getTrack().getAlbum();
 		String cover = list.getSongs().get(index).getCoverPath();
-		
+
 		path = path.replaceAll(Pattern.quote("\'"), "\'\'");
 		title = title.replaceAll(Pattern.quote("\'"), "\'\'");
-		artist = artist.replaceAll(Pattern.quote("\'"), "\'\'");
-		album = album.replaceAll(Pattern.quote("\'"), "\'\'");
+
+		if (artist != null) {
+			artist = artist.replaceAll(Pattern.quote("\'"), "\'\'");
+
+		}
+		if (album != null) {
+			album = album.replaceAll(Pattern.quote("\'"), "\'\'");
+		}
 
 		trackLabel.setText(title);
 		artistLabel.setText((artist.isBlank() || artist.isEmpty()) ? "Unkown Artist" : artist);
@@ -759,15 +781,15 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		db.executeUpdate("UPDATE Songs SET title = \'" + title + "\', artist = \'" + artist + "\', album = \'" + album + "\', image_path = \'" + cover + "\' WHERE path = \'" + path + "\'");
 		db.close();
-		
-		if(cover == null) {
+
+		if (cover == null) {
 			System.out.println("Cover is null");
 			GUIMethods.loadImage(albumImageLabel, project_path + "/assets/album-image-placeholder.png");
 			return;
 		}
-		
+
 		File albumCover = new File(cover);
-		
+
 		if (albumCover.isFile()) {
 			BufferedImage img = null;
 

@@ -4,26 +4,38 @@
  */
 package kdesp73.musicplayer;
 
-import java.io.BufferedInputStream;
+import kdesp73.musicplayer.api.Track;
+import ealvatag.audio.AudioFile;
+import ealvatag.audio.AudioFileIO;
+import ealvatag.audio.AudioHeader;
+import ealvatag.audio.exceptions.CannotReadException;
+import ealvatag.audio.exceptions.CannotWriteException;
+import ealvatag.audio.exceptions.InvalidAudioFrameException;
+import ealvatag.tag.FieldDataInvalidException;
+import ealvatag.tag.FieldKey;
+import ealvatag.tag.NullTag;
+import ealvatag.tag.Tag;
+import ealvatag.tag.TagException;
+import ealvatag.tag.UnsupportedFieldException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import kdesp73.musicplayer.files.FileOperations;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.decoder.Bitstream;
-import javazoom.jl.player.Player;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
-import javazoom.jl.player.advanced.PlaybackEvent;
-import javazoom.jl.player.advanced.PlaybackListener;
 
 /**
  *
@@ -32,25 +44,32 @@ import javazoom.jl.player.advanced.PlaybackListener;
 public class Mp3File extends File {
 
 	// Player
-	private Player player;
+	private AdvancedPlayer player;
 	private boolean isPlaying = false;
-	private int pauseTime = 0;
+	private int pausedOnFrame = 0;
+	private int currentFrame = 0;
 
 	// File
 	private int durationSeconds;
 	private String timeOfImport;
 	private String extension;
 	private String coverPath;
+	private HashMap<String, Object> metadata;
 
 	// API
 	private Track track = new Track();
-
+	
 	public Mp3File(String title, String artist, String album, String path) {
 		super(path);
 
 		this.track.setName(title);
 		this.track.setArtist(artist);
 		this.track.setAlbum(album);
+		this.metadata = getMetadata();
+		this.coverPath = (System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/album-image-placeholder.png");
+		this.timeOfImport = this.calculateTimeOfImport();
+		this.extension = FileOperations.getExtensionFromPath(this.getAbsolutePath());
+
 	}
 
 	public Mp3File(String pathname) {
@@ -58,99 +77,73 @@ public class Mp3File extends File {
 
 		this.extension = FileOperations.getExtensionFromPath(this.getAbsolutePath());
 		this.timeOfImport = this.calculateTimeOfImport();
-
 		this.track.setName(FileOperations.getJustFilenameFromPath(pathname));
 		this.coverPath = (System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/album-image-placeholder.png");
+		this.metadata = getMetadata();
 	}
 
-	public void play() {
-		String filename = this.getAbsolutePath();
+	// =============METADATA =============
+	public HashMap<String, Object> getMetadata() {
+		File inputFile = new File(this.getAbsolutePath());
+		AudioFile audioFile = null;
 		try {
-			FileInputStream fis = new FileInputStream(filename);
-			BufferedInputStream bis = new BufferedInputStream(fis);
-			player = new Player(bis);
-
-//            fis.close();
-//            bis.close();
-		} catch (FileNotFoundException | JavaLayerException e) {
-			System.out.println("Problem playing file " + filename);
-			System.out.println(e);
-		} catch (IOException ex) {
+			audioFile = AudioFileIO.read(inputFile);
+		} catch (CannotReadException | IOException | TagException | InvalidAudioFrameException ex) {
 			Logger.getLogger(Mp3File.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
-		new Thread() {
-			public void run() {
-				try {
-					if (pauseTime > 0) {
-						player.play(pauseTime);
-					} else {
-						player.play();
-					}
-//                    player.play();
-
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-			}
-		}.start();
-		isPlaying = true;
-
-	}
-
-	public void pause() {
-		if (isPlaying) {
-			pauseTime = calculateFrameFromTime(getCurrentTime());
-			player.close();
-			isPlaying = false;
+		if (audioFile == null) {
+			return null;
 		}
 
+		final AudioHeader audioHeader = audioFile.getAudioHeader();
+		Tag tag = audioFile.getTag().or(NullTag.INSTANCE);
+
+		HashMap<String, Object> m = new HashMap<>();
+
+		m.put("title", tag.getValue(FieldKey.TITLE).or(""));
+		m.put("artist", tag.getValue(FieldKey.ARTIST).or(""));
+		m.put("album", tag.getValue(FieldKey.ALBUM).or(""));
+		m.put("duration", audioHeader.getDuration(TimeUnit.SECONDS, false));
+
+		return m;
 	}
 
-	public void stop() {
-		if (isPlaying) {
-			player.close();
-			isPlaying = false;
-			pauseTime = 0;
-
-		}
-
-	}
-
-	public void seek(int seconds) {
-		if (isPlaying) {
-			pause();
-		}
-		pauseTime = calculateFrameFromTime(seconds);
-		play();
-	}
-
-	private int getCurrentTime() {
-		int milli = player.getPosition();
-		int seconds = (int) (milli / 1000) % 60;
-
-		return seconds;
-	}
-
-	private int calculateFrameFromTime(int seconds) {
+	public void setMetadata(FieldKey fk, String value) {
+		File inputFile = new File(this.getAbsolutePath());
+		AudioFile audioFile = null;
 		try {
-			Bitstream bitstream = new Bitstream(new FileInputStream(this.getAbsolutePath()));
-			int frame = 0;
-			long currentTime = 0;
-			while (currentTime < seconds * 1000) { // Convert seconds to milliseconds
-				bitstream.readFrame(); // Skip the frame
-				currentTime += bitstream.readFrame().ms_per_frame();
-				frame++;
-			}
-			return frame;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return 0;
+			audioFile = AudioFileIO.read(inputFile);
+		} catch (CannotReadException | IOException | TagException | InvalidAudioFrameException ex) {
+			Logger.getLogger(Mp3File.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		if (audioFile == null) {
+			return;
+		}
+
+		Tag tag = audioFile.getTag().or(NullTag.INSTANCE);
+
+		try {
+			tag.setField(fk, value);
+		} catch (IllegalArgumentException | UnsupportedFieldException | FieldDataInvalidException ex) {
+			Logger.getLogger(Mp3File.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		try {
+			audioFile.save();
+		} catch (CannotWriteException ex) {
+			Logger.getLogger(Mp3File.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
-	public void getDurationInSeconds() {
+	public long getDurationInSeconds() {
+		if (metadata == null) {
+			System.err.println("Metadata is null");
+			return -1;
+		}
 
+		return (long) metadata.get("duration");
 	}
 
 	public Track getTrack() {
@@ -173,14 +166,6 @@ public class Mp3File extends File {
 		return this.timeOfImport;
 	}
 
-	public int getDurationSeconds() {
-		return durationSeconds;
-	}
-
-	public void setDurationSeconds(int durationSeconds) {
-		this.durationSeconds = durationSeconds;
-	}
-
 	public String getCoverPath() {
 		return coverPath;
 	}
@@ -188,8 +173,6 @@ public class Mp3File extends File {
 	public void setCoverPath(String coverPath) {
 		this.coverPath = coverPath;
 	}
-	
-	
 
 	private String calculateTimeOfImport() {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -199,9 +182,7 @@ public class Mp3File extends File {
 
 	@Override
 	public String toString() {
-		return "Mp3File{" + "player=" + player + ", isPlaying=" + isPlaying + ", pauseTime=" + pauseTime + ", durationSeconds=" + durationSeconds + ", timeOfImport=" + timeOfImport + ", extension=" + extension + ", coverPath=" + coverPath + ", track=" + track + '}';
+		return "Mp3File{" + "player=" + player + ", isPlaying=" + isPlaying + ", pauseTime=" + pausedOnFrame + ", durationSeconds=" + durationSeconds + ", timeOfImport=" + timeOfImport + ", extension=" + extension + ", coverPath=" + coverPath + ", track=" + track + '}';
 	}
-
-
 
 }

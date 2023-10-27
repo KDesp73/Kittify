@@ -5,6 +5,8 @@
 package kdesp73.musicplayer.gui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
@@ -46,6 +48,15 @@ public class EditDirectories extends javax.swing.JFrame {
 		pathsList.setFixedCellHeight(35);
 
 		refreshPaths();
+
+		this.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				frame.updateSongs();
+			}
+
+		});
 
 	}
 

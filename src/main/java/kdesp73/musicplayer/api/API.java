@@ -14,7 +14,7 @@ public class API {
     public API() {
     }
 
-    public String GET(String lastfmMethod, String tags) throws IOException, InterruptedException {
+    public Pair<String, Integer> GET(String lastfmMethod, String tags) throws IOException, InterruptedException {
 		tags = setupString(tags);
 		try {
             String apiKey = readFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/data/api_key.txt");
@@ -38,11 +38,11 @@ public class API {
 
             conn.disconnect();
             
-            return jsonResponse;
+            return new Pair<>(jsonResponse, conn.getResponseCode());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "ERROR";
+		return null;
     }
 
     private String setupString(String s) {
