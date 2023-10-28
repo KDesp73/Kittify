@@ -71,6 +71,8 @@ public class Queries {
 		db.executeUpdate(builder.deleteFrom("Songs").build());
 
 		db.close();
+		
+		System.out.println("Database cleared");
 	}
 
 	public static String getSortBy() {
@@ -155,11 +157,12 @@ public class Queries {
 	public static Album selectAlbum(String name) {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + name + "\'").build());
-		db.close();
+		
+		if(rs == null) return null;
 
 		Album album = new Album();
 		try {
-			rs.next();
+			if(!rs.next()) return null;
 
 			album.setArtist(rs.getString("artist"));
 			album.setMbid(rs.getString("mbid"));
@@ -172,6 +175,7 @@ public class Queries {
 		} catch (SQLException ex) {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		db.close();
 
 		return album;
 	}
@@ -179,11 +183,12 @@ public class Queries {
 	public static Album selectAlbum(String name, String artist) {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + name + "\' AND artist = \'" + artist + "\'").build());
-		db.close();
 
+		if(rs == null) return null;
+		
 		Album album = new Album();
 		try {
-			rs.next();
+			if(!rs.next()) return null;
 
 			album.setArtist(rs.getString("artist"));
 			album.setMbid(rs.getString("mbid"));
@@ -197,6 +202,7 @@ public class Queries {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
+		db.close();
 		return album;
 	}
 
@@ -220,9 +226,11 @@ public class Queries {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Artists").where("name = \'" + name + "\'").build());
 
+		if(rs == null) return null;
+		
 		Artist artist = new Artist();
 		try {
-			rs.next();
+			if(!rs.next()) return null;
 
 			artist.setName(rs.getString("name"));
 			artist.setMbid(rs.getString("mbid"));
@@ -245,8 +253,10 @@ public class Queries {
 		ResultSet rs = db.executeQuery(new QueryBuilder().select("cover_url").from("Albums").where("name = \'" + album + "\'").build());
 		String cover = null;
 
+		if(rs == null) return null;
+		
 		try {
-			rs.next();
+			if(!rs.next()) return null;
 			cover = rs.getString(1);
 		} catch (SQLException ex) {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);

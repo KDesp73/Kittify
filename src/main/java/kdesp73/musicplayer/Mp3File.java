@@ -23,18 +23,10 @@ import kdesp73.musicplayer.files.FileOperations;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 
 /**
@@ -80,11 +72,33 @@ public class Mp3File extends File {
 		this.track.setName(FileOperations.getJustFilenameFromPath(pathname));
 		this.coverPath = (System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/album-image-placeholder.png");
 		this.metadata = getMetadata();
+		
+		if(metadata == null) return;
+		
+		String metadataTitle = (String) metadata.get("title");
+		String metadataArtist = (String) metadata.get("artist");
+		String metadataAlbum = (String) metadata.get("album");
+		
+		if(metadataTitle != null && !metadataTitle.isBlank()){
+			this.track.setName(metadataTitle);
+		}
+		
+		if(metadataArtist != null && !metadataArtist.isBlank()){
+			this.track.setArtist(metadataArtist);
+		}
+		
+		if(metadataAlbum != null && !metadataAlbum.isBlank()){
+			this.track.setAlbum(metadataAlbum);
+		}
+		
 	}
 
 	// =============METADATA =============
 	public HashMap<String, Object> getMetadata() {
 		File inputFile = new File(this.getAbsolutePath());
+		
+		if(!inputFile.exists()) return null;
+		
 		AudioFile audioFile = null;
 		try {
 			audioFile = AudioFileIO.read(inputFile);

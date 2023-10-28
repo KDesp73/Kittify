@@ -94,7 +94,6 @@ public final class MainFrame extends javax.swing.JFrame {
 		}
 
 		selectSong(currentIndex);
-		
 
 		songsList.setFixedCellHeight(35);
 
@@ -539,6 +538,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		db.close();
 
+		initList();
 		updateSongs();
 		refreshList();
     }//GEN-LAST:event_addFileMenuItemActionPerformed
@@ -748,9 +748,8 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		System.out.println(response.first);
 
-		String error = (String) ((JSONObject) JSONValue.parse(response.first)).get("error");
-		if (error != null) {
-			JOptionPane.showMessageDialog(this, "Error No" + error, "API Error", JOptionPane.ERROR_MESSAGE);
+		if ("{\"error\":6,\"message\":\"Track not found\",\"links\":[]}".equals(response.first)) {
+			JOptionPane.showMessageDialog(this, "Track not found", "API Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -760,8 +759,8 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		// Scrape for the Album if not scraped already
 		Album album = Queries.selectAlbum(currentSong.getTrack().getAlbum());
-		
-		if(album == null){
+
+		if (album == null) {
 			try {
 				response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, currentSong.getTrack().getAlbum()));
 			} catch (IOException | InterruptedException ex) {
@@ -771,12 +770,11 @@ public final class MainFrame extends javax.swing.JFrame {
 			album = new Album(response.first);
 			Queries.insertAlbum(album);
 		}
-		
 
 		// Scrape for the Artist if not scraped already
 		Artist artistO = Queries.selectArtist(artist);
-		
-		if(artistO == null){
+
+		if (artistO == null) {
 			try {
 				response = api.GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags(artist));
 			} catch (IOException | InterruptedException ex) {
@@ -841,14 +839,17 @@ public final class MainFrame extends javax.swing.JFrame {
 	}
 
 	private void selectSong(int index) {
-		songsList.ensureIndexIsVisible(index);
-		
+		if (list.getSongs().isEmpty()) {
+			return;
+		}
+
 		updateSongInfo(index);
 
 		currentSong = list.getSongs().get(index);
 		currentIndex = index;
 
 		player.setFile(currentSong);
+		songsList.ensureIndexIsVisible(index);
 	}
 
 	public void updateSongInfo(int index) {
@@ -865,10 +866,12 @@ public final class MainFrame extends javax.swing.JFrame {
 		Queries.updateSong(list.getSongs().get(index));
 
 		// If album has been scraped load album cover
-		if (album != null &&  !album.isBlank() && !album.equals("Unknown Album") ) {
+		if (album != null && !album.isBlank() && !album.equals("Unknown Album")) {
 			String coverURL = Queries.selectAlbumCover(album);
 
 			if (coverURL == null) {
+				System.out.println("Cover is null");
+				GUIMethods.loadImage(albumImageLabel, project_path + "/assets/album-image-placeholder.png");
 				return;
 			}
 

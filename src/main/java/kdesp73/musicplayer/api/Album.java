@@ -13,9 +13,8 @@ import org.json.simple.JSONValue;
  *
  * @author konstantinos
  */
-
-
 public class Album {
+
 	private String artist;
 	private String mbid;
 	private String coverURL;
@@ -24,38 +23,47 @@ public class Album {
 	private String URL;
 	private String content;
 
-	public Album(){
+	public Album() {
 		this.name = "Unknown Album";
 	}
-	
+
 	public Album(String json) {
 		JSONObject root = (JSONObject) JSONValue.parse(json);
-		
+
 		JSONObject album = (JSONObject) root.get("album");
-		
+
+		if (album == null) {
+			return;
+		}
+
 		this.artist = (String) album.get("artist");
 		this.mbid = (String) album.get("mbid");
-		
+
 		JSONArray image = (JSONArray) album.get("image");
-		
-		this.coverURL = (String) ((JSONObject) image.get(4)).get("#text");
-	
-		JSONObject tracks = (JSONObject) album.get("tracks");
-		
-		if(tracks == null) return;
-		
-		JSONArray track = (JSONArray) tracks.get("track");
-		
-		for(int i = 0; i < track.size(); i++){
-			JSONObject o = (JSONObject) track.get(i);
-			this.tracks.add((String) o.get("name"));
+
+		if (image != null) {
+			this.coverURL = (String) ((JSONObject) image.get(4)).get("#text");
 		}
-		
+
+		JSONObject tracks = (JSONObject) album.get("tracks");
+
+		if (tracks != null) {
+			JSONArray track = (JSONArray) tracks.get("track");
+			for (int i = 0; i < track.size(); i++) {
+				JSONObject o = (JSONObject) track.get(i);
+				this.tracks.add((String) o.get("name"));
+			}
+		}
+
+
 		this.name = (String) album.get("name");
-		
+
 		JSONObject wiki = (JSONObject) album.get("wiki");
-		this.content = (String) wiki.get("content");
-		
+
+		if (wiki != null) {
+			this.content = (String) wiki.get("content");
+		}
+
 	}
 
 	public String getArtist() {
@@ -114,15 +122,9 @@ public class Album {
 		this.content = content;
 	}
 
-
-	
-	
 	@Override
 	public String toString() {
 		return "Album{" + "artist=" + artist + ", mbid=" + mbid + ", coverURL=" + coverURL + ", tracks=" + tracks + ", name=" + name + ", URL=" + URL + ", content=" + content + '}';
 	}
-	
-	
-	
-	
+
 }

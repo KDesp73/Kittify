@@ -32,6 +32,10 @@ public class Track {
 		JSONObject root = (JSONObject) JSONValue.parse(json);
 		JSONObject track = (JSONObject) root.get("track");
 
+		if (track == null) {
+			return;
+		}
+
 		this.name = (String) track.get("name");
 		this.URL = (String) track.get("url");
 		this.duration = Integer.parseInt((String) track.get("duration"));
@@ -39,14 +43,19 @@ public class Track {
 		JSONObject artist = (JSONObject) track.get("artist");
 		JSONObject albumObject = (JSONObject) track.get("album");
 
-		this.artist = (String) artist.get("name");
-		this.artistMbid = (String) artist.get("mbid");
-		this.album = (albumObject != null) ? (String) albumObject.get("title") : "";
-		
-		if(albumObject == null) return;
+		if (artist != null) {
+			this.artist = (String) artist.get("name");
+			this.artistMbid = (String) artist.get("mbid");
+		}
 
-		JSONArray image = (JSONArray) albumObject.get("image");
-		this.cover = (String) ((JSONObject) image.get(3)).get("#text");
+		if (albumObject != null) {
+			this.album = (String) albumObject.get("title");
+			JSONArray image = (JSONArray) albumObject.get("image");
+
+			if (image != null) {
+				this.cover = (String) ((JSONObject) image.get(3)).get("#text");
+			}
+		}
 
 	}
 

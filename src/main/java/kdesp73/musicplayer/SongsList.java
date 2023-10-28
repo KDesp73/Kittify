@@ -64,7 +64,7 @@ public class SongsList {
 	public SongsList(List<String> paths, List<String> files) {
 		list.addAll(loadSongsFromDB());
 		
-		ArrayList<Mp3File> newFiles = loadFiles(paths);
+		ArrayList<Mp3File> newFiles = loadFiles(paths, files);
 		
 		for(Mp3File f : newFiles){
 			if(!this.paths.contains(f.getAbsolutePath())){
