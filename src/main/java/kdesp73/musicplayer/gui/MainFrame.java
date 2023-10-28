@@ -758,25 +758,34 @@ public final class MainFrame extends javax.swing.JFrame {
 		currentSong.setTrack(new Track(response.first));
 		Queries.updateSong(currentSong);
 
-		// Scrape for the Album
-		try {
-			response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, currentSong.getTrack().getAlbum()));
-		} catch (IOException | InterruptedException ex) {
-			System.err.println("Album scrape fail");
+		// Scrape for the Album if not scraped already
+		Album album = Queries.selectAlbum(currentSong.getTrack().getAlbum());
+		
+		if(album == null){
+			try {
+				response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, currentSong.getTrack().getAlbum()));
+			} catch (IOException | InterruptedException ex) {
+				System.err.println("Album scrape fail");
+			}
+
+			album = new Album(response.first);
+			Queries.insertAlbum(album);
 		}
+		
 
-		Album album = new Album(response.first);
-		Queries.insertAlbum(album);
+		// Scrape for the Artist if not scraped already
+		Artist artistO = Queries.selectArtist(artist);
+		
+		if(artistO == null){
+			try {
+				response = api.GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags(artist));
+			} catch (IOException | InterruptedException ex) {
+				System.err.println("Album scrape fail");
+			}
 
-		// Scrape for the Artist
-		try {
-			response = api.GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags(artist));
-		} catch (IOException | InterruptedException ex) {
-			System.err.println("Album scrape fail");
+			artistO = new Artist(response.first);
+			Queries.insertArtist(artistO);
 		}
-
-		Artist artistO = new Artist(response.first);
-		Queries.insertArtist(artistO);
 
 		JOptionPane.showMessageDialog(this, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
