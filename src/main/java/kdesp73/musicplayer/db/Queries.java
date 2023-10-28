@@ -168,7 +168,7 @@ public class Queries {
 
 	public static Album selectAlbum(String name) {
 		DatabaseConnection db = Database.connection();
-		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + name + "\'").build());
+		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + Utils.replaceQuotes(name) + "\'").build());
 
 		if (rs == null) {
 			return null;
@@ -198,7 +198,7 @@ public class Queries {
 
 	public static Album selectAlbum(String name, String artist) {
 		DatabaseConnection db = Database.connection();
-		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + name + "\' AND artist = \'" + artist + "\'").build());
+		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + Utils.replaceQuotes(name) + "\' AND artist = \'" + Utils.replaceQuotes(artist) + "\'").build());
 
 		if (rs == null) {
 			return null;
@@ -257,7 +257,7 @@ public class Queries {
 
 	public static Artist selectArtist(String name) {
 		DatabaseConnection db = Database.connection();
-		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Artists").where("name = \'" + name + "\'").build());
+		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Artists").where("name = \'" + Utils.replaceQuotes(name) + "\'").build());
 
 		if (rs == null) {
 			return null;
@@ -287,7 +287,7 @@ public class Queries {
 	public static String selectAlbumCover(String album, String artist) {
 		DatabaseConnection db = Database.connection();
 
-		ResultSet rs = db.executeQuery(new QueryBuilder().select("cover_url").from("Albums").where("name = \'" + album + "\' AND artist = \'" + artist + "\'").build());
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("cover_url").from("Albums").where("name = \'" + Utils.replaceQuotes(album) + "\' AND artist = \'" + Utils.replaceQuotes(artist) + "\'").build());
 		String cover = null;
 
 		if (rs == null) {

@@ -15,6 +15,7 @@ import org.json.simple.JSONValue;
  * @author konstantinos
  */
 public class Artist {
+
 	private String name;
 	private String mbid;
 	private String URL;
@@ -22,30 +23,40 @@ public class Artist {
 	private ArrayList<String> tags = new ArrayList<>();
 	private String content;
 
-	public Artist(){
+	public Artist() {
 		name = "Unknown Artist";
 	}
-	
+
 	public Artist(String json) {
 		JSONObject root = (JSONObject) JSONValue.parse(json);
-		
+
 		JSONObject artist = (JSONObject) JsonParsing.getJsonValue(json, "artist");
-		
+
+		if (artist == null) {
+			return;
+		}
+
 		this.name = (String) artist.get("name");
 		this.mbid = (String) artist.get("mbid");
 		this.URL = (String) artist.get("url");
-		
+
 		JSONArray imageArray = (JSONArray) artist.get("image");
-		
-		JSONObject megaImage = (JSONObject) JSONValue.parse(imageArray.get(4).toString());
-		this.image = (String) megaImage.get("#text");
-		
-		JSONArray tagsArray = (JSONArray) JsonParsing.getJsonValue(artist.toString(), "tags", "tag");
-	
-		for(int i = 0; i < tagsArray.size(); i++){
-			tags.add((String) ((JSONObject) JSONValue.parse(tagsArray.get(i).toString())).get("name"));
+
+		if (imageArray != null) {
+
+			JSONObject megaImage = (JSONObject) JSONValue.parse(imageArray.get(4).toString());
+			this.image = (String) megaImage.get("#text");
 		}
-		
+
+		JSONArray tagsArray = (JSONArray) JsonParsing.getJsonValue(artist.toString(), "tags", "tag");
+
+		if (tagsArray != null) {
+
+			for (int i = 0; i < tagsArray.size(); i++) {
+				tags.add((String) ((JSONObject) JSONValue.parse(tagsArray.get(i).toString())).get("name"));
+			}
+		}
+
 		this.content = (String) JsonParsing.getJsonValue(artist.toString(), "bio", "content");
 	}
 
@@ -101,8 +112,5 @@ public class Artist {
 	public String toString() {
 		return "Artist{" + "name=" + name + ", mbid=" + mbid + ", URL=" + URL + ", image=" + image + ", tags=" + tags + ", content=" + content + '}';
 	}
-	
-	
-	
 
 }

@@ -82,7 +82,7 @@ public class Mp3File extends File {
 			}
 		}
 
-		if (artist == null || artist.isBlank()) {
+		if (artist == null || artist.isBlank() || artist.toLowerCase().equals("unknown artist") || artist.toLowerCase().equals("άγνωστος καλλιτέχνης")) {
 
 			String metadataArtist = (String) metadata.get("artist");
 			if (metadataArtist != null && !metadataArtist.isBlank()) {
@@ -90,7 +90,7 @@ public class Mp3File extends File {
 			}
 		}
 
-		if (album == null || album.isBlank()) {
+		if (album == null || album.isBlank() || album.toLowerCase().equals("unknown album") || album.toLowerCase().equals("άγνωστο άλμπουμ")) {
 
 			String metadataAlbum = (String) metadata.get("album");
 			if (metadataAlbum != null && !metadataAlbum.isBlank()) {
@@ -282,8 +282,10 @@ public class Mp3File extends File {
 					System.err.println("Album scrape fail");
 				}
 
-				album = new Album(response.first);
-				Queries.insertAlbum(album);
+				if (response != null) {
+					album = new Album(response.first);
+					Queries.insertAlbum(album);
+				}
 			}
 		}
 
@@ -297,8 +299,10 @@ public class Mp3File extends File {
 				System.err.println("Album scrape fail");
 			}
 
-			artistO = new Artist(response.first);
-			Queries.insertArtist(artistO);
+			if (response != null) {
+				artistO = new Artist(response.first);
+				Queries.insertArtist(artistO);
+			}
 		}
 	}
 

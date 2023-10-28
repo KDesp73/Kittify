@@ -210,6 +210,7 @@ public class SongsList {
 	}
 	
 	public void scrapeSongs(){
+		// TODO: THREADING
 		for(Mp3File file : list){
 			file.selfScrape();
 		}

@@ -96,7 +96,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		sortComboBox.setSelectedItem(Queries.getSortBy());
 
-//		list.scrapeSongs();
+		list.scrapeSongs();
 	}
 
 	private void addExtensions() {
@@ -712,8 +712,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		// If artist is not specified select one
 		if (artist == null || "Unknown Artist".equals(artist)) {
-			JOptionPane.showMessageDialog(this, "Artist not specified. Searching for song...");
-
 			try {
 				response = api.GET(LastFmMethods.Track.search, LastFmMethods.Track.tags(title));
 			} catch (IOException | InterruptedException ex) {
@@ -788,7 +786,7 @@ public final class MainFrame extends javax.swing.JFrame {
 			try {
 				response = api.GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags(artist));
 			} catch (IOException | InterruptedException ex) {
-				System.err.println("Album scrape fail");
+				System.err.println("Artist scrape fail");
 			}
 
 			artistO = new Artist(response.first);
@@ -845,8 +843,15 @@ public final class MainFrame extends javax.swing.JFrame {
 
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
 		String search = JOptionPane.showInputDialog(this, "Search Song");
+		
+		if(search == null || search.isBlank()) return;
 
 		int index = list.searchSong(search);
+		
+		if(index < 0){
+			JOptionPane.showMessageDialog(this, "Song not found");
+			return;
+		}
 
 		selectSong(index);
 		songsList.ensureIndexIsVisible(index);
