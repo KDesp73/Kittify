@@ -16,6 +16,9 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import kdesp73.musicplayer.api.API;
 import kdesp73.musicplayer.api.LastFmMethods;
+import kdesp73.musicplayer.api.Search;
+import kdesp73.musicplayer.api.SearchTrack;
+import kdesp73.musicplayer.db.Queries;
 
 /**
  *
@@ -31,5 +34,15 @@ public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException, IllegalArgumentException, UnsupportedFieldException, FieldDataInvalidException, CannotReadException, TagException, InvalidAudioFrameException, CannotWriteException, UnsupportedAudioFileException, LineUnavailableException {
 		Mp3File file = new Mp3File("/home/konstantinos/personal/repos/java/MusicPlayer/data/The Velvet Underground - After Hours.mp3");
 
+		
+		Search s = new Search(testGetTrackSearchResponse);
+		
+		
+		
+		for(SearchTrack track : s.getTracks()){
+			System.out.println(track.getArtist());
+		}
+		
+		Queries.clearDatabase();
 	}
 }

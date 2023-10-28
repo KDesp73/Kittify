@@ -20,21 +20,21 @@ public class Mp3Player extends AudioPlayer {
 
 	@Override
 	public void play() {
-		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+		System.err.println("Not implemented yet.");
 	}
 
 	@Override
 	public void stop() {
-		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+		System.err.println("Not implemented yet.");
 	}
 
 	@Override
 	public void pause() {
-		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+		System.err.println("Not implemented yet.");
 	}
 
 	@Override
 	public void seek(long sample) {
-		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+		System.err.println("Not implemented yet.");
 	}
 }

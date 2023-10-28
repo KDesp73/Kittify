@@ -41,7 +41,9 @@ public class Track {
 
 		this.artist = (String) artist.get("name");
 		this.artistMbid = (String) artist.get("mbid");
-		this.album = (String) albumObject.get("title");
+		this.album = (albumObject != null) ? (String) albumObject.get("title") : "";
+		
+		if(albumObject == null) return;
 
 		JSONArray image = (JSONArray) albumObject.get("image");
 		this.cover = (String) ((JSONObject) image.get(3)).get("#text");

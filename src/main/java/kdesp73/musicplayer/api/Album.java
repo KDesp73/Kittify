@@ -41,6 +41,9 @@ public class Album {
 		this.coverURL = (String) ((JSONObject) image.get(4)).get("#text");
 	
 		JSONObject tracks = (JSONObject) album.get("tracks");
+		
+		if(tracks == null) return;
+		
 		JSONArray track = (JSONArray) tracks.get("track");
 		
 		for(int i = 0; i < track.size(); i++){

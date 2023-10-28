@@ -13,6 +13,10 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -31,14 +35,20 @@ import kdesp73.musicplayer.Mp3File;
 import kdesp73.musicplayer.player.Mp3Player;
 import kdesp73.musicplayer.SongsList;
 import kdesp73.musicplayer.api.API;
+import kdesp73.musicplayer.api.Album;
+import kdesp73.musicplayer.api.Artist;
 import kdesp73.musicplayer.api.LastFmMethods;
 import kdesp73.musicplayer.api.Pair;
+import kdesp73.musicplayer.api.Search;
+import kdesp73.musicplayer.api.SearchTrack;
 import kdesp73.musicplayer.api.Track;
 import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.YamlFile;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  *
@@ -82,6 +92,9 @@ public final class MainFrame extends javax.swing.JFrame {
 			selectSong(currentIndex);
 			player = new Mp3Player(currentSong);
 		}
+
+		selectSong(currentIndex);
+		
 
 		songsList.setFixedCellHeight(35);
 
@@ -277,12 +290,12 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(basicInfoPanelLayout.createSequentialGroup()
-                        .addComponent(albumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(albumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(basicInfoPanelLayout.createSequentialGroup()
                         .addComponent(trackLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(artistLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(artistLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         basicInfoPanelLayout.setVerticalGroup(
@@ -527,6 +540,7 @@ public final class MainFrame extends javax.swing.JFrame {
 		db.close();
 
 		updateSongs();
+		refreshList();
     }//GEN-LAST:event_addFileMenuItemActionPerformed
 
     private void addDirectoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDirectoryMenuItemActionPerformed
@@ -553,30 +567,34 @@ public final class MainFrame extends javax.swing.JFrame {
 		updateSongs();
     }//GEN-LAST:event_addDirectoryMenuItemActionPerformed
 
-    private void sortComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortComboBoxActionPerformed
+	private String sort() {
 		int selected = sortComboBox.getSelectedIndex();
-
-		String sort_by;
 
 		switch (selected) {
 			case 0 -> {
 				list.sortByName();
 				refreshList();
-				sort_by = "Name";
+				return "Name";
 			}
 			case 1 -> {
 				list.sortByArtist();
 				refreshList();
-				sort_by = "Artist";
+				return "Artist";
 			}
 			case 2 -> {
 				list.sortByAlbum();
 				refreshList();
-				sort_by = "Album";
+				return "Album";
 			}
 			default ->
 				throw new AssertionError();
 		}
+	}
+
+    private void sortComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortComboBoxActionPerformed
+		String sort_by;
+
+		sort_by = sort();
 
 		Queries.updateSortBy(sort_by);
 
@@ -672,31 +690,99 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	private void editAction() {
 		new EditSongInfo(this).setVisible(true);
+
+		selectSong(currentIndex);
+		refreshList();
 	}
 
 	private void scrapeAction() {
+		API api = new API();
 		String artist = currentSong.getTrack().getArtist();
 		String title = currentSong.getTrack().getName();
-		
-		if(artist == null || "Unknown Artist".equals(artist)) {
-			// Search
-		}else {
-			Pair<String, Integer> response = null;
+
+		Pair<String, Integer> response = null;
+
+		// If artist is not specified select one
+		if (artist == null || "Unknown Artist".equals(artist)) {
+			JOptionPane.showMessageDialog(this, "Artist not specified. Searching for song...");
+
 			try {
-				response = new API().GET(LastFmMethods.Track.getInfo, LastFmMethods.Track.tags(artist, title));
+				response = api.GET(LastFmMethods.Track.search, LastFmMethods.Track.tags(title));
 			} catch (IOException | InterruptedException ex) {
 				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			
-			if(response.second != 200) {
-				JOptionPane.showMessageDialog(this, "API Reponse Code: " + response.second, response.second.toString(), JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			
-			currentSong.setTrack(new Track(response.first));
+
+			if (response.second != 200) {
+				JOptionPane.showMessageDialog(this, "API Reponse Code: " + response.second, "API Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			System.out.println(response.first);
+			System.out.println(response.second);
+
+			Search search = new Search(response.first);
+
+			HashSet<Object> propableArtists = new HashSet<>();
+			for (SearchTrack track : search.getTracks()) {
+				propableArtists.add(track.getArtist());
+			}
+
+			artist = (String) JOptionPane.showInputDialog(this, "Select Artist", "", JOptionPane.QUESTION_MESSAGE, null, propableArtists.toArray(), 0);
+
+			currentSong.getTrack().setArtist(artist);
 		}
-		
-		
+
+		// Make an API call using title and artist (LastFmMethods.Track.getInfo)
+		try {
+			response = api.GET(LastFmMethods.Track.getInfo, LastFmMethods.Track.tags(artist, title));
+		} catch (IOException | InterruptedException ex) {
+			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+			return;
+		}
+
+		if (response.second != 200) {
+			JOptionPane.showMessageDialog(this, "API Reponse Code: " + response.second, "API Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		System.out.println(response.first);
+
+		String error = (String) ((JSONObject) JSONValue.parse(response.first)).get("error");
+		if (error != null) {
+			JOptionPane.showMessageDialog(this, "Error No" + error, "API Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		// Update the Song
+		currentSong.setTrack(new Track(response.first));
+		Queries.updateSong(currentSong);
+
+		// Scrape for the Album
+		try {
+			response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, currentSong.getTrack().getAlbum()));
+		} catch (IOException | InterruptedException ex) {
+			System.err.println("Album scrape fail");
+		}
+
+		Album album = new Album(response.first);
+		Queries.insertAlbum(album);
+
+		// Scrape for the Artist
+		try {
+			response = api.GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags(artist));
+		} catch (IOException | InterruptedException ex) {
+			System.err.println("Album scrape fail");
+		}
+
+		Artist artistO = new Artist(response.first);
+		Queries.insertArtist(artistO);
+
+		JOptionPane.showMessageDialog(this, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+		updateSongInfo(currentIndex);
+		sort();
+		refreshList();
 	}
 
     private void optionsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseClicked
@@ -732,7 +818,7 @@ public final class MainFrame extends javax.swing.JFrame {
 			scrape.addActionListener(menuListener);
 			options.add(scrape);
 
-			if (songsList.getSelectedIndex() >= 0 && currentSong != null) {
+			if (currentSong != null) {
 				options.show(evt.getComponent(), evt.getX(), evt.getY());
 			}
 		}
@@ -746,6 +832,8 @@ public final class MainFrame extends javax.swing.JFrame {
 	}
 
 	private void selectSong(int index) {
+		songsList.ensureIndexIsVisible(index);
+		
 		updateSongInfo(index);
 
 		currentSong = list.getSongs().get(index);
@@ -761,27 +849,28 @@ public final class MainFrame extends javax.swing.JFrame {
 		String album = list.getSongs().get(index).getTrack().getAlbum();
 		String cover = list.getSongs().get(index).getCoverPath();
 
-		path = path.replaceAll(Pattern.quote("\'"), "\'\'");
-		title = title.replaceAll(Pattern.quote("\'"), "\'\'");
-
-		if (artist != null) {
-			artist = artist.replaceAll(Pattern.quote("\'"), "\'\'");
-
-		}
-		if (album != null) {
-			album = album.replaceAll(Pattern.quote("\'"), "\'\'");
-		}
-
 		trackLabel.setText(title);
-		artistLabel.setText((artist.isBlank() || artist.isEmpty()) ? "Unkown Artist" : artist);
-		albumLabel.setText((album.isBlank() || album.isEmpty()) ? "Unkown Album" : album);
+		artistLabel.setText((artist == null) ? "Unknown Artist" : artist);
+		albumLabel.setText((album == null) ? "Unknown Album" : album);
 
-		DatabaseConnection db = Database.connection();
-		QueryBuilder builder = new QueryBuilder();
+		Queries.updateSong(list.getSongs().get(index));
 
-		db.executeUpdate("UPDATE Songs SET title = \'" + title + "\', artist = \'" + artist + "\', album = \'" + album + "\', image_path = \'" + cover + "\' WHERE path = \'" + path + "\'");
-		db.close();
+		// If album has been scraped load album cover
+		if (album != null &&  !album.isBlank() && !album.equals("Unknown Album") ) {
+			String coverURL = Queries.selectAlbumCover(album);
 
+			if (coverURL == null) {
+				return;
+			}
+
+			BufferedImage image = GUIMethods.imageFromURL(coverURL);
+
+			GUIMethods.loadImage(albumImageLabel, image);
+
+			return;
+		}
+
+		// if not load imported image or placeholder
 		if (cover == null) {
 			System.out.println("Cover is null");
 			GUIMethods.loadImage(albumImageLabel, project_path + "/assets/album-image-placeholder.png");
