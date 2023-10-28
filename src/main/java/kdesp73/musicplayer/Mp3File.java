@@ -235,6 +235,10 @@ public class Mp3File extends File {
 	}
 
 	public void selfScrape() {
+		boolean scraped = Queries.selectScraped(this.getAbsolutePath());
+		
+		if(scraped) return;
+		
 		Mp3File file = this;
 
 		API api = new API();
@@ -304,6 +308,8 @@ public class Mp3File extends File {
 				Queries.insertArtist(artistO);
 			}
 		}
+		
+		Queries.updateScraped(true, this.getAbsolutePath());
 	}
 
 	@Override

@@ -306,6 +306,31 @@ public class Queries {
 
 		return cover;
 	}
+	
+	public static boolean selectScraped(String path){
+		DatabaseConnection db = Database.connection();
+		
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("scraped").from("Songs").where("path = \'" + Utils.replaceQuotes(path) + "\'").build());
+		
+		boolean scraped = false;
+		try {
+			rs.next();
+			scraped = rs.getBoolean(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+		db.close();
+		return scraped;
+	}
+	
+	public static void updateScraped(boolean scraped, String path){
+		DatabaseConnection db = Database.connection();
+		
+		db.executeUpdate(new QueryBuilder().update("Songs").set("scraped", scraped).build());
+		
+		db.close();
+	}
 
 	private class Utils {
 
