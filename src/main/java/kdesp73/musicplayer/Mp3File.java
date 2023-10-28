@@ -27,7 +27,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 import javazoom.jl.player.advanced.AdvancedPlayer;
+import kdesp73.musicplayer.api.API;
+import kdesp73.musicplayer.api.Album;
+import kdesp73.musicplayer.api.Artist;
+import kdesp73.musicplayer.api.LastFmMethods;
+import kdesp73.musicplayer.api.Pair;
+import kdesp73.musicplayer.db.Queries;
+import kdesp73.musicplayer.gui.MainFrame;
 
 /**
  *
@@ -50,7 +58,7 @@ public class Mp3File extends File {
 
 	// API
 	private Track track = new Track();
-	
+
 	public Mp3File(String title, String artist, String album, String path) {
 		super(path);
 
@@ -62,6 +70,34 @@ public class Mp3File extends File {
 		this.timeOfImport = this.calculateTimeOfImport();
 		this.extension = FileOperations.getExtensionFromPath(this.getAbsolutePath());
 
+		if (metadata == null) {
+			return;
+		}
+
+		if (title == null || title.isBlank()) {
+
+			String metadataTitle = (String) metadata.get("title");
+			if (metadataTitle != null && !metadataTitle.isBlank()) {
+				this.track.setName(metadataTitle);
+			}
+		}
+
+		if (artist == null || artist.isBlank()) {
+
+			String metadataArtist = (String) metadata.get("artist");
+			if (metadataArtist != null && !metadataArtist.isBlank()) {
+				this.track.setArtist(metadataArtist);
+			}
+		}
+
+		if (album == null || album.isBlank()) {
+
+			String metadataAlbum = (String) metadata.get("album");
+			if (metadataAlbum != null && !metadataAlbum.isBlank()) {
+				this.track.setAlbum(metadataAlbum);
+			}
+		}
+
 	}
 
 	public Mp3File(String pathname) {
@@ -72,33 +108,37 @@ public class Mp3File extends File {
 		this.track.setName(FileOperations.getJustFilenameFromPath(pathname));
 		this.coverPath = (System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/album-image-placeholder.png");
 		this.metadata = getMetadata();
-		
-		if(metadata == null) return;
-		
+
+		if (metadata == null) {
+			return;
+		}
+
 		String metadataTitle = (String) metadata.get("title");
 		String metadataArtist = (String) metadata.get("artist");
 		String metadataAlbum = (String) metadata.get("album");
-		
-		if(metadataTitle != null && !metadataTitle.isBlank()){
+
+		if (metadataTitle != null && !metadataTitle.isBlank()) {
 			this.track.setName(metadataTitle);
 		}
-		
-		if(metadataArtist != null && !metadataArtist.isBlank()){
+
+		if (metadataArtist != null && !metadataArtist.isBlank()) {
 			this.track.setArtist(metadataArtist);
 		}
-		
-		if(metadataAlbum != null && !metadataAlbum.isBlank()){
+
+		if (metadataAlbum != null && !metadataAlbum.isBlank()) {
 			this.track.setAlbum(metadataAlbum);
 		}
-		
+
 	}
 
 	// =============METADATA =============
 	public HashMap<String, Object> getMetadata() {
 		File inputFile = new File(this.getAbsolutePath());
-		
-		if(!inputFile.exists()) return null;
-		
+
+		if (!inputFile.exists()) {
+			return null;
+		}
+
 		AudioFile audioFile = null;
 		try {
 			audioFile = AudioFileIO.read(inputFile);
@@ -192,6 +232,74 @@ public class Mp3File extends File {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 		return formatter.format(date);
+	}
+
+	public void selfScrape() {
+		Mp3File file = this;
+
+		API api = new API();
+		String artist = file.getTrack().getArtist();
+		String title = file.getTrack().getName();
+
+		Pair<String, Integer> response = null;
+
+		if (artist == null || "Unknown Artist".equals(artist)) {
+			return;
+		}
+
+		// Make an API call using title and artist (LastFmMethods.Track.getInfo)
+		try {
+			response = api.GET(LastFmMethods.Track.getInfo, LastFmMethods.Track.tags(artist, title));
+		} catch (IOException | InterruptedException ex) {
+			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+			return;
+		}
+
+		if (response.second != 200) {
+			return;
+		}
+
+		System.out.println(response.first);
+
+		if ("{\"error\":6,\"message\":\"Track not found\",\"links\":[]}".equals(response.first)) {
+			return;
+		}
+
+		// Update the Song
+		file.setTrack(new Track(response.first));
+
+		Queries.updateSong(file);
+
+		// Scrape for the Album if not scraped already
+		if (file.getTrack().getAlbum() != null && !file.getTrack().getAlbum().isBlank()) {
+
+			Album album = Queries.selectAlbum(file.getTrack().getAlbum(), artist);
+
+			if (album == null) {
+				try {
+					response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, file.getTrack().getAlbum()));
+				} catch (IOException | InterruptedException ex) {
+					System.err.println("Album scrape fail");
+				}
+
+				album = new Album(response.first);
+				Queries.insertAlbum(album);
+			}
+		}
+
+		// Scrape for the Artist if not scraped already
+		Artist artistO = Queries.selectArtist(artist);
+
+		if (artistO == null) {
+			try {
+				response = api.GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags(artist));
+			} catch (IOException | InterruptedException ex) {
+				System.err.println("Album scrape fail");
+			}
+
+			artistO = new Artist(response.first);
+			Queries.insertArtist(artistO);
+		}
 	}
 
 	@Override

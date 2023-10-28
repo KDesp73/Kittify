@@ -71,7 +71,7 @@ public class Queries {
 		db.executeUpdate(builder.deleteFrom("Songs").build());
 
 		db.close();
-		
+
 		System.out.println("Database cleared");
 	}
 
@@ -130,7 +130,6 @@ public class Queries {
 				+ "\', artist = \'" + Utils.replaceQuotes(file.getTrack().getArtist())
 				+ "\', album = \'" + Utils.replaceQuotes(file.getTrack().getAlbum())
 				+ "\', image_path = \'" + Utils.replaceQuotes(file.getCoverPath())
-				+ "\', image_url = \'" + Utils.replaceQuotes(file.getTrack().getCover())
 				+ "\' WHERE path = \'" + Utils.replaceQuotes(file.getAbsolutePath()) + "\'";
 
 		db.executeUpdate(query);
@@ -139,6 +138,19 @@ public class Queries {
 
 	public static void insertAlbum(Album album) {
 		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery("SELECT EXISTS(SELECT 1 FROM Albums WHERE mbid= \'" + Utils.replaceQuotes(album.getMbid()) + "\')");
+
+		try {
+			rs.next();
+			if (rs.getInt(1) == 1) {
+				System.out.println("Album exists in DB");
+				db.close();
+				return;
+			}
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
 
 		String query = "INSERT INTO Albums "
 				+ "(artist, mbid, cover_url, name, url, content, tracks) "
@@ -157,12 +169,16 @@ public class Queries {
 	public static Album selectAlbum(String name) {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + name + "\'").build());
-		
-		if(rs == null) return null;
+
+		if (rs == null) {
+			return null;
+		}
 
 		Album album = new Album();
 		try {
-			if(!rs.next()) return null;
+			if (!rs.next()) {
+				return null;
+			}
 
 			album.setArtist(rs.getString("artist"));
 			album.setMbid(rs.getString("mbid"));
@@ -184,11 +200,15 @@ public class Queries {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + name + "\' AND artist = \'" + artist + "\'").build());
 
-		if(rs == null) return null;
-		
+		if (rs == null) {
+			return null;
+		}
+
 		Album album = new Album();
 		try {
-			if(!rs.next()) return null;
+			if (!rs.next()) {
+				return null;
+			}
 
 			album.setArtist(rs.getString("artist"));
 			album.setMbid(rs.getString("mbid"));
@@ -209,6 +229,19 @@ public class Queries {
 	public static void insertArtist(Artist artist) {
 		DatabaseConnection db = Database.connection();
 
+		ResultSet rs = db.executeQuery("SELECT EXISTS(SELECT 1 FROM Artists WHERE mbid= \'" + Utils.replaceQuotes(artist.getMbid()) + "\')");
+
+		try {
+			rs.next();
+			if (rs.getInt(1) == 1) {
+				System.out.println("Artist exists in DB");
+				db.close();
+				return;
+			}
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
 		String query = "INSERT INTO Artists "
 				+ "(name, mbid, url, image, tags, content) "
 				+ "VALUES (\'" + Utils.replaceQuotes(artist.getName()) + "\', "
@@ -226,11 +259,15 @@ public class Queries {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Artists").where("name = \'" + name + "\'").build());
 
-		if(rs == null) return null;
-		
+		if (rs == null) {
+			return null;
+		}
+
 		Artist artist = new Artist();
 		try {
-			if(!rs.next()) return null;
+			if (!rs.next()) {
+				return null;
+			}
 
 			artist.setName(rs.getString("name"));
 			artist.setMbid(rs.getString("mbid"));
@@ -247,22 +284,26 @@ public class Queries {
 		return artist;
 	}
 
-	public static String selectAlbumCover(String album) {
+	public static String selectAlbumCover(String album, String artist) {
 		DatabaseConnection db = Database.connection();
 
-		ResultSet rs = db.executeQuery(new QueryBuilder().select("cover_url").from("Albums").where("name = \'" + album + "\'").build());
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("cover_url").from("Albums").where("name = \'" + album + "\' AND artist = \'" + artist + "\'").build());
 		String cover = null;
 
-		if(rs == null) return null;
-		
+		if (rs == null) {
+			return null;
+		}
+
 		try {
-			if(!rs.next()) return null;
+			if (!rs.next()) {
+				return null;
+			}
 			cover = rs.getString(1);
 		} catch (SQLException ex) {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		db.close();
-		
+
 		return cover;
 	}
 

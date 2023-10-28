@@ -209,6 +209,12 @@ public class SongsList {
 		return -1;
 	}
 	
+	public void scrapeSongs(){
+		for(Mp3File file : list){
+			file.selfScrape();
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "SongsList{" + "list=" + list + '}';

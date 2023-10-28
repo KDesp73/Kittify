@@ -13,9 +13,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,8 +44,6 @@ import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.YamlFile;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 /**
  *
@@ -100,6 +95,8 @@ public final class MainFrame extends javax.swing.JFrame {
 		GUIMethods.loadImage(optionsLabel, project_path + "/assets/ellipsis-vertical-solid-small.png");
 
 		sortComboBox.setSelectedItem(Queries.getSortBy());
+
+//		list.scrapeSongs();
 	}
 
 	private void addExtensions() {
@@ -127,7 +124,7 @@ public final class MainFrame extends javax.swing.JFrame {
         sortbyLabel = new javax.swing.JLabel();
         tabbedPane = new javax.swing.JTabbedPane();
         playerBackground = new javax.swing.JPanel();
-        controlsParentPanel = new javax.swing.JPanel();
+        controlsParentPanel = new RoundedPanel();
         sliderPanel = new javax.swing.JPanel();
         slider = new javax.swing.JScrollBar();
         timeLabel = new javax.swing.JLabel();
@@ -519,7 +516,6 @@ public final class MainFrame extends javax.swing.JFrame {
 	}
 
 	public void refreshList() {
-
 		DefaultListModel listModel = new DefaultListModel();
 		for (Mp3File song : list.getSongs()) {
 			listModel.addElement(song.getTrack().getName());
@@ -767,20 +763,22 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		// Update the Song
 		currentSong.setTrack(new Track(response.first));
-		Queries.updateSong(currentSong);
 
 		// Scrape for the Album if not scraped already
-		Album album = Queries.selectAlbum(currentSong.getTrack().getAlbum());
+		if (currentSong.getTrack().getAlbum() != null && !currentSong.getTrack().getAlbum().isBlank()) {
 
-		if (album == null) {
-			try {
-				response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, currentSong.getTrack().getAlbum()));
-			} catch (IOException | InterruptedException ex) {
-				System.err.println("Album scrape fail");
+			Album album = Queries.selectAlbum(currentSong.getTrack().getAlbum(), artist);
+
+			if (album == null) {
+				try {
+					response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, currentSong.getTrack().getAlbum()));
+				} catch (IOException | InterruptedException ex) {
+					System.err.println("Album scrape fail");
+				}
+
+				album = new Album(response.first);
+				Queries.insertAlbum(album);
 			}
-
-			album = new Album(response.first);
-			Queries.insertAlbum(album);
 		}
 
 		// Scrape for the Artist if not scraped already
@@ -797,11 +795,13 @@ public final class MainFrame extends javax.swing.JFrame {
 			Queries.insertArtist(artistO);
 		}
 
+		Queries.updateSong(currentSong);
 		JOptionPane.showMessageDialog(this, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-		updateSongInfo(currentIndex);
 		sort();
+		selectSong(currentIndex);
 		refreshList();
+		songsList.setSelectedIndex(currentIndex);
 	}
 
     private void optionsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseClicked
@@ -847,7 +847,7 @@ public final class MainFrame extends javax.swing.JFrame {
 		String search = JOptionPane.showInputDialog(this, "Search Song");
 
 		int index = list.searchSong(search);
-		
+
 		selectSong(index);
 		songsList.ensureIndexIsVisible(index);
     }//GEN-LAST:event_searchButtonMouseClicked
@@ -888,7 +888,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
 		// If album has been scraped load album cover
 		if (album != null && !album.isBlank() && !album.equals("Unknown Album")) {
-			String coverURL = Queries.selectAlbumCover(album);
+			String coverURL = Queries.selectAlbumCover(album, artist);
 
 			if (coverURL == null) {
 				System.out.println("Cover is null");

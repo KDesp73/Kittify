@@ -45,16 +45,21 @@ public class Album {
 			this.coverURL = (String) ((JSONObject) image.get(4)).get("#text");
 		}
 
-		JSONObject tracks = (JSONObject) album.get("tracks");
+		JSONObject tracksObject = (JSONObject) album.get("tracks");
 
-		if (tracks != null) {
-			JSONArray track = (JSONArray) tracks.get("track");
-			for (int i = 0; i < track.size(); i++) {
-				JSONObject o = (JSONObject) track.get(i);
-				this.tracks.add((String) o.get("name"));
+		if (tracksObject != null) {
+			Object track = tracksObject.get("track");
+
+			if (track instanceof JSONArray) {
+				for (int i = 0; i < ((JSONArray)track).size(); i++) {
+					JSONObject o = (JSONObject) ((JSONArray)track).get(i);
+					this.tracks.add((String) o.get("name"));
+				}
+			} else if(track instanceof JSONObject){
+				this.tracks.add((String) ((JSONObject) track).get("name"));
 			}
-		}
 
+		}
 
 		this.name = (String) album.get("name");
 

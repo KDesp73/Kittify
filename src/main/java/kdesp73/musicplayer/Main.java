@@ -34,15 +34,6 @@ public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException, IllegalArgumentException, UnsupportedFieldException, FieldDataInvalidException, CannotReadException, TagException, InvalidAudioFrameException, CannotWriteException, UnsupportedAudioFileException, LineUnavailableException {
 		Mp3File file = new Mp3File("/home/konstantinos/personal/repos/java/MusicPlayer/data/The Velvet Underground - After Hours.mp3");
 
-		
-		Search s = new Search(testGetTrackSearchResponse);
-		
-		
-		
-		for(SearchTrack track : s.getTracks()){
-			System.out.println(track.getArtist());
-		}
-		
 		Queries.clearDatabase();
 	}
 }
