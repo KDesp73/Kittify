@@ -142,6 +142,7 @@ public final class MainFrame extends javax.swing.JFrame {
         optionsLabel = new javax.swing.JLabel();
         albumImageLabel = new javax.swing.JLabel();
         infoBackground = new javax.swing.JPanel();
+        searchButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         addFileMenuItem = new javax.swing.JMenuItem();
@@ -386,14 +387,24 @@ public final class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Info", infoBackground);
 
+        searchButton.setText("Search");
+        searchButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);
         backgroundLayout.setHorizontalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout.createSequentialGroup()
+                        .addComponent(searchButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(sortbyLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(sortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -409,7 +420,8 @@ public final class MainFrame extends javax.swing.JFrame {
                     .addGroup(backgroundLayout.createSequentialGroup()
                         .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sortbyLabel)
-                            .addComponent(sortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(sortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(searchButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2))
                     .addComponent(tabbedPane)))
@@ -831,6 +843,15 @@ public final class MainFrame extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_optionsLabelMouseClicked
 
+    private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
+		String search = JOptionPane.showInputDialog(this, "Search Song");
+
+		int index = list.searchSong(search);
+		
+		selectSong(index);
+		songsList.ensureIndexIsVisible(index);
+    }//GEN-LAST:event_searchButtonMouseClicked
+
 	private String secondsToMinutes(int seconds) {
 		int minutes = seconds / 60;
 		seconds %= 60;
@@ -961,6 +982,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton playButton;
     private javax.swing.JPanel playerBackground;
     private javax.swing.JButton prevButton;
+    private javax.swing.JButton searchButton;
     private javax.swing.JScrollBar slider;
     private javax.swing.JPanel sliderPanel;
     private javax.swing.JList<String> songsList;

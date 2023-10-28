@@ -154,7 +154,7 @@ public class Mp3File extends File {
 	public long getDurationInSeconds() {
 		if (metadata == null) {
 			System.err.println("Metadata is null");
-			return -1;
+			return 0;
 		}
 
 		return (long) metadata.get("duration");
