@@ -730,17 +730,17 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_prevButtonMouseClicked
 
     private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
-		if(currentSong == null || (long) currentSong.getMetadata().get("duration") == 0){
+		if(currentSong == null){
 			slider.setEnabled(false);
 			return;
 		}
 		
-		int input_start = 0, input_end = 99;
-		int output_start = 0, output_end = (int) (long) currentSong.getMetadata().get("duration");
+		
+		long duration = currentSong.getDurationInSeconds();
+		
+		slider.setMaximum((int) duration + 1);
 
-		int output = output_start + ((output_end - output_start) / (input_end - input_start)) * (slider.getValue() - input_start);
-
-		timeLabel.setText(secondsToMinutes(output));
+		timeLabel.setText(secondsToMinutes(slider.getValue()));
 
     }//GEN-LAST:event_sliderMouseDragged
 
@@ -939,6 +939,9 @@ public final class MainFrame extends javax.swing.JFrame {
 		player.setFile(currentSong);
 		songsList.setSelectedIndex(index);
 		songsList.ensureIndexIsVisible(index);
+		
+		slider.setValue(0);
+		timeLabel.setText("00:00");
 	}
 
 	public void setDefaultSongInfo() {
