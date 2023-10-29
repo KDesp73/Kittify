@@ -5,8 +5,8 @@
 package kdesp73.musicplayer.api;
 
 import javax.swing.JOptionPane;
-import kdesp73.musicplayer.Mp3File;
-import kdesp73.musicplayer.SongsList;
+import kdesp73.musicplayer.songs.Mp3File;
+import kdesp73.musicplayer.songs.SongsList;
 
 /**
  *

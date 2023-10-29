@@ -4,6 +4,7 @@
  */
 package kdesp73.musicplayer;
 
+import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.player.Mp3Player;
 import ealvatag.audio.exceptions.CannotReadException;
 import ealvatag.audio.exceptions.CannotWriteException;

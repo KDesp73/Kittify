@@ -8,14 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import kdesp73.databridge.connections.DatabaseConnection;
 import kdesp73.databridge.helpers.QueryBuilder;
-import kdesp73.musicplayer.Mp3File;
-import kdesp73.musicplayer.SongsList;
+import kdesp73.musicplayer.songs.Mp3File;
+import kdesp73.musicplayer.songs.SongsList;
 import kdesp73.musicplayer.api.Album;
 import kdesp73.musicplayer.api.Artist;
 import kdesp73.musicplayer.gui.MainFrame;
@@ -76,7 +77,7 @@ public class Queries {
 		} catch (SQLException ex) {
 			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
+
 		db.close();
 
 		return paths;
@@ -98,7 +99,7 @@ public class Queries {
 		}
 
 		db.close();
-		
+
 		return paths;
 	}
 
@@ -370,6 +371,73 @@ public class Queries {
 		db.executeUpdate(new QueryBuilder().update("Songs").set("scraped", scraped).where("path = \'" + Utils.replaceQuotes(path) + "\'").build());
 
 		db.close();
+	}
+
+	public static ArrayList<Mp3File> selectPlaylistSongs(String name) {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("song_path").from("Playlist_Songs").where("playlist_name = \'" + Utils.replaceQuotes(name) + "\'").build());
+
+		ArrayList<Mp3File> list = new ArrayList<>();
+		try {
+			while (rs.next()) {
+				list.add(selectSong(rs.getString("song_path")));
+			}
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+		return list;
+	}
+
+	public static void insertPlayListSong(String name, Mp3File song) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().insertInto("Playlist_Songs").columns("playlist_name", "song_path").values(name, song.getAbsolutePath()).build());
+
+		db.close();
+	}
+
+	public static void deletePlaylistSong(String name, Mp3File song) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().deleteFrom("Playlist_Songs").where("playlist_name = \'" + Utils.replaceQuotes(name) + "\' AND song_path = \'" + Utils.replaceQuotes(song.getAbsolutePath()) + "\'").build());
+
+		db.close();
+	}
+
+	public static Mp3File selectSong(String path) {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Songs").where("path = \'" + path + "\'").build());
+		Mp3File file = null;
+		try {
+			rs.next();
+			file = new Mp3File(rs.getString("title"), rs.getString("artist"), rs.getString("album"), rs.getString("path"));
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+
+		return file;
+	}
+
+	public static boolean playlistSongExists(String name, Mp3File song) {
+		DatabaseConnection db = Database.connection();
+		ResultSet rs = db.executeQuery("SELECT EXISTS(SELECT 1 FROM Playlist_Songs WHERE playlist_name= \'" + Utils.replaceQuotes(name) + "\' AND song_path = \'" + Utils.replaceQuotes(song.getAbsolutePath()) + "\')");
+
+		boolean exists = false;
+		try {
+			rs.next();
+			exists = (rs.getInt(1) == 1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+		return exists;
 	}
 
 	private class Utils {

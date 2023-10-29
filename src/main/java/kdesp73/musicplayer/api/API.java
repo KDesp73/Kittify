@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import kdesp73.musicplayer.Mp3File;
+import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.gui.MainFrame;
 

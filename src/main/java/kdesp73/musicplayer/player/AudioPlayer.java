@@ -5,7 +5,7 @@
 package kdesp73.musicplayer.player;
 
 import java.io.File;
-import kdesp73.musicplayer.Mp3File;
+import kdesp73.musicplayer.songs.Mp3File;
 
 /**
  *

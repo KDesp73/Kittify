@@ -12,7 +12,7 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.databridge.connections.DatabaseConnection;
 import kdesp73.databridge.helpers.QueryBuilder;
-import kdesp73.musicplayer.Mp3File;
+import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.db.Database;
 
 /**

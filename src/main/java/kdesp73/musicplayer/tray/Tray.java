@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package kdesp73.musicplayer;
+package kdesp73.musicplayer.tray;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;

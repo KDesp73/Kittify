@@ -26,9 +26,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.musicplayer.player.AudioPlayer;
-import kdesp73.musicplayer.Mp3File;
+import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.player.Mp3Player;
-import kdesp73.musicplayer.SongsList;
+import kdesp73.musicplayer.songs.SongsList;
 import kdesp73.musicplayer.api.API;
 import kdesp73.musicplayer.api.Album;
 import kdesp73.musicplayer.api.Artist;
@@ -39,6 +39,7 @@ import kdesp73.musicplayer.api.SearchTrack;
 import kdesp73.musicplayer.api.Track;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
+import kdesp73.musicplayer.songs.Playlist;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.YamlFile;
 
@@ -54,6 +55,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	public int currentIndex = 0;
 	public Mp3File currentSong = null;
+	private Playlist playlist;
 	public SongsList list;
 	private boolean scrapeAtStart = false;
 
@@ -728,8 +730,13 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_prevButtonMouseClicked
 
     private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
+		if(currentSong == null || (long) currentSong.getMetadata().get("duration") == 0){
+			slider.setEnabled(false);
+			return;
+		}
+		
 		int input_start = 0, input_end = 99;
-		int output_start = 0, output_end = (currentSong == null) ? 0 : (int) currentSong.getDurationInSeconds();
+		int output_start = 0, output_end = (int) (long) currentSong.getMetadata().get("duration");
 
 		int output = output_start + ((output_end - output_start) / (input_end - input_start)) * (slider.getValue() - input_start);
 
