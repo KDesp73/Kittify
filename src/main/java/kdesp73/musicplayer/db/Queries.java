@@ -26,7 +26,43 @@ import kdesp73.musicplayer.gui.MainFrame;
  */
 public class Queries {
 
-	public static List<String> getDirectories() {
+	public static boolean selectScrapeAtStart() {
+		DatabaseConnection db = Database.connection();
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("scrape_at_start").from("Settings").build());
+		boolean scrape_at_start = false;
+		try {
+			rs.next();
+			scrape_at_start = rs.getBoolean(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+
+		return scrape_at_start;
+	}
+
+	public static void updateScrapeAtStart(boolean scrape_at_start) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().update("Settings").set("scrape_at_start", scrape_at_start).build());
+
+		db.close();
+	}
+
+	public static void insertFile(String path) {
+		DatabaseConnection db = Database.connection();
+		db.executeUpdate(new QueryBuilder().insertInto("Files").columns("filepath").values(Utils.replaceQuotes(path)).build());
+		db.close();
+	}
+
+	public static void insertDirectory(String path) {
+		DatabaseConnection db = Database.connection();
+		db.executeUpdate(new QueryBuilder().insertInto("Directories").columns("directory").values(Utils.replaceQuotes(path)).build());
+		db.close();
+	}
+
+	public static List<String> selectDirectories() {
 		DatabaseConnection db = Database.connection();
 		QueryBuilder builder = new QueryBuilder();
 
@@ -40,11 +76,13 @@ public class Queries {
 		} catch (SQLException ex) {
 			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		
+		db.close();
 
 		return paths;
 	}
 
-	public static List<String> getFiles() {
+	public static List<String> selectFiles() {
 		DatabaseConnection db = Database.connection();
 		QueryBuilder builder = new QueryBuilder();
 
@@ -59,6 +97,8 @@ public class Queries {
 			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
+		db.close();
+		
 		return paths;
 	}
 
@@ -75,7 +115,7 @@ public class Queries {
 		System.out.println("Database cleared");
 	}
 
-	public static String getSortBy() {
+	public static String selectSortBy() {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select("sort_by").from("Settings").build());
 		String sort_by = "";
@@ -99,7 +139,7 @@ public class Queries {
 		db.close();
 	}
 
-	public static int getLastPlayed() {
+	public static int selectLastPlayed() {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select("last_played").from("Settings").build());
 		int sort_by = 0;
@@ -306,29 +346,29 @@ public class Queries {
 
 		return cover;
 	}
-	
-	public static boolean selectScraped(String path){
+
+	public static boolean selectScraped(String path) {
 		DatabaseConnection db = Database.connection();
-		
+
 		ResultSet rs = db.executeQuery(new QueryBuilder().select("scraped").from("Songs").where("path = \'" + Utils.replaceQuotes(path) + "\'").build());
-		
+
 		boolean scraped = false;
 		try {
 			rs.next();
-			scraped = rs.getBoolean(1);
+			scraped = rs.getBoolean("scraped");
 		} catch (SQLException ex) {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
+
 		db.close();
 		return scraped;
 	}
-	
-	public static void updateScraped(boolean scraped, String path){
+
+	public static void updateScraped(boolean scraped, String path) {
 		DatabaseConnection db = Database.connection();
-		
-		db.executeUpdate(new QueryBuilder().update("Songs").set("scraped", scraped).build());
-		
+
+		db.executeUpdate(new QueryBuilder().update("Songs").set("scraped", scraped).where("path = \'" + Utils.replaceQuotes(path) + "\'").build());
+
 		db.close();
 	}
 

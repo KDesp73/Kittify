@@ -148,7 +148,7 @@ public class EditDirectories extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void refreshPaths() {
-		paths = Queries.getDirectories();
+		paths = Queries.selectDirectories();
 
 		DefaultListModel listModel = new DefaultListModel();
 		for (String path : paths) {
@@ -174,6 +174,7 @@ public class EditDirectories extends javax.swing.JFrame {
 		db.close();
 
 		frame.updateSongs();
+		frame.setDefaultSongInfo();
     }//GEN-LAST:event_removeButtonMouseClicked
 
     private void editButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editButtonMouseClicked

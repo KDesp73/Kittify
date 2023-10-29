@@ -148,10 +148,10 @@ public class EditFiles extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void refreshFiles() {
-		files = Queries.getFiles();
+		files = Queries.selectFiles();
 		DefaultListModel listModel = new DefaultListModel();
 		for (String file : files) {
-			listModel.addElement(files);
+			listModel.addElement(file);
 		}
 		pathsList.setModel(listModel);
 	}
@@ -173,6 +173,7 @@ public class EditFiles extends javax.swing.JFrame {
 		db.close();
 
 		frame.updateSongs();
+		frame.setDefaultSongInfo();
     }//GEN-LAST:event_removeButtonMouseClicked
 
     private void editButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editButtonMouseClicked

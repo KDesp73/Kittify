@@ -27,8 +27,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
-import javazoom.jl.player.advanced.AdvancedPlayer;
 import kdesp73.musicplayer.api.API;
 import kdesp73.musicplayer.api.Album;
 import kdesp73.musicplayer.api.Artist;
@@ -42,13 +40,6 @@ import kdesp73.musicplayer.gui.MainFrame;
  * @author konstantinos
  */
 public class Mp3File extends File {
-
-	// Player
-	private AdvancedPlayer player;
-	private boolean isPlaying = false;
-	private int pausedOnFrame = 0;
-	private int currentFrame = 0;
-
 	// File
 	private int durationSeconds;
 	private String timeOfImport;
@@ -97,7 +88,6 @@ public class Mp3File extends File {
 				this.track.setAlbum(metadataAlbum);
 			}
 		}
-
 	}
 
 	public Mp3File(String pathname) {
@@ -128,7 +118,6 @@ public class Mp3File extends File {
 		if (metadataAlbum != null && !metadataAlbum.isBlank()) {
 			this.track.setAlbum(metadataAlbum);
 		}
-
 	}
 
 	// =============METADATA =============
@@ -228,6 +217,22 @@ public class Mp3File extends File {
 		this.coverPath = coverPath;
 	}
 
+	public int getDurationSeconds() {
+		return durationSeconds;
+	}
+
+	public void setDurationSeconds(int durationSeconds) {
+		this.durationSeconds = durationSeconds;
+	}
+
+	public boolean isScraped() {
+		return Queries.selectScraped(this.getAbsolutePath());
+	}
+	
+	public void setScraped(boolean scraped){
+		Queries.updateScraped(scraped, this.getAbsolutePath());
+	}
+
 	private String calculateTimeOfImport() {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
@@ -235,9 +240,7 @@ public class Mp3File extends File {
 	}
 
 	public void selfScrape() {
-		boolean scraped = Queries.selectScraped(this.getAbsolutePath());
-		
-		if(scraped) return;
+		if(isScraped()) return;
 		
 		Mp3File file = this;
 
@@ -266,6 +269,7 @@ public class Mp3File extends File {
 		System.out.println(response.first);
 
 		if ("{\"error\":6,\"message\":\"Track not found\",\"links\":[]}".equals(response.first)) {
+			setScraped(false);
 			return;
 		}
 
@@ -309,12 +313,13 @@ public class Mp3File extends File {
 			}
 		}
 		
-		Queries.updateScraped(true, this.getAbsolutePath());
+		setScraped(true);
 	}
 
 	@Override
 	public String toString() {
-		return "Mp3File{" + "player=" + player + ", isPlaying=" + isPlaying + ", pauseTime=" + pausedOnFrame + ", durationSeconds=" + durationSeconds + ", timeOfImport=" + timeOfImport + ", extension=" + extension + ", coverPath=" + coverPath + ", track=" + track + '}';
+		return "Mp3File{" + "durationSeconds=" + durationSeconds + ", timeOfImport=" + timeOfImport + ", extension=" + extension + ", coverPath=" + coverPath + ", metadata=" + metadata + ", track=" + track + '}';
 	}
 
+	
 }

@@ -25,8 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import kdesp73.databridge.connections.DatabaseConnection;
-import kdesp73.databridge.helpers.QueryBuilder;
 import kdesp73.musicplayer.player.AudioPlayer;
 import kdesp73.musicplayer.Mp3File;
 import kdesp73.musicplayer.player.Mp3Player;
@@ -39,7 +37,6 @@ import kdesp73.musicplayer.api.Pair;
 import kdesp73.musicplayer.api.Search;
 import kdesp73.musicplayer.api.SearchTrack;
 import kdesp73.musicplayer.api.Track;
-import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.themeLib.Theme;
@@ -58,6 +55,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public int currentIndex = 0;
 	public Mp3File currentSong = null;
 	public SongsList list;
+	private boolean scrapeAtStart = false;
 
 	public AudioPlayer player = new Mp3Player(null);
 
@@ -82,21 +80,29 @@ public final class MainFrame extends javax.swing.JFrame {
 		updateSongs();
 
 		if (!list.getSongs().isEmpty()) {
-			currentIndex = Queries.getLastPlayed();
+			currentIndex = Queries.selectLastPlayed();
 			currentSong = list.getSongs().get(currentIndex);
 			selectSong(currentIndex);
 			player = new Mp3Player(currentSong);
+		} else {
+			setDefaultSongInfo();
 		}
-
+		
 		selectSong(currentIndex);
 
 		songsList.setFixedCellHeight(35);
 
 		GUIMethods.loadImage(optionsLabel, project_path + "/assets/ellipsis-vertical-solid-small.png");
 
-		sortComboBox.setSelectedItem(Queries.getSortBy());
+		sortComboBox.setSelectedItem(Queries.selectSortBy());
 
-		list.scrapeSongs();
+		this.scrapeAtStart = Queries.selectScrapeAtStart();
+		scrapeAtStartMenuItem.setSelected(scrapeAtStart);
+
+		if (scrapeAtStart) {
+			list.scrapeSongs();
+		}
+
 	}
 
 	private void addExtensions() {
@@ -147,6 +153,9 @@ public final class MainFrame extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         editDirectoriesMenuItem = new javax.swing.JMenuItem();
+        ApiMenu = new javax.swing.JMenu();
+        scrapeAllMenuItem = new javax.swing.JMenuItem();
+        scrapeAtStartMenuItem = new javax.swing.JCheckBoxMenuItem();
         jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -468,6 +477,27 @@ public final class MainFrame extends javax.swing.JFrame {
 
         menuBar.add(editMenu);
 
+        ApiMenu.setText("Api");
+
+        scrapeAllMenuItem.setText("Scrape All");
+        scrapeAllMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scrapeAllMenuItemActionPerformed(evt);
+            }
+        });
+        ApiMenu.add(scrapeAllMenuItem);
+
+        scrapeAtStartMenuItem.setSelected(true);
+        scrapeAtStartMenuItem.setText("Scrape At Start");
+        scrapeAtStartMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scrapeAtStartMenuItemActionPerformed(evt);
+            }
+        });
+        ApiMenu.add(scrapeAtStartMenuItem);
+
+        menuBar.add(ApiMenu);
+
         jMenu1.setText("About");
         menuBar.add(jMenu1);
 
@@ -491,34 +521,51 @@ public final class MainFrame extends javax.swing.JFrame {
 		addExtensions();
 		initList();
 
-		switch (Queries.getSortBy()) {
-			case "Name":
-				list.sortByName();
-				break;
-			case "Artist":
-				list.sortByArtist();
-				break;
-			case "Album":
-				list.sortByAlbum();
-				break;
-			default:
-				throw new AssertionError();
-		}
+		sort();
 		refreshList();
 	}
 
 	private void initList() {
 		try {
-			list = new SongsList(Queries.getDirectories(), Queries.getFiles());
+			list = new SongsList(Queries.selectDirectories(), Queries.selectFiles());
 		} catch (java.lang.StringIndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void refreshList() {
+		String sortBy = Queries.selectSortBy();
 		DefaultListModel listModel = new DefaultListModel();
 		for (Mp3File song : list.getSongs()) {
-			listModel.addElement(song.getTrack().getName());
+			String listText = "";
+			switch (sortBy) {
+				case "Name" ->
+					listText = (song.getTrack().getArtist() == null || song.getTrack().getArtist().isBlank())
+							? song.getTrack().getName()
+							: song.getTrack().getName() + " - " + song.getTrack().getArtist();
+				case "Artist" ->
+					listText = song.getTrack().getArtist() + " - " + song.getTrack().getName();
+				case "Album" ->
+					listText = song.getTrack().getAlbum() + " - " + song.getTrack().getName();
+
+			}
+			listModel.addElement(listText);
+		}
+		songsList.setModel(listModel);
+	}
+
+	public void refreshList(String sortBy) {
+		DefaultListModel listModel = new DefaultListModel();
+		for (Mp3File song : list.getSongs()) {
+			switch (sortBy) {
+				case "Name" ->
+					listModel.addElement(song.getTrack().getName() + " - " + song.getTrack().getArtist());
+				case "Artist" ->
+					listModel.addElement(song.getTrack().getArtist() + " - " + song.getTrack().getName());
+				case "Album" ->
+					listModel.addElement(song.getTrack().getAlbum() + " - " + song.getTrack().getName());
+
+			}
 		}
 		songsList.setModel(listModel);
 	}
@@ -541,10 +588,7 @@ public final class MainFrame extends javax.swing.JFrame {
 			return;
 		}
 
-		DatabaseConnection db = Database.connection();
-		db.executeUpdate(new QueryBuilder().insertInto("Files").columns("filepath").values(dir).build());
-
-		db.close();
+		Queries.insertFile(dir);
 
 		initList();
 		updateSongs();
@@ -567,10 +611,7 @@ public final class MainFrame extends javax.swing.JFrame {
 			return;
 		}
 
-		DatabaseConnection db = Database.connection();
-		db.executeUpdate(new QueryBuilder().insertInto("Directories").columns("directory").values(dir).build());
-
-		db.close();
+		Queries.insertDirectory(dir);
 
 		updateSongs();
     }//GEN-LAST:event_addDirectoryMenuItemActionPerformed
@@ -581,17 +622,17 @@ public final class MainFrame extends javax.swing.JFrame {
 		switch (selected) {
 			case 0 -> {
 				list.sortByName();
-				refreshList();
+				refreshList("Name");
 				return "Name";
 			}
 			case 1 -> {
 				list.sortByArtist();
-				refreshList();
+				refreshList("Artist");
 				return "Artist";
 			}
 			case 2 -> {
 				list.sortByAlbum();
-				refreshList();
+				refreshList("Album");
 				return "Album";
 			}
 			default ->
@@ -794,6 +835,7 @@ public final class MainFrame extends javax.swing.JFrame {
 		}
 
 		Queries.updateSong(currentSong);
+		Queries.updateScraped(true, currentSong.getAbsolutePath());
 		JOptionPane.showMessageDialog(this, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
 		sort();
@@ -843,12 +885,14 @@ public final class MainFrame extends javax.swing.JFrame {
 
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
 		String search = JOptionPane.showInputDialog(this, "Search Song");
-		
-		if(search == null || search.isBlank()) return;
+
+		if (search == null || search.isBlank()) {
+			return;
+		}
 
 		int index = list.searchSong(search);
-		
-		if(index < 0){
+
+		if (index < 0) {
 			JOptionPane.showMessageDialog(this, "Song not found");
 			return;
 		}
@@ -856,6 +900,17 @@ public final class MainFrame extends javax.swing.JFrame {
 		selectSong(index);
 		songsList.ensureIndexIsVisible(index);
     }//GEN-LAST:event_searchButtonMouseClicked
+
+    private void scrapeAllMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrapeAllMenuItemActionPerformed
+		list.scrapeSongs();
+    }//GEN-LAST:event_scrapeAllMenuItemActionPerformed
+
+    private void scrapeAtStartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrapeAtStartMenuItemActionPerformed
+		boolean flag = scrapeAtStartMenuItem.isSelected();
+
+		Queries.updateScrapeAtStart(flag);
+		this.scrapeAtStart = flag;
+    }//GEN-LAST:event_scrapeAtStartMenuItemActionPerformed
 
 	private String secondsToMinutes(int seconds) {
 		int minutes = seconds / 60;
@@ -875,7 +930,16 @@ public final class MainFrame extends javax.swing.JFrame {
 		currentIndex = index;
 
 		player.setFile(currentSong);
+		songsList.setSelectedIndex(index);
 		songsList.ensureIndexIsVisible(index);
+	}
+
+	public void setDefaultSongInfo() {
+		trackLabel.setText("Title");
+		artistLabel.setText("Artist");
+		albumLabel.setText("Album");
+		
+		GUIMethods.loadImage(albumImageLabel, project_path + "/assets/album-image-placeholder.png");
 	}
 
 	public void updateSongInfo(int index) {
@@ -964,6 +1028,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu ApiMenu;
     private javax.swing.JMenuItem addDirectoryMenuItem;
     private javax.swing.JMenuItem addFileMenuItem;
     private javax.swing.JLabel albumImageLabel;
@@ -987,6 +1052,8 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton playButton;
     private javax.swing.JPanel playerBackground;
     private javax.swing.JButton prevButton;
+    private javax.swing.JMenuItem scrapeAllMenuItem;
+    private javax.swing.JCheckBoxMenuItem scrapeAtStartMenuItem;
     private javax.swing.JButton searchButton;
     private javax.swing.JScrollBar slider;
     private javax.swing.JPanel sliderPanel;

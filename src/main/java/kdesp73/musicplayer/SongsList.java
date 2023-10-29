@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import kdesp73.databridge.connections.DatabaseConnection;
 import kdesp73.databridge.helpers.QueryBuilder;
+import kdesp73.musicplayer.api.ScrapeThread;
 import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.files.FileOperations;
 
@@ -153,7 +154,7 @@ public class SongsList {
 			}
 
 			if (!dontAdd) {
-				db.executeUpdate(builder.insertInto("Songs").columns("path", "title").values(file.getAbsolutePath().replaceAll(Pattern.quote("\'"), "\'\'"), file.getTrack().getName().replaceAll(Pattern.quote("\'"), "\'\'")).build());
+				db.executeUpdate(builder.insertInto("Songs").columns("path", "title", "scraped").values(file.getAbsolutePath().replaceAll(Pattern.quote("\'"), "\'\'"), file.getTrack().getName().replaceAll(Pattern.quote("\'"), "\'\'"), false).build());
 			}
 		}
 		db.close();
@@ -210,10 +211,7 @@ public class SongsList {
 	}
 	
 	public void scrapeSongs(){
-		// TODO: THREADING
-		for(Mp3File file : list){
-			file.selfScrape();
-		}
+		new ScrapeThread(this).start();
 	}
 	
 	@Override
