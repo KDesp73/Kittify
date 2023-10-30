@@ -68,24 +68,14 @@
 		
 		<!--Player-->	
 		<dependency>
-			<groupId>com.googlecode.soundlibs</groupId>
+			<groupId>javazoom</groupId>
 			<artifactId>jlayer</artifactId>
 			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.soundlibs</groupId>
-			<artifactId>spi</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org</groupId>
-			<artifactId>tritonus</artifactId>
-			<version>0.3.6</version>
-		</dependency>
-		<dependency>
-			<groupId>davaguine</groupId>
-			<artifactId>jeq</artifactId>
-			<version>1.0.0</version>
+			<artifactId>basicplayer</artifactId>
+			<version>3.0.0.0</version>
 		</dependency>
 		
 	

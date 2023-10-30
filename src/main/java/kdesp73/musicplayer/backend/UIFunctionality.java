@@ -252,7 +252,7 @@ public class UIFunctionality {
 				return;
 			}
 
-			Backend.selectSong(mainFrame, index);
+//			Backend.selectSong(mainFrame, index);
 			mainFrame.getSongsList().ensureIndexIsVisible(index);
 		}
 	}

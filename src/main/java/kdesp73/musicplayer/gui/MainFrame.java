@@ -4,35 +4,24 @@
  */
 package kdesp73.musicplayer.gui;
 
-import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JRootPane;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.musicplayer.player.AudioPlayer;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.songs.SongsList;
 import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.backend.UIFunctionality;
-import kdesp73.musicplayer.db.Queries;
-import kdesp73.musicplayer.songs.Playlist;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.YamlFile;
 
@@ -48,7 +37,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	public int currentIndex = 0;
 	public Mp3File currentSong = null;
-	private Playlist playlist;
 	public SongsList list;
 	public boolean scrapeAtStart = false;
 
@@ -553,10 +541,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	public Mp3File getCurrentSong() {
 		return currentSong;
-	}
-
-	public Playlist getPlaylist() {
-		return playlist;
 	}
 
 	public SongsList getList() {

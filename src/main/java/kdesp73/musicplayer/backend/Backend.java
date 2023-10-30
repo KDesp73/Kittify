@@ -38,9 +38,9 @@ import kdesp73.musicplayer.songs.SongsList;
  * @author konstantinos
  */
 public class Backend {
-
 	private static MainFrame mainFrame;
-
+	
+	
 	public static void setMainFrame(MainFrame mainFrame) {
 		Backend.mainFrame = mainFrame;
 		UIFunctionality.setMainFrame(mainFrame);

@@ -7,6 +7,9 @@ package kdesp73.musicplayer.player;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javazoom.jlgui.basicplayer.BasicPlayer;
+import javazoom.jlgui.basicplayer.BasicPlayerEvent;
+import javazoom.jlgui.basicplayer.BasicPlayerException;
 
 /**
  *
@@ -25,57 +28,82 @@ public class Mp3Player extends AudioPlayer {
 		super(file);
 
 		this.player = new BasicPlayer();
-
-		try {
-			player.open(new File(super.getPath()));
-		} catch (BasicPlayerException ex) {
-			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		this.volume = 10;
 
 	}
 
 	@Override
 	public void play() {
-		System.out.println("Play");
-
+		
 		try {
+			if(player.getStatus() == BasicPlayer.PAUSED){
+				player.resume();
+				return;
+			}
+
+			player.open(new File(this.getPath()));
 			player.play();
-		} catch (BasicPlayerException ex) {
-			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, ex);
+			player.setGain(volume);
+		} catch (BasicPlayerException bpEx) {
+			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
 
-		super.setPlaying(true);
 	}
 
 	@Override
 	public void stop() {
-		System.out.println("Stop");
 		try {
 			player.stop();
-		} catch (BasicPlayerException ex) {
-			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (BasicPlayerException bpEx) {
+			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
-		super.setPlaying(false);
+
 	}
 
 	@Override
 	public void pause() {
-		System.out.println("Pause");
 		try {
 			player.pause();
-		} catch (BasicPlayerException ex) {
-			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (BasicPlayerException bpEx) {
+			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
-		super.setPlaying(false);
+
 	}
 
 	@Override
 	public void seek(long sample) {
-		System.out.println("Seek");
 		try {
 			player.seek(sample);
-		} catch (BasicPlayerException ex) {
-			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, ex);
+			player.setGain(this.volume);
+		} catch (BasicPlayerException bpEx) {
+			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
+
+	}
+
+	@Override
+	public void setVolume(int value, int maxValue) {
+		try {
+			this.volume = value;
+
+			if (value == 0) {
+				player.setGain(0);
+			} else {
+				player.setGain(calcVolume(value, maxValue));
+			}
+
+		} catch (BasicPlayerException bpEx) {
+			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
+		}
+	}
+
+	private double calcVolume(int currentValue, int maximumValue) {
+		this.volume = (double) currentValue / (double) maximumValue;
+		return volume;
+	}
+
+	@Override
+	public boolean isPlaying() {
+		return (player.getStatus() == BasicPlayer.PLAYING);
 	}
 }

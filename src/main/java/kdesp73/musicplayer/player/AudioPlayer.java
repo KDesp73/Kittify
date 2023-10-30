@@ -10,8 +10,8 @@ package kdesp73.musicplayer.player;
  */
 public abstract class AudioPlayer {
 	private String path;
-	private boolean playing = false;
 	private int pausedAt = 0;
+	public double volume;
 
 	public AudioPlayer(String path) {
 		this.path = path;
@@ -25,16 +25,9 @@ public abstract class AudioPlayer {
 	
 	public abstract void seek(long sample);
 	
+	public abstract void setVolume(int value, int maxValue);
 	
-
-	
-	public boolean isPlaying() {
-		return playing;
-	}
-
-	public void setPlaying(boolean playing) {
-		this.playing = playing;
-	}
+	public abstract boolean isPlaying();
 
 	public int getPausedAt() {
 		return pausedAt;
@@ -52,9 +45,7 @@ public abstract class AudioPlayer {
 		this.path = path;
 	}
 
-
-
-	
-	
-	
+	public double getVolume() {
+		return volume;
+	}
 }
