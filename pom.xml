@@ -49,11 +49,6 @@
 			<version>3.2.5</version>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode.soundlibs</groupId>
-			<artifactId>jlayer</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>2.1.1</version>
@@ -70,6 +65,29 @@
 			<version>2.10.0</version>
 			<type>jar</type>
 		</dependency>
+		
+		<!--Player-->	
+		<dependency>
+			<groupId>com.googlecode.soundlibs</groupId>
+			<artifactId>jlayer</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.soundlibs</groupId>
+			<artifactId>spi</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org</groupId>
+			<artifactId>tritonus</artifactId>
+			<version>0.3.6</version>
+		</dependency>
+		<dependency>
+			<groupId>davaguine</groupId>
+			<artifactId>jeq</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		
 	
 		<!--Metadata-->
 		<dependency>
@@ -78,12 +96,19 @@
 			<version>0.4.6</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>com.mpatric</groupId>
-			<artifactId>mp3agic</artifactId>
-			<version>0.9.1</version>
+		<!--		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>21.0.1</version>
 		</dependency>
 		
-
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+			<version>15</version>
+			<type>pom</type>
+		</dependency>-->
+		
 	</dependencies>
+
 </project>

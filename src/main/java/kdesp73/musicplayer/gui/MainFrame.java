@@ -59,7 +59,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public SongsList list;
 	private boolean scrapeAtStart = false;
 
-	public AudioPlayer player = new Mp3Player(null);
+	public AudioPlayer player;
 
 	/**
 	 * Creates new form MainFrame
@@ -85,11 +85,11 @@ public final class MainFrame extends javax.swing.JFrame {
 			currentIndex = Queries.selectLastPlayed();
 			currentSong = list.getSongs().get(currentIndex);
 			selectSong(currentIndex);
-			player = new Mp3Player(currentSong);
 		} else {
 			setDefaultSongInfo();
 		}
-		
+
+		this.player = new Mp3Player(currentSong.getAbsolutePath());
 		selectSong(currentIndex);
 
 		songsList.setFixedCellHeight(35);
@@ -730,14 +730,13 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_prevButtonMouseClicked
 
     private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
-		if(currentSong == null){
+		if (currentSong == null) {
 			slider.setEnabled(false);
 			return;
 		}
-		
-		
+
 		long duration = currentSong.getDurationInSeconds();
-		
+
 		slider.setMaximum((int) duration + 1);
 
 		timeLabel.setText(secondsToMinutes(slider.getValue()));
@@ -936,10 +935,10 @@ public final class MainFrame extends javax.swing.JFrame {
 		currentSong = list.getSongs().get(index);
 		currentIndex = index;
 
-		player.setFile(currentSong);
+		player = new Mp3Player(currentSong.getAbsolutePath());
 		songsList.setSelectedIndex(index);
 		songsList.ensureIndexIsVisible(index);
-		
+
 		slider.setValue(0);
 		timeLabel.setText("00:00");
 	}
@@ -948,7 +947,7 @@ public final class MainFrame extends javax.swing.JFrame {
 		trackLabel.setText("Title");
 		artistLabel.setText("Artist");
 		albumLabel.setText("Album");
-		
+
 		GUIMethods.loadImage(albumImageLabel, project_path + "/assets/album-image-placeholder.png");
 	}
 
@@ -1026,7 +1025,6 @@ public final class MainFrame extends javax.swing.JFrame {
 		} catch (Exception ex) {
 			System.err.println("Failed to initialize LaF");
 		}
-
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {

@@ -4,25 +4,19 @@
  */
 package kdesp73.musicplayer.player;
 
-import java.io.File;
-import kdesp73.musicplayer.songs.Mp3File;
-
 /**
  *
  * @author konstantinos
  */
 public abstract class AudioPlayer {
-	private Mp3File file;
+	private String path;
 	private boolean playing = false;
 	private int pausedAt = 0;
 
-	public AudioPlayer(Mp3File file) {
-		this.file = file;
+	public AudioPlayer(String path) {
+		this.path = path;
 	}
 
-	
-	
-	
 	public abstract void play();
 
 	public abstract void stop();
@@ -50,13 +44,15 @@ public abstract class AudioPlayer {
 		this.pausedAt = pausedAt;
 	}
 
-	public Mp3File getFile() {
-		return file;
+	public String getPath() {
+		return path;
 	}
 
-	public void setFile(Mp3File file) {
-		this.file = file;
+	public void setPath(String path) {
+		this.path = path;
 	}
+
+
 
 	
 	
