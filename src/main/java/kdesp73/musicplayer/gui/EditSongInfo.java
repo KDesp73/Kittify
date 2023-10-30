@@ -12,6 +12,7 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.databridge.connections.DatabaseConnection;
 import kdesp73.databridge.helpers.QueryBuilder;
+import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.db.Database;
 
@@ -234,8 +235,8 @@ public class EditSongInfo extends javax.swing.JFrame {
 		this.frame.list.getSongs().set(frame.currentIndex, song);
 		this.frame.currentSong = song;
 
-		this.frame.updateSongInfo(this.frame.currentIndex);
-		this.frame.refreshList();
+		Backend.updateSongInfo(frame, this.frame.currentIndex);
+		Backend.refreshList(frame);
 
 		this.dispose();
     }//GEN-LAST:event_applyButtonActionPerformed

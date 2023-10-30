@@ -4,42 +4,24 @@
  */
 package kdesp73.musicplayer.gui;
 
-import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.imageio.ImageIO;
-import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.UIManager;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import kdesp73.musicplayer.player.AudioPlayer;
 import kdesp73.musicplayer.songs.Mp3File;
-import kdesp73.musicplayer.player.Mp3Player;
 import kdesp73.musicplayer.songs.SongsList;
-import kdesp73.musicplayer.api.API;
-import kdesp73.musicplayer.api.Album;
-import kdesp73.musicplayer.api.Artist;
-import kdesp73.musicplayer.api.LastFmMethods;
-import kdesp73.musicplayer.api.Pair;
-import kdesp73.musicplayer.api.Search;
-import kdesp73.musicplayer.api.SearchTrack;
-import kdesp73.musicplayer.api.Track;
-import kdesp73.musicplayer.db.Queries;
-import kdesp73.musicplayer.files.FileOperations;
-import kdesp73.musicplayer.songs.Playlist;
+import kdesp73.musicplayer.backend.Backend;
+import kdesp73.musicplayer.backend.UIFunctionality;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.YamlFile;
 
@@ -55,63 +37,22 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	public int currentIndex = 0;
 	public Mp3File currentSong = null;
-	private Playlist playlist;
 	public SongsList list;
-	private boolean scrapeAtStart = false;
+	public boolean scrapeAtStart = false;
 
 	public AudioPlayer player;
 
-	/**
-	 * Creates new form MainFrame
-	 */
+	public static MainFrame create(){
+		MainFrame frame = new MainFrame();
+		Backend.setMainFrame(frame);
+		Backend.setup(frame);
+		return frame;
+	}
+	
 	public MainFrame() {
 		initComponents();
-
-		setLocationRelativeTo(null);
-		this.rootPane.requestFocus();
-
-		this.addWindowListener(new WindowAdapter() {
-
-			@Override
-			public void windowClosing(WindowEvent e) {
-				Queries.updateLastPlayed(currentIndex);
-			}
-
-		});
-
-		updateSongs();
-
-		if (!list.getSongs().isEmpty()) {
-			currentIndex = Queries.selectLastPlayed();
-			currentSong = list.getSongs().get(currentIndex);
-			selectSong(currentIndex);
-		} else {
-			setDefaultSongInfo();
-		}
-
-		this.player = new Mp3Player(currentSong.getAbsolutePath());
-		selectSong(currentIndex);
-
-		songsList.setFixedCellHeight(35);
-
-		GUIMethods.loadImage(optionsLabel, project_path + "/assets/ellipsis-vertical-solid-small.png");
-
-		sortComboBox.setSelectedItem(Queries.selectSortBy());
-
-		this.scrapeAtStart = Queries.selectScrapeAtStart();
-		scrapeAtStartMenuItem.setSelected(scrapeAtStart);
-
-		if (scrapeAtStart) {
-			list.scrapeSongs();
-		}
-
 	}
 
-	private void addExtensions() {
-		FileOperations.acceptedExtensions.add("mp3");
-		FileOperations.acceptedExtensions.add("wav");
-		FileOperations.acceptedExtensions.add("mpeg");
-	}
 
 	/**
 	 * This method is called from within the
@@ -153,7 +94,7 @@ public final class MainFrame extends javax.swing.JFrame {
         addFileMenuItem = new javax.swing.JMenuItem();
         addDirectoryMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        editFilesMenuItem = new javax.swing.JMenuItem();
         editDirectoriesMenuItem = new javax.swing.JMenuItem();
         ApiMenu = new javax.swing.JMenu();
         scrapeAllMenuItem = new javax.swing.JMenuItem();
@@ -459,14 +400,14 @@ public final class MainFrame extends javax.swing.JFrame {
 
         editMenu.setText("Edit");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
-        jMenuItem1.setText("Edit Files");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        editFilesMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
+        editFilesMenuItem.setText("Edit Files");
+        editFilesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                editFilesMenuItemActionPerformed(evt);
             }
         });
-        editMenu.add(jMenuItem1);
+        editMenu.add(editFilesMenuItem);
 
         editDirectoriesMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
         editDirectoriesMenuItem.setText("Edit Directories");
@@ -519,521 +460,237 @@ public final class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	public void updateSongs() {
-		addExtensions();
-		initList();
-
-		sort();
-		refreshList();
-	}
-
-	private void initList() {
-		try {
-			list = new SongsList(Queries.selectDirectories(), Queries.selectFiles());
-		} catch (java.lang.StringIndexOutOfBoundsException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void refreshList() {
-		String sortBy = Queries.selectSortBy();
-		DefaultListModel listModel = new DefaultListModel();
-		for (Mp3File song : list.getSongs()) {
-			String listText = "";
-			switch (sortBy) {
-				case "Name" ->
-					listText = (song.getTrack().getArtist() == null || song.getTrack().getArtist().isBlank())
-							? song.getTrack().getName()
-							: song.getTrack().getName() + " - " + song.getTrack().getArtist();
-				case "Artist" ->
-					listText = song.getTrack().getArtist() + " - " + song.getTrack().getName();
-				case "Album" ->
-					listText = song.getTrack().getAlbum() + " - " + song.getTrack().getName();
-
-			}
-			listModel.addElement(listText);
-		}
-		songsList.setModel(listModel);
-	}
-
-	public void refreshList(String sortBy) {
-		DefaultListModel listModel = new DefaultListModel();
-		for (Mp3File song : list.getSongs()) {
-			switch (sortBy) {
-				case "Name" ->
-					listModel.addElement(song.getTrack().getName() + " - " + song.getTrack().getArtist());
-				case "Artist" ->
-					listModel.addElement(song.getTrack().getArtist() + " - " + song.getTrack().getName());
-				case "Album" ->
-					listModel.addElement(song.getTrack().getAlbum() + " - " + song.getTrack().getName());
-
-			}
-		}
-		songsList.setModel(listModel);
-	}
 
     private void addFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFileMenuItemActionPerformed
-		String dir = "";
-		JFileChooser fc = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Sound Files", "mp3");
-
-		fc.setFileFilter(filter);
-
-		int choide = fc.showOpenDialog(this);
-
-		if (choide == JFileChooser.APPROVE_OPTION) {
-			File SelectedFile = fc.getSelectedFile();
-			dir = SelectedFile.getPath();
-		}
-
-		if (choide == JFileChooser.CANCEL_OPTION) {
-			return;
-		}
-
-		Queries.insertFile(dir);
-
-		initList();
-		updateSongs();
-		refreshList();
+		UIFunctionality.addFileMenuItemActionPerformed(this);
     }//GEN-LAST:event_addFileMenuItemActionPerformed
 
     private void addDirectoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDirectoryMenuItemActionPerformed
-		String dir = "";
-		JFileChooser fc = new JFileChooser();
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-		int choice = fc.showOpenDialog(this);
-
-		if (choice == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = fc.getSelectedFile();
-			dir = selectedFile.getPath();
-		}
-
-		if (choice == JFileChooser.CANCEL_OPTION) {
-			return;
-		}
-
-		Queries.insertDirectory(dir);
-
-		updateSongs();
+		UIFunctionality.addDirectoryMenuItemActionPerformed(this);
     }//GEN-LAST:event_addDirectoryMenuItemActionPerformed
 
-	private String sort() {
-		int selected = sortComboBox.getSelectedIndex();
-
-		switch (selected) {
-			case 0 -> {
-				list.sortByName();
-				refreshList("Name");
-				return "Name";
-			}
-			case 1 -> {
-				list.sortByArtist();
-				refreshList("Artist");
-				return "Artist";
-			}
-			case 2 -> {
-				list.sortByAlbum();
-				refreshList("Album");
-				return "Album";
-			}
-			default ->
-				throw new AssertionError();
-		}
-	}
-
     private void sortComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortComboBoxActionPerformed
-		String sort_by;
-
-		sort_by = sort();
-
-		Queries.updateSortBy(sort_by);
-
+		UIFunctionality.sortComboBoxActionPerformed(this);
     }//GEN-LAST:event_sortComboBoxActionPerformed
 
     private void editDirectoriesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDirectoriesMenuItemActionPerformed
-		new EditDirectories(this).setVisible(true);
+		UIFunctionality.editDirectoriesMenuItemActionPerformed(this);
     }//GEN-LAST:event_editDirectoriesMenuItemActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-		new EditFiles(this).setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void editFilesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFilesMenuItemActionPerformed
+		UIFunctionality.editFilesMenuItemActionPerformed(this);
+    }//GEN-LAST:event_editFilesMenuItemActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
-		int index = songsList.getSelectedIndex();
-
-		if (index == list.getSongs().size() - 1) {
-			return;
-		}
-
-		songsList.setSelectedIndex(index + 1);
-
-		player.stop();
-
-		selectSong(index + 1);
-
-		player.play();
-
-		playButton.setText("Pause");
+		UIFunctionality.nextButtonActionPerformed(this);
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
-		if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
-			player.stop();
-
-			selectSong();
-
-			player.play();
-			playButton.setText("Pause");
-		}
+		UIFunctionality.songsListMouseClicked(this, evt);
     }//GEN-LAST:event_songsListMouseClicked
 
     private void playButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseClicked
-		currentSong = list.getSongs().get(currentIndex);
-		if (player.isPlaying()) {
-			player.pause();
-			playButton.setText("Play");
-		} else {
-			player.play();
-			playButton.setText("Pause");
-		}
+		UIFunctionality.playButtonMouseClicked(this);
     }//GEN-LAST:event_playButtonMouseClicked
 
     private void songsListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_songsListKeyPressed
-		if (evt.getKeyChar() == '\n') {
-			player.stop();
-
-			selectSong();
-
-			player.play();
-			playButton.setText("Pause");
-		}
+		UIFunctionality.songsListKeyPressed(this, evt);
     }//GEN-LAST:event_songsListKeyPressed
 
     private void prevButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevButtonMouseClicked
-		int index = songsList.getSelectedIndex();
-
-		if (index == 0) {
-			return;
-		}
-
-		songsList.setSelectedIndex(index - 1);
-
-		player.stop();
-
-		selectSong(index - 1);
-
-		player.play();
-
-		playButton.setText("Pause");
-
+		UIFunctionality.prevButtonMouseClicked(this);
     }//GEN-LAST:event_prevButtonMouseClicked
 
     private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
-		if (currentSong == null) {
-			slider.setEnabled(false);
-			return;
-		}
-
-		long duration = currentSong.getDurationInSeconds();
-
-		slider.setMaximum((int) duration + 1);
-
-		timeLabel.setText(secondsToMinutes(slider.getValue()));
-
+		UIFunctionality.sliderMouseDragged(this);
     }//GEN-LAST:event_sliderMouseDragged
 
-	private void editAction() {
-		new EditSongInfo(this).setVisible(true);
-
-		selectSong(currentIndex);
-		refreshList();
-	}
-
-	private void scrapeAction() {
-		API api = new API();
-		String artist = currentSong.getTrack().getArtist();
-		String title = currentSong.getTrack().getName();
-
-		Pair<String, Integer> response = null;
-
-		// If artist is not specified select one
-		if (artist == null || "Unknown Artist".equals(artist)) {
-			try {
-				response = api.GET(LastFmMethods.Track.search, LastFmMethods.Track.tags(title));
-			} catch (IOException | InterruptedException ex) {
-				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-				return;
-			}
-
-			if (response.second != 200) {
-				JOptionPane.showMessageDialog(this, "API Reponse Code: " + response.second, "API Error", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
-			System.out.println(response.first);
-			System.out.println(response.second);
-
-			Search search = new Search(response.first);
-
-			HashSet<Object> propableArtists = new HashSet<>();
-			for (SearchTrack track : search.getTracks()) {
-				propableArtists.add(track.getArtist());
-			}
-
-			artist = (String) JOptionPane.showInputDialog(this, "Select Artist", "", JOptionPane.QUESTION_MESSAGE, null, propableArtists.toArray(), 0);
-
-			currentSong.getTrack().setArtist(artist);
-		}
-
-		// Make an API call using title and artist (LastFmMethods.Track.getInfo)
-		try {
-			response = api.GET(LastFmMethods.Track.getInfo, LastFmMethods.Track.tags(artist, title));
-		} catch (IOException | InterruptedException ex) {
-			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-			return;
-		}
-
-		if (response.second != 200) {
-			JOptionPane.showMessageDialog(this, "API Reponse Code: " + response.second, "API Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		System.out.println(response.first);
-
-		if ("{\"error\":6,\"message\":\"Track not found\",\"links\":[]}".equals(response.first)) {
-			JOptionPane.showMessageDialog(this, "Track not found", "API Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		// Update the Song
-		currentSong.setTrack(new Track(response.first));
-
-		// Scrape for the Album if not scraped already
-		if (currentSong.getTrack().getAlbum() != null && !currentSong.getTrack().getAlbum().isBlank()) {
-
-			Album album = Queries.selectAlbum(currentSong.getTrack().getAlbum(), artist);
-
-			if (album == null) {
-				try {
-					response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, currentSong.getTrack().getAlbum()));
-				} catch (IOException | InterruptedException ex) {
-					System.err.println("Album scrape fail");
-				}
-
-				album = new Album(response.first);
-				Queries.insertAlbum(album);
-			}
-		}
-
-		// Scrape for the Artist if not scraped already
-		Artist artistO = Queries.selectArtist(artist);
-
-		if (artistO == null) {
-			try {
-				response = api.GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags(artist));
-			} catch (IOException | InterruptedException ex) {
-				System.err.println("Artist scrape fail");
-			}
-
-			artistO = new Artist(response.first);
-			Queries.insertArtist(artistO);
-		}
-
-		Queries.updateSong(currentSong);
-		Queries.updateScraped(true, currentSong.getAbsolutePath());
-		JOptionPane.showMessageDialog(this, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-		sort();
-		selectSong(currentIndex);
-		refreshList();
-		songsList.setSelectedIndex(currentIndex);
-	}
-
     private void optionsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseClicked
-		if (evt.getButton() == MouseEvent.BUTTON1) {
-			JPopupMenu options = new JPopupMenu();
-			JMenuItem edit = new JMenuItem("Edit");
-			JMenuItem scrape = new JMenuItem("Scrape");
-
-			options.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-			ActionListener menuListener = new ActionListener() {
-				String selectedItem;
-
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					selectedItem = event.getActionCommand();
-					if (null != selectedItem) {
-						switch (selectedItem) {
-							case "Edit" ->
-								editAction();
-							case "Scrape" ->
-								scrapeAction();
-							default -> {
-							}
-						}
-					}
-				}
-			};
-
-			edit.addActionListener(menuListener);
-			options.add(edit);
-
-			scrape.addActionListener(menuListener);
-			options.add(scrape);
-
-			if (currentSong != null) {
-				options.show(evt.getComponent(), evt.getX(), evt.getY());
-			}
-		}
+		UIFunctionality.optionsLabelMouseClicked(this, evt);
     }//GEN-LAST:event_optionsLabelMouseClicked
 
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
-		String search = JOptionPane.showInputDialog(this, "Search Song");
-
-		if (search == null || search.isBlank()) {
-			return;
-		}
-
-		int index = list.searchSong(search);
-
-		if (index < 0) {
-			JOptionPane.showMessageDialog(this, "Song not found");
-			return;
-		}
-
-		selectSong(index);
-		songsList.ensureIndexIsVisible(index);
+		UIFunctionality.searchButtonMouseClicked(this);
     }//GEN-LAST:event_searchButtonMouseClicked
 
     private void scrapeAllMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrapeAllMenuItemActionPerformed
-		list.scrapeSongs();
+		UIFunctionality.scrapeAllMenuItemActionPerformed(this);
     }//GEN-LAST:event_scrapeAllMenuItemActionPerformed
 
     private void scrapeAtStartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrapeAtStartMenuItemActionPerformed
-		boolean flag = scrapeAtStartMenuItem.isSelected();
-
-		Queries.updateScrapeAtStart(flag);
-		this.scrapeAtStart = flag;
+		UIFunctionality.scrapeAtStartMenuItemActionPerformed(this);
     }//GEN-LAST:event_scrapeAtStartMenuItemActionPerformed
 
-	private String secondsToMinutes(int seconds) {
-		int minutes = seconds / 60;
-		seconds %= 60;
-
-		return "" + ((minutes < 10) ? "0" + minutes : minutes) + ":" + ((seconds < 10) ? "0" + seconds : seconds);
+	// Getters
+	
+	public String getProject_path() {
+		return project_path;
 	}
 
-	private void selectSong(int index) {
-		if (list.getSongs().isEmpty()) {
-			return;
-		}
-
-		updateSongInfo(index);
-
-		currentSong = list.getSongs().get(index);
-		currentIndex = index;
-
-		player = new Mp3Player(currentSong.getAbsolutePath());
-		songsList.setSelectedIndex(index);
-		songsList.ensureIndexIsVisible(index);
-
-		slider.setValue(0);
-		timeLabel.setText("00:00");
+	public String getThemes_path() {
+		return themes_path;
 	}
 
-	public void setDefaultSongInfo() {
-		trackLabel.setText("Title");
-		artistLabel.setText("Artist");
-		albumLabel.setText("Album");
-
-		GUIMethods.loadImage(albumImageLabel, project_path + "/assets/album-image-placeholder.png");
+	public Theme getTheme() {
+		return theme;
 	}
 
-	public void updateSongInfo(int index) {
-		String path = list.getSongs().get(index).getAbsolutePath();
-		String title = list.getSongs().get(index).getTrack().getName();
-		String artist = list.getSongs().get(index).getTrack().getArtist();
-		String album = list.getSongs().get(index).getTrack().getAlbum();
-		String cover = list.getSongs().get(index).getCoverPath();
-
-		trackLabel.setText(title);
-		artistLabel.setText((artist == null) ? "Unknown Artist" : artist);
-		albumLabel.setText((album == null) ? "Unknown Album" : album);
-
-		Queries.updateSong(list.getSongs().get(index));
-
-		// If album has been scraped load album cover
-		if (album != null && !album.isBlank() && !album.equals("Unknown Album")) {
-			String coverURL = Queries.selectAlbumCover(album, artist);
-
-			if (coverURL == null) {
-				System.out.println("Cover is null");
-				GUIMethods.loadImage(albumImageLabel, project_path + "/assets/album-image-placeholder.png");
-				return;
-			}
-
-			BufferedImage image = GUIMethods.imageFromURL(coverURL);
-
-			GUIMethods.loadImage(albumImageLabel, image);
-
-			return;
-		}
-
-		// if not load imported image or placeholder
-		if (cover == null) {
-			System.out.println("Cover is null");
-			GUIMethods.loadImage(albumImageLabel, project_path + "/assets/album-image-placeholder.png");
-			return;
-		}
-
-		File albumCover = new File(cover);
-
-		if (albumCover.isFile()) {
-			BufferedImage img = null;
-
-			try {
-				img = ImageIO.read(new File(albumCover.getAbsolutePath()));
-			} catch (IOException e) {
-			}
-
-			if (img == null) {
-				return;
-			}
-
-			if (img.getWidth() > 392 || img.getHeight() > 324) {
-				BufferedImage resized = GUIMethods.resizeImage(img, 392, 324);
-				GUIMethods.loadImage(albumImageLabel, resized);
-			} else {
-				GUIMethods.loadImage(albumImageLabel, img);
-			}
-
-		}
+	public int getCurrentIndex() {
+		return currentIndex;
 	}
 
-	private void selectSong() {
-		selectSong(songsList.getSelectedIndex());
+	public Mp3File getCurrentSong() {
+		return currentSong;
 	}
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String args[]) {
-		try {
-			UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkIJTheme());
-		} catch (Exception ex) {
-			System.err.println("Failed to initialize LaF");
-		}
-
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-
-			public void run() {
-				new MainFrame().setVisible(true);
-			}
-		});
+	public SongsList getList() {
+		return list;
 	}
+
+	public boolean isScrapeAtStart() {
+		return scrapeAtStart;
+	}
+
+	public AudioPlayer getPlayer() {
+		return player;
+	}
+
+	public JMenu getApiMenu() {
+		return ApiMenu;
+	}
+
+	public JMenuItem getAddDirectoryMenuItem() {
+		return addDirectoryMenuItem;
+	}
+
+	public JMenuItem getAddFileMenuItem() {
+		return addFileMenuItem;
+	}
+
+	public JLabel getAlbumImageLabel() {
+		return albumImageLabel;
+	}
+
+	public JLabel getAlbumLabel() {
+		return albumLabel;
+	}
+
+	public JLabel getArtistLabel() {
+		return artistLabel;
+	}
+
+	public JPanel getBasicInfoPanel() {
+		return basicInfoPanel;
+	}
+
+	public JPanel getControlsPanel() {
+		return controlsPanel;
+	}
+
+	public JPanel getControlsParentPanel() {
+		return controlsParentPanel;
+	}
+
+	public JMenuItem getEditDirectoriesMenuItem() {
+		return editDirectoriesMenuItem;
+	}
+
+	public JMenu getEditMenu() {
+		return editMenu;
+	}
+
+	public JMenu getFileMenu() {
+		return fileMenu;
+	}
+
+	public JPanel getInfoBackground() {
+		return infoBackground;
+	}
+
+	public JMenu getjMenu1() {
+		return jMenu1;
+	}
+
+	public JMenuItem getjMenuItem1() {
+		return editFilesMenuItem;
+	}
+
+	public JScrollPane getjScrollPane1() {
+		return jScrollPane1;
+	}
+
+	public JScrollPane getjScrollPane2() {
+		return jScrollPane2;
+	}
+
+	public JButton getNextButton() {
+		return nextButton;
+	}
+
+	public JLabel getOptionsLabel() {
+		return optionsLabel;
+	}
+
+	public JButton getPlayButton() {
+		return playButton;
+	}
+
+	public JPanel getPlayerBackground() {
+		return playerBackground;
+	}
+
+	public JButton getPrevButton() {
+		return prevButton;
+	}
+
+	public JMenuItem getScrapeAllMenuItem() {
+		return scrapeAllMenuItem;
+	}
+
+	public JCheckBoxMenuItem getScrapeAtStartMenuItem() {
+		return scrapeAtStartMenuItem;
+	}
+
+	public JButton getSearchButton() {
+		return searchButton;
+	}
+
+	public JScrollBar getSlider() {
+		return slider;
+	}
+
+	public JPanel getSliderPanel() {
+		return sliderPanel;
+	}
+
+	public JList<String> getSongsList() {
+		return songsList;
+	}
+
+	public JComboBox<String> getSortComboBox() {
+		return sortComboBox;
+	}
+
+	public JLabel getSortbyLabel() {
+		return sortbyLabel;
+	}
+
+	public JTabbedPane getTabbedPane() {
+		return tabbedPane;
+	}
+
+	public JLabel getTimeLabel() {
+		return timeLabel;
+	}
+
+	public JLabel getTrackLabel() {
+		return trackLabel;
+	}
+	
+	public JRootPane getRootPane(){
+		return this.rootPane;
+	}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ApiMenu;
@@ -1047,11 +704,11 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel controlsPanel;
     private javax.swing.JPanel controlsParentPanel;
     private javax.swing.JMenuItem editDirectoriesMenuItem;
+    private javax.swing.JMenuItem editFilesMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JPanel infoBackground;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuBar menuBar;

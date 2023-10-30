@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import kdesp73.databridge.connections.DatabaseConnection;
 import kdesp73.databridge.helpers.QueryBuilder;
+import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.themeLib.Theme;
@@ -53,7 +54,7 @@ public class EditDirectories extends javax.swing.JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				frame.updateSongs();
+				Backend.updateSongs(frame);
 			}
 
 		});
@@ -173,8 +174,7 @@ public class EditDirectories extends javax.swing.JFrame {
 
 		db.close();
 
-		frame.updateSongs();
-		frame.setDefaultSongInfo();
+		Backend.setDefaultSongInfo(frame);
     }//GEN-LAST:event_removeButtonMouseClicked
 
     private void editButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editButtonMouseClicked
@@ -199,9 +199,6 @@ public class EditDirectories extends javax.swing.JFrame {
 		refreshPaths();
 
 		db.close();
-
-		frame.updateSongs();
-
     }//GEN-LAST:event_editButtonMouseClicked
 
 
