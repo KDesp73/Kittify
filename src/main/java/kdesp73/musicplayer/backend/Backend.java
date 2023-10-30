@@ -86,6 +86,7 @@ public class Backend {
 			if (mainFrame.scrapeAtStart) {
 				mainFrame.list.scrapeSongs();
 			}
+			
 		}
 	}
 
@@ -204,8 +205,8 @@ public class Backend {
 			mainFrame.currentIndex = index;
 
 			mainFrame.player = new Mp3Player(mainFrame.currentSong.getAbsolutePath());
-			mainFrame.getSongsList().setSelectedIndex(index);
 			mainFrame.getSongsList().ensureIndexIsVisible(index);
+			mainFrame.getSongsList().setSelectedIndex(index);
 
 			mainFrame.getSlider().setValue(0);
 			mainFrame.getTimeLabel().setText("00:00");

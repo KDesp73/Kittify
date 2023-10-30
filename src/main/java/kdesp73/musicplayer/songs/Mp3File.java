@@ -148,6 +148,8 @@ public class Mp3File extends File {
 		m.put("artist", tag.getValue(FieldKey.ARTIST).or(""));
 		m.put("album", tag.getValue(FieldKey.ALBUM).or(""));
 		m.put("duration", audioHeader.getDuration(TimeUnit.SECONDS, false));
+		m.put("bit-rate", audioHeader.getBitRate());
+		m.put("sample-rate", audioHeader.getSampleRate());
 
 		return m;
 	}

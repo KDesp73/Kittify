@@ -195,6 +195,16 @@ public class UIFunctionality {
 			mainFrame.getTimeLabel().setText(Backend.secondsToMinutes(mainFrame.getSlider().getValue()));
 		}
 	}
+	
+	public static void sliderMouseReleased(JFrame frame){
+		if(frame instanceof MainFrame){
+			int skip = mainFrame.getSlider().getValue();
+			
+			System.out.println("Skip: " + skip);
+			
+			mainFrame.player.seek(skip);
+		}
+	}
 
 	public static void optionsLabelMouseClicked(JFrame frame, MouseEvent evt) {
 		if (frame instanceof MainFrame) {

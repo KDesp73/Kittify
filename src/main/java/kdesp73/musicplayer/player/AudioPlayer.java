@@ -23,7 +23,7 @@ public abstract class AudioPlayer {
 	
 	public abstract void pause();
 	
-	public abstract void seek(long sample);
+	public abstract void seek(int seconds);
 	
 	public abstract void setVolume(int value, int maxValue);
 	
