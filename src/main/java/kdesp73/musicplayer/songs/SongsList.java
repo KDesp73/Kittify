@@ -203,7 +203,7 @@ public class SongsList {
 		// TODO: REPLACE BRUTE FORCE AT SOME POINT
 		for (int i = 0; i < list.size(); i++) {
 			Mp3File file = list.get(i);
-			if(file.getTrack().getName().contains(search)){
+			if(file.getTrack().getName().toLowerCase().contains(search.toLowerCase())){
 				return i;
 			}
 		}	
