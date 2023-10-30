@@ -199,11 +199,22 @@ public class SongsList {
 		list.sort((o1, o2) -> o2.getTimeOfImport().compareTo(o1.getTimeOfImport()));
 	}
 	
-	public int searchSong(String search){
+	public int searchSongName(String search){
 		// TODO: REPLACE BRUTE FORCE AT SOME POINT
 		for (int i = 0; i < list.size(); i++) {
 			Mp3File file = list.get(i);
 			if(file.getTrack().getName().toLowerCase().contains(search.toLowerCase())){
+				return i;
+			}
+		}	
+		return -1;
+	}
+	
+	public int searchSongPath(String path){
+		// TODO: REPLACE BRUTE FORCE AT SOME POINT
+		for (int i = 0; i < list.size(); i++) {
+			Mp3File file = list.get(i);
+			if(file.getAbsolutePath().equals(path)){
 				return i;
 			}
 		}	

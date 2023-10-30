@@ -255,7 +255,7 @@ public class UIFunctionality {
 				return;
 			}
 
-			int index = mainFrame.list.searchSong(search);
+			int index = mainFrame.list.searchSongName(search);
 
 			if (index < 0) {
 				JOptionPane.showMessageDialog(mainFrame, "Song not found");

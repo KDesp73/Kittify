@@ -140,13 +140,13 @@ public class Queries {
 		db.close();
 	}
 
-	public static int selectLastPlayed() {
+	public static String selectLastPlayed() {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select("last_played").from("Settings").build());
-		int sort_by = 0;
+		String sort_by = null;
 		try {
 			rs.next();
-			sort_by = rs.getInt(1);
+			sort_by = rs.getString(1);
 		} catch (SQLException ex) {
 			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -156,9 +156,9 @@ public class Queries {
 		return sort_by;
 	}
 
-	public static void updateLastPlayed(int index) {
+	public static void updateLastPlayed(String path) {
 		DatabaseConnection db = Database.connection();
-		db.executeUpdate(new QueryBuilder().update("Settings").set("last_played", index).where("key = 1").build());
+		db.executeUpdate(new QueryBuilder().update("Settings").set("last_played", path).where("key = 1").build());
 		db.close();
 
 	}

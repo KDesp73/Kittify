@@ -56,7 +56,7 @@ public class Backend {
 
 				@Override
 				public void windowClosing(WindowEvent e) {
-					Queries.updateLastPlayed(mainFrame.currentIndex);
+					Queries.updateLastPlayed(mainFrame.currentSong.getAbsolutePath());
 				}
 
 			});
@@ -64,7 +64,8 @@ public class Backend {
 			updateSongs(frame);
 
 			if (!mainFrame.list.getSongs().isEmpty()) {
-				mainFrame.currentIndex = Queries.selectLastPlayed();
+				sort(mainFrame);
+				mainFrame.currentIndex = (mainFrame.list.searchSongPath(Queries.selectLastPlayed()) < 0) ? 0 : mainFrame.list.searchSongPath(Queries.selectLastPlayed());
 				mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
 				selectSong(frame, mainFrame.currentIndex);
 			} else {
