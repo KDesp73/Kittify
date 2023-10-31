@@ -210,7 +210,7 @@ public class Queries {
 
 	public static void updateLastPlayed(String path) {
 		DatabaseConnection db = Database.connection();
-		db.executeUpdate(new QueryBuilder().update("Settings").set("last_played", path).where("key = 1").build());
+		db.executeUpdate(new QueryBuilder().update("Settings").set("last_played", Utils.replaceQuotes(path)).where("key = 1").build());
 		db.close();
 
 	}

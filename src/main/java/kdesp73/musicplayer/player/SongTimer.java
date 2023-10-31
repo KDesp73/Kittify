@@ -63,11 +63,11 @@ public class SongTimer extends Thread {
 	public void pause() {
 		this.pause = true;
 		this.stop();
-		try {
-			this.join();
-		} catch (InterruptedException ex) {
-			Logger.getLogger(SongTimer.class.getName()).log(Level.SEVERE, null, ex);
-		}
+//		try {
+//			this.join();
+//		} catch (InterruptedException ex) {
+//			Logger.getLogger(SongTimer.class.getName()).log(Level.SEVERE, null, ex);
+//		}
 	}
 
 	public void proceed() {

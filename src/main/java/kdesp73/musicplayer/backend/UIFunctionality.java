@@ -124,11 +124,11 @@ public class UIFunctionality {
 	public static void songsListMouseClicked(JFrame frame, MouseEvent evt) {
 		if (frame instanceof MainFrame) {
 			if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
-
+				mainFrame.player.timer.stop();
+				
 				Backend.selectSong(mainFrame);
 
-				mainFrame.player.setSong(mainFrame.currentIndex);
-				mainFrame.player.play();
+				mainFrame.player.play(mainFrame.getSongsList().getSelectedIndex());
 				mainFrame.getPlayButton().setText("Pause");
 			}
 		}
@@ -150,9 +150,10 @@ public class UIFunctionality {
 	public static void songsListKeyPressed(JFrame frame, KeyEvent evt) {
 		if (frame instanceof MainFrame) {
 			if (evt.getKeyChar() == '\n') {
+				mainFrame.player.timer.stop();
 
 				Backend.selectSong(mainFrame);
-				mainFrame.player.play();
+				mainFrame.player.play(mainFrame.getSongsList().getSelectedIndex());
 				mainFrame.getPlayButton().setText("Pause");
 			}
 		}

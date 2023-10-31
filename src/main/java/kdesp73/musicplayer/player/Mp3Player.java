@@ -30,7 +30,7 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 	private BasicController controller;
 	private JSlider progressSlider;
 	private JLabel timerLabel;
-	private SongTimer timer;
+	public SongTimer timer;
 
 	public Mp3Player() {
 		super(0, null);
@@ -58,7 +58,7 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 	@Override
 	public void play() {
 		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
-		 
+
 		try {
 
 			if (player.getStatus() == BasicPlayer.PAUSED) {
@@ -71,11 +71,11 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 			}
 
 			player.open(new File(playlist.get(playingIndex)));
-			timer.start();
 
 			System.out.println("Playing \"" + playlist.get(playingIndex) + "\"");
 
 			player.play();
+			timer.start();
 			player.setGain(volume);
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
@@ -84,6 +84,7 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 
 	@Override
 	public void play(int index) {
+		this.playingIndex = index;
 		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
 		try {
 
@@ -97,26 +98,25 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 			}
 
 			player.open(new File(playlist.get(index)));
-			timer.start();
 
-			System.out.println("Playing \"" + playlist.get(playingIndex) + "\"");
+			System.out.println("Playing \"" + playlist.get(index) + "\"");
 
 			player.play();
+			timer.start();
 			player.setGain(volume);
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
-
 	}
 
 	@Override
 	public void stop() {
 		try {
 			player.stop();
+			timer.stop();
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
-
 	}
 
 	@Override

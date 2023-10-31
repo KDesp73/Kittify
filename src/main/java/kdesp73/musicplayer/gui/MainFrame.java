@@ -23,6 +23,7 @@ import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.songs.SongsList;
 import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.backend.UIFunctionality;
+import kdesp73.musicplayer.player.Mp3Player;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.YamlFile;
 
@@ -41,7 +42,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public SongsList list;
 	public boolean scrapeAtStart = false;
 
-	public AudioPlayer player;
+	public Mp3Player player;
 
 	public static MainFrame create(){
 		MainFrame frame = new MainFrame();
