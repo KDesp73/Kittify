@@ -6,26 +6,37 @@ package kdesp73.musicplayer.player;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayer;
+import javazoom.jlgui.basicplayer.BasicPlayerEvent;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
+import javazoom.jlgui.basicplayer.BasicPlayerListener;
+import kdesp73.musicplayer.gui.MainFrame;
+import kdesp73.musicplayer.songs.Mp3File;
 
 /**
  *
  * @author konstantinos
  */
-public class Mp3Player extends AudioPlayer {
+public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 
 	private BasicPlayer player;
+	private BasicController controller;
 	private JSlider progressSlider;
+	private JLabel timerLabel;
+	private SongTimer timer;
 
 	public Mp3Player() {
 		super(0, null);
 		this.player = new BasicPlayer();
 		this.volume = 1;
+		player.addBasicPlayerListener(this);
 	}
 
 	public Mp3Player(int index, ArrayList<String> playlist) {
@@ -33,19 +44,25 @@ public class Mp3Player extends AudioPlayer {
 
 		this.player = new BasicPlayer();
 		this.volume = 1;
+		player.addBasicPlayerListener(this);
 
 	}
 
-	public void setSlider(JSlider slider) {
-		this.progressSlider = slider;
+	public void setFrame(JFrame frame) {
+		if (frame instanceof MainFrame mf) {
+			this.progressSlider = mf.getSlider();
+			this.timerLabel = mf.getTimeLabel();
+		}
 	}
 
 	@Override
 	public void play() {
-
+		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
+		 
 		try {
 
 			if (player.getStatus() == BasicPlayer.PAUSED) {
+				timer.resume();
 				player.resume();
 				return;
 			}
@@ -54,6 +71,7 @@ public class Mp3Player extends AudioPlayer {
 			}
 
 			player.open(new File(playlist.get(playingIndex)));
+			timer.start();
 
 			System.out.println("Playing \"" + playlist.get(playingIndex) + "\"");
 
@@ -62,7 +80,6 @@ public class Mp3Player extends AudioPlayer {
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
-
 	}
 
 	public void play(int index) {
@@ -88,7 +105,7 @@ public class Mp3Player extends AudioPlayer {
 		}
 
 	}
-	
+
 	@Override
 	public void stop() {
 		try {
@@ -103,6 +120,7 @@ public class Mp3Player extends AudioPlayer {
 	public void pause() {
 		try {
 			player.pause();
+			timer.pause();
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
@@ -114,16 +132,18 @@ public class Mp3Player extends AudioPlayer {
 		System.out.println("Seconds: " + seconds);
 		System.out.println("Frames: " + secondsToFrames(seconds));
 
+//		long duration = (long) new Mp3File(this.playlist.get(playingIndex)).getMetadata().get("duration");
+//		long newPosition = (long) (duration * seconds * 0.01);
 		try {
-			player.seek(seconds);
-			player.setGain(this.volume);
-		} catch (BasicPlayerException bpEx) {
-			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
+			player.seek(secondsToFrames(seconds));
+		} catch (BasicPlayerException e) {
+			e.printStackTrace();
 		}
 	}
 
 	private long secondsToFrames(long seconds) {
-		return -1;
+		final double FRAMES_PER_SECOND = 38.46;
+		return (long) (seconds * FRAMES_PER_SECOND);
 	}
 
 	@Override
@@ -167,5 +187,38 @@ public class Mp3Player extends AudioPlayer {
 	@Override
 	public void setSong(int index) {
 		this.playingIndex = index;
+	}
+
+	@Override
+	public void opened(Object o, Map map) {
+		System.out.println("Song opened for playback.");
+	}
+
+	@Override
+	public void progress(int i, long l, byte[] bytes, Map map) {
+//		double duration = (double) map.get("duration");
+//		double currentProgress = (l / (duration * 1000.0)) * 100.0;
+//		progressSlider.setValue((int) currentProgress);
+	}
+
+	@Override
+	public void stateUpdated(BasicPlayerEvent bpe) {
+//		if (bpe.getCode() == BasicPlayerEvent.STOPPED /* && duration == timePassed*/) {
+//			// IF REPEAT
+//			// IF SHUFFLE
+//
+//			
+//			
+//			if (this.playingIndex < playlist.size()) {
+//				next();
+//			} else {
+//				System.out.println("End of playlist.");
+//			}
+//		}
+	}
+
+	@Override
+	public void setController(BasicController bc) {
+		controller = bc;
 	}
 }

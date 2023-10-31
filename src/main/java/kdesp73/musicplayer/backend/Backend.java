@@ -71,6 +71,7 @@ public class Backend {
 			}
 
 			mainFrame.player = new Mp3Player(mainFrame.currentIndex, mainFrame.list.getPaths());
+			((Mp3Player) mainFrame.player).setFrame(mainFrame);
 
 			selectSong(mainFrame, mainFrame.currentIndex);
 
@@ -213,6 +214,7 @@ public class Backend {
 			mainFrame.getSongsList().ensureIndexIsVisible(index);
 			mainFrame.getSongsList().setSelectedIndex(index);
 
+			mainFrame.getSlider().setMaximum((int) (mainFrame.currentSong.getDurationInSeconds() + 1));
 			mainFrame.getSlider().setValue(0);
 			mainFrame.getTimeLabel().setText("00:00");
 		}
@@ -224,6 +226,7 @@ public class Backend {
 			mainFrame.getTrackLabel().setText("Title");
 			mainFrame.getArtistLabel().setText("Artist");
 			mainFrame.getAlbumLabel().setText("Album");
+			mainFrame.getTimeLabel().setText("00:00");
 
 			GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 		}

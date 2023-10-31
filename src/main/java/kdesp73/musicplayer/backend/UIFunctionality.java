@@ -87,6 +87,8 @@ public class UIFunctionality {
 	public static void sortComboBoxActionPerformed(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			Queries.updateSortBy(Backend.sort(mainFrame));
+		
+			mainFrame.player.playlist = ((MainFrame) frame).list.getPaths();
 		}
 	}
 
@@ -111,8 +113,8 @@ public class UIFunctionality {
 			}
 
 			
-			mainFrame.player.next();
 			Backend.selectSong(mainFrame, index + 1);
+			mainFrame.player.next();
 
 
 			mainFrame.getPlayButton().setText("Pause");
