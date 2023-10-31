@@ -62,8 +62,8 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 		try {
 
 			if (player.getStatus() == BasicPlayer.PAUSED) {
-				timer.resume();
 				player.resume();
+				timer.proceed();
 				return;
 			}
 			if (player.getStatus() != BasicPlayer.STOPPED) {
@@ -82,12 +82,14 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 		}
 	}
 
+	@Override
 	public void play(int index) {
-
+		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
 		try {
 
 			if (player.getStatus() == BasicPlayer.PAUSED) {
 				player.resume();
+				timer.proceed();
 				return;
 			}
 			if (player.getStatus() != BasicPlayer.STOPPED) {
@@ -95,6 +97,7 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 			}
 
 			player.open(new File(playlist.get(index)));
+			timer.start();
 
 			System.out.println("Playing \"" + playlist.get(playingIndex) + "\"");
 

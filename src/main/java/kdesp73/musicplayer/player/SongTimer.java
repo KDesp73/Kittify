@@ -17,12 +17,13 @@ import kdesp73.musicplayer.songs.Mp3File;
  *
  * @author konstantinos
  */
-public class SongTimer extends Timer {
+public class SongTimer extends Thread {
 
 	private boolean pause;
 	private Mp3File file;
 	private JSlider slider;
 	private JLabel timerLabel;
+	private int startAt = 0;
 	public int progress = 0;
 
 	public SongTimer(JLabel timerLabel, JSlider slider, Mp3File file) {
@@ -33,59 +34,47 @@ public class SongTimer extends Timer {
 		this.timerLabel = timerLabel;
 	}
 
-	public void start() {
-		this.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				if (!pause) {
+	public SongTimer(JLabel timerLabel, JSlider slider, Mp3File file, int startAt) {
+		super();
 
-					slider.setValue(slider.getValue() + 1);
-					timerLabel.setText(Backend.secondsToMinutes(slider.getValue()));
-
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException ex) {
-						Logger.getLogger(SongTimer.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-
-			}
-
-		}, 0, file.getDurationInSeconds());
+		this.file = file;
+		this.slider = slider;
+		this.timerLabel = timerLabel;
+		this.startAt = startAt;
 	}
 
-	public void start(int seconds) {
-		this.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				if (!pause) {
+	@Override
+	public void run() {
+		if (!pause) {
+			for (int i = startAt; i < file.getDurationInSeconds(); i++) {
 
-					slider.setValue(slider.getValue() + 1);
-					timerLabel.setText(Backend.secondsToMinutes(slider.getValue()));
+				slider.setValue(slider.getValue() + 1);
+				timerLabel.setText(Backend.secondsToMinutes(slider.getValue()));
 
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException ex) {
-						Logger.getLogger(SongTimer.class.getName()).log(Level.SEVERE, null, ex);
-					}
-
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ex) {
+					Logger.getLogger(SongTimer.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
-
-		}, seconds, file.getDurationInSeconds());
-	}
-
-	public void stop() {
-		this.cancel();
+		}
 	}
 
 	public void pause() {
 		this.pause = true;
-		this.cancel();
+		this.stop();
+		try {
+			this.join();
+		} catch (InterruptedException ex) {
+			Logger.getLogger(SongTimer.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 
-	public void resume() {
+	public void proceed() {
+		this.startAt = slider.getValue();
 		this.pause = false;
-		start(slider.getValue());
+		
+		this.start();
 	}
+
 }
