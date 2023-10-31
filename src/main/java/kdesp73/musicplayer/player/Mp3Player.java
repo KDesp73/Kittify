@@ -37,6 +37,7 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 		this.player = new BasicPlayer();
 		this.volume = 1;
 		player.addBasicPlayerListener(this);
+		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
 	}
 
 	public Mp3Player(int index, ArrayList<String> playlist) {
@@ -45,7 +46,7 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 		this.player = new BasicPlayer();
 		this.volume = 1;
 		player.addBasicPlayerListener(this);
-
+		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
 	}
 
 	public void setFrame(JFrame frame) {

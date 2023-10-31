@@ -87,7 +87,7 @@ public class UIFunctionality {
 	public static void sortComboBoxActionPerformed(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			Queries.updateSortBy(Backend.sort(mainFrame));
-		
+
 			mainFrame.player.playlist = ((MainFrame) frame).list.getPaths();
 		}
 	}
@@ -112,25 +112,28 @@ public class UIFunctionality {
 				return;
 			}
 
-			
-			Backend.selectSong(mainFrame, index + 1);
 			mainFrame.player.next();
-
+			Backend.selectSong(mainFrame, index + 1);
 
 			mainFrame.getPlayButton().setText("Pause");
 		}
 	}
 
 	public static void songsListMouseClicked(JFrame frame, MouseEvent evt) {
-		if (frame instanceof MainFrame) {
-			if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
-				mainFrame.player.timer.stop();
-				
-				Backend.selectSong(mainFrame);
+		if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+			playSong(frame);
+		}
+	}
 
-				mainFrame.player.play(mainFrame.getSongsList().getSelectedIndex());
-				mainFrame.getPlayButton().setText("Pause");
-			}
+	public static void playSong(JFrame frame) {
+		if (frame instanceof MainFrame) {
+
+			mainFrame.player.timer.stop();
+
+			Backend.selectSong(mainFrame);
+
+			mainFrame.player.play(mainFrame.getSongsList().getSelectedIndex());
+			mainFrame.getPlayButton().setText("Pause");
 		}
 	}
 
@@ -148,14 +151,8 @@ public class UIFunctionality {
 	}
 
 	public static void songsListKeyPressed(JFrame frame, KeyEvent evt) {
-		if (frame instanceof MainFrame) {
-			if (evt.getKeyChar() == '\n') {
-				mainFrame.player.timer.stop();
-
-				Backend.selectSong(mainFrame);
-				mainFrame.player.play(mainFrame.getSongsList().getSelectedIndex());
-				mainFrame.getPlayButton().setText("Pause");
-			}
+		if (evt.getKeyChar() == '\n') {
+			playSong(frame);
 		}
 	}
 
@@ -166,8 +163,6 @@ public class UIFunctionality {
 			if (index == 0) {
 				return;
 			}
-
-
 
 			mainFrame.player.prev();
 			Backend.selectSong(mainFrame, index - 1);
@@ -190,13 +185,13 @@ public class UIFunctionality {
 			mainFrame.getTimeLabel().setText(Backend.secondsToMinutes(mainFrame.getSlider().getValue()));
 		}
 	}
-	
-	public static void sliderMouseReleased(JFrame frame){
-		if(frame instanceof MainFrame){
+
+	public static void sliderMouseReleased(JFrame frame) {
+		if (frame instanceof MainFrame) {
 			int skip = mainFrame.getSlider().getValue();
-			
+
 			System.out.println("Skip: " + skip);
-			
+
 			mainFrame.player.seek(skip);
 		}
 	}
