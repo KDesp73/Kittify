@@ -112,6 +112,7 @@ public class UIFunctionality {
 				return;
 			}
 
+			mainFrame.player.timer.stop();
 			mainFrame.player.next();
 			Backend.selectSong(mainFrame, index + 1);
 
@@ -164,6 +165,7 @@ public class UIFunctionality {
 				return;
 			}
 
+			mainFrame.player.timer.stop();
 			mainFrame.player.prev();
 			Backend.selectSong(mainFrame, index - 1);
 
