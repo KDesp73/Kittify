@@ -247,52 +247,55 @@ public class Backend {
 
 			Queries.updateSong(mainFrame.list.getSongs().get(index));
 
+			if (cover != null && cover.isBlank()) {
+				Queries.updateLocalCoverPath(album, artist, cover);
+			}
+
 			// If album has been scraped load album cover
 			if (album != null && !album.isBlank() && !album.equals("Unknown Album")) {
 				String coverURL = Queries.selectAlbumCover(album, artist);
+				String coverPath = Queries.selectLocalCoverPath(album, artist);
 
-				if (coverURL == null) {
-					System.out.println("Cover is null");
-					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
-					return;
-				}
-
-				BufferedImage image = GUIMethods.imageFromURL(coverURL);
-
-				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), image);
-
-				return;
-			}
-
-			// if not load imported image or placeholder
-			if (cover == null) {
-				System.out.println("Cover is null");
-				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
-				return;
-			}
-
-			File albumCover = new File(cover);
-
-			if (albumCover.isFile()) {
-				BufferedImage img = null;
-
-				try {
-					img = ImageIO.read(new File(albumCover.getAbsolutePath()));
-				} catch (IOException e) {
-				}
-
-				if (img == null) {
-					return;
-				}
-
-				if (img.getWidth() > 392 || img.getHeight() > 324) {
-					BufferedImage resized = GUIMethods.resizeImage(img, 392, 324);
-					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), resized);
+				if (coverPath != null) {
+					BufferedImage image = GUIMethods.imageFromURL(coverPath);
+					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), image);
+				} else if (coverURL != null) {
+					BufferedImage image = GUIMethods.imageFromURL(coverURL);
+					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), image);
 				} else {
-					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), img);
+					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 				}
-
 			}
+
+//			// if not load imported image or placeholder
+//			if (cover == null) {
+//				System.out.println("Cover is null");
+//				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+//				return;
+//			}
+//
+//			File albumCover = new File(cover);
+//
+//			if (albumCover.isFile()) {
+//				BufferedImage img = null;
+//
+//				try {
+//					img = ImageIO.read(new File(albumCover.getAbsolutePath()));
+//				} catch (IOException e) {
+//				}
+//
+//				if (img == null) {
+//					return;
+//				}
+//
+//				if (img.getWidth() > 392 || img.getHeight() > 324) {
+//					BufferedImage resized = GUIMethods.resizeImage(img, 392, 324);
+//					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), resized);
+//				} else {
+//					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), img);
+//				}
+//
+//			}
 		}
 	}
 

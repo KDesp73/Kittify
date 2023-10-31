@@ -27,6 +27,58 @@ import kdesp73.musicplayer.gui.MainFrame;
  */
 public class Queries {
 
+	public static void updateLocalArtistImagePath(String artist, String path) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().update("Artists").set("local_image_path", path).where("name = \'" + Utils.replaceQuotes(artist) + "\'").build());
+
+		db.close();
+	}
+
+	public static String selectLocalArtistImagePath(String artist) {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("local_image_path").from("Artists").where("name = \'" + Utils.replaceQuotes(artist) + "\'").build());
+
+		String path = null;
+		try {
+			rs.next();
+			path = rs.getString(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+		return path;
+	}
+	
+	public static void updateLocalCoverPath(String album, String artist, String path) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().update("Albums").set("local_cover_path", path).where("name = \'" + Utils.replaceQuotes(album) + "\' AND artist = \'" + Utils.replaceQuotes(artist) + "\'").build());
+
+		db.close();
+	}
+
+	public static String selectLocalCoverPath(String album, String artist) {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("local_cover_path").from("Albums").where("name = \'" + Utils.replaceQuotes(album) + "\' AND artist = \'" + Utils.replaceQuotes(artist) + "\'").build());
+
+		String path = null;
+		try {
+			rs.next();
+			path = rs.getString(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+		return path;
+	}
+	
+	
+
 	public static boolean selectScrapeAtStart() {
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select("scrape_at_start").from("Settings").build());
@@ -170,7 +222,6 @@ public class Queries {
 				+ "SET title = \'" + Utils.replaceQuotes(file.getTrack().getName())
 				+ "\', artist = \'" + Utils.replaceQuotes(file.getTrack().getArtist())
 				+ "\', album = \'" + Utils.replaceQuotes(file.getTrack().getAlbum())
-				+ "\', image_path = \'" + Utils.replaceQuotes(file.getCoverPath())
 				+ "\' WHERE path = \'" + Utils.replaceQuotes(file.getAbsolutePath()) + "\'";
 
 		db.executeUpdate(query);
