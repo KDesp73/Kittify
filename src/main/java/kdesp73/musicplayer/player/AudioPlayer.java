@@ -4,20 +4,25 @@
  */
 package kdesp73.musicplayer.player;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author konstantinos
  */
 public abstract class AudioPlayer {
-	private String path;
-	private int pausedAt = 0;
+	public int pausedAt = 0;
 	public double volume;
-
-	public AudioPlayer(String path) {
-		this.path = path;
+	public ArrayList<String> playlist;
+	public int playingIndex;
+	
+	public AudioPlayer(int playingIndex, ArrayList<String> playlist) {
+		this.playlist = playlist;
+		this.playingIndex = playingIndex;
 	}
 
 	public abstract void play();
+	public abstract void play(int index);
 
 	public abstract void stop();
 	
@@ -27,7 +32,13 @@ public abstract class AudioPlayer {
 	
 	public abstract void setVolume(int value, int maxValue);
 	
+	public abstract void next();
+	
+	public abstract void prev();
+	
 	public abstract boolean isPlaying();
+	
+	public abstract void setSong(int index);
 
 	public int getPausedAt() {
 		return pausedAt;
@@ -37,12 +48,8 @@ public abstract class AudioPlayer {
 		this.pausedAt = pausedAt;
 	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
+	public String getCurrentSong(){
+		return playlist.get(playingIndex);
 	}
 
 	public double getVolume() {

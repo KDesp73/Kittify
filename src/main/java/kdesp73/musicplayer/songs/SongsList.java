@@ -167,6 +167,16 @@ public class SongsList {
 	public ArrayList<Mp3File> getSongs() {
 		return list;
 	}
+	
+	public ArrayList<String> getPaths(){
+		ArrayList<String> arr = new ArrayList<>();
+		
+		for(Mp3File file : list){
+			arr.add(file.getAbsolutePath());
+		}
+		
+		return arr;
+	}
 
 	public void sortByName() {
 		list.sort((o1, o2) -> {

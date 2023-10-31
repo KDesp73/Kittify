@@ -38,9 +38,9 @@ import kdesp73.musicplayer.songs.SongsList;
  * @author konstantinos
  */
 public class Backend {
+
 	private static MainFrame mainFrame;
-	
-	
+
 	public static void setMainFrame(MainFrame mainFrame) {
 		Backend.mainFrame = mainFrame;
 		UIFunctionality.setMainFrame(mainFrame);
@@ -62,17 +62,16 @@ public class Backend {
 			});
 
 			updateSongs(frame);
-
 			if (!mainFrame.list.getSongs().isEmpty()) {
 				sort(mainFrame);
 				mainFrame.currentIndex = (mainFrame.list.searchSongPath(Queries.selectLastPlayed()) < 0) ? 0 : mainFrame.list.searchSongPath(Queries.selectLastPlayed());
 				mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
-				selectSong(frame, mainFrame.currentIndex);
 			} else {
 				setDefaultSongInfo(frame);
 			}
 
-			mainFrame.player = new Mp3Player(mainFrame.currentSong.getAbsolutePath());
+			mainFrame.player = new Mp3Player(mainFrame.currentIndex, mainFrame.list.getPaths());
+
 			selectSong(mainFrame, mainFrame.currentIndex);
 
 			mainFrame.getSongsList().setFixedCellHeight(35);
@@ -87,7 +86,7 @@ public class Backend {
 			if (mainFrame.scrapeAtStart) {
 				mainFrame.list.scrapeSongs();
 			}
-			
+
 		}
 	}
 
@@ -129,6 +128,10 @@ public class Backend {
 				default ->
 					throw new AssertionError();
 			}
+		}
+
+		if (mainFrame.player != null) {
+			mainFrame.player.playlist = mainFrame.list.getPaths();
 		}
 
 		return null;
@@ -205,7 +208,8 @@ public class Backend {
 			mainFrame.currentSong = mainFrame.list.getSongs().get(index);
 			mainFrame.currentIndex = index;
 
-			mainFrame.player = new Mp3Player(mainFrame.currentSong.getAbsolutePath());
+			mainFrame.player.setSong(index);
+
 			mainFrame.getSongsList().ensureIndexIsVisible(index);
 			mainFrame.getSongsList().setSelectedIndex(index);
 

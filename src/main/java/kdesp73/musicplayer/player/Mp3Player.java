@@ -5,22 +5,13 @@
 package kdesp73.musicplayer.player;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
-import javazoom.jl.decoder.Bitstream;
-import javazoom.jl.decoder.BitstreamException;
-import javazoom.jl.decoder.Header;
-import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayer;
-import javazoom.jlgui.basicplayer.BasicPlayerEvent;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import kdesp73.musicplayer.songs.Mp3File;
 
 /**
  *
@@ -29,21 +20,18 @@ import kdesp73.musicplayer.songs.Mp3File;
 public class Mp3Player extends AudioPlayer {
 
 	private BasicPlayer player;
-	private BasicController control;
 	private JSlider progressSlider;
 
 	public Mp3Player() {
-		super("");
+		super(0, null);
 		this.player = new BasicPlayer();
-		this.control = (BasicController) player;
 		this.volume = 1;
 	}
 
-	public Mp3Player(String file) {
-		super(file);
+	public Mp3Player(int index, ArrayList<String> playlist) {
+		super(index, playlist);
 
 		this.player = new BasicPlayer();
-		this.control = (BasicController) player;
 		this.volume = 1;
 
 	}
@@ -65,19 +53,46 @@ public class Mp3Player extends AudioPlayer {
 				player.stop();
 			}
 
-			control.open(new File(this.getPath()));
-			control.play();
-			control.setGain(volume);
+			player.open(new File(playlist.get(playingIndex)));
+
+			System.out.println("Playing \"" + playlist.get(playingIndex) + "\"");
+
+			player.play();
+			player.setGain(volume);
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
 
 	}
 
+	public void play(int index) {
+
+		try {
+
+			if (player.getStatus() == BasicPlayer.PAUSED) {
+				player.resume();
+				return;
+			}
+			if (player.getStatus() != BasicPlayer.STOPPED) {
+				player.stop();
+			}
+
+			player.open(new File(playlist.get(index)));
+
+			System.out.println("Playing \"" + playlist.get(playingIndex) + "\"");
+
+			player.play();
+			player.setGain(volume);
+		} catch (BasicPlayerException bpEx) {
+			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
+		}
+
+	}
+	
 	@Override
 	public void stop() {
 		try {
-			control.stop();
+			player.stop();
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
@@ -87,7 +102,7 @@ public class Mp3Player extends AudioPlayer {
 	@Override
 	public void pause() {
 		try {
-			control.pause();
+			player.pause();
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
@@ -100,14 +115,14 @@ public class Mp3Player extends AudioPlayer {
 		System.out.println("Frames: " + secondsToFrames(seconds));
 
 		try {
-			control.seek(seconds);
-			control.setGain(this.volume);
+			player.seek(seconds);
+			player.setGain(this.volume);
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
 	}
 
-	private long secondsToFrames(long seconds){
+	private long secondsToFrames(long seconds) {
 		return -1;
 	}
 
@@ -135,5 +150,22 @@ public class Mp3Player extends AudioPlayer {
 	@Override
 	public boolean isPlaying() {
 		return (player.getStatus() == BasicPlayer.PLAYING);
+	}
+
+	@Override
+	public void next() {
+		this.playingIndex++;
+		play(playingIndex);
+	}
+
+	@Override
+	public void prev() {
+		this.playingIndex--;
+		play(playingIndex);
+	}
+
+	@Override
+	public void setSong(int index) {
+		this.playingIndex = index;
 	}
 }
