@@ -248,7 +248,7 @@ public class Backend {
 				try {
 					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), GUIMethods.imageFromURL(artist.getImage()));
 				} catch (java.lang.NullPointerException e) {
-					// Load artist placeholder image
+					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/artist-image-placeholder.png");
 				}
 			}
 
@@ -349,8 +349,9 @@ public class Backend {
 			}
 
 			// Download image
+			String imagePath = mainFrame.getProject_path() + "/covers/" + selectedSong.getTrack().getAlbum() + " - " + selectedSong.getTrack().getArtist() + ".png";
 			try {
-				GUIMethods.downloadImage(new URL(coverURL), mainFrame.getProject_path() + "/covers/" + selectedSong.getTrack().getAlbum() + " - " + selectedSong.getTrack().getArtist() + ".png");
+				GUIMethods.downloadImage(new URL(coverURL), imagePath);
 			} catch (MalformedURLException ex) {
 				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 				System.err.println("Invalid URL");
@@ -358,6 +359,9 @@ public class Backend {
 				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 				System.err.println("Downloading image failed");
 			}
+			
+			Queries.updateLocalCoverPath(selectedSong.getTrack().getAlbum(), selectedSong.getTrack().getArtist(), imagePath);
+			JOptionPane.showMessageDialog(mainFrame, "Downloaded image at covers/ directory");
 		}
 
 	}
