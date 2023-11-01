@@ -77,8 +77,6 @@ public class Backend {
 
 			mainFrame.getSongsList().setFixedCellHeight(35);
 
-			GUIMethods.loadImage(mainFrame.getOptionsLabel(), mainFrame.getProject_path() + "/assets/ellipsis-vertical-solid-small.png");
-
 			mainFrame.getSortComboBox().setSelectedItem(Queries.selectSortBy());
 
 			mainFrame.scrapeAtStart = Queries.selectScrapeAtStart();
@@ -311,7 +309,7 @@ public class Backend {
 
 			new EditSongInfo(mainFrame).setVisible(true);
 
-			selectSong(mainFrame, mainFrame.currentIndex);
+//			selectSong(mainFrame, mainFrame.getSongsList().getSelectedIndex());
 			refreshList(mainFrame);
 		}
 	}
@@ -320,8 +318,8 @@ public class Backend {
 		if (frame instanceof MainFrame) {
 
 			API api = new API();
-			String artist = mainFrame.currentSong.getTrack().getArtist();
-			String title = mainFrame.currentSong.getTrack().getName();
+			String artist = mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack().getArtist();
+			String title = mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack().getName();
 
 			Pair<String, Integer> response = null;
 
@@ -351,7 +349,7 @@ public class Backend {
 
 				artist = (String) JOptionPane.showInputDialog(mainFrame, "Select Artist", "", JOptionPane.QUESTION_MESSAGE, null, propableArtists.toArray(), 0);
 
-				mainFrame.currentSong.getTrack().setArtist(artist);
+				mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack().setArtist(artist);
 			}
 
 			// Make an API call using title and artist (LastFmMethods.Track.getInfo)
@@ -375,7 +373,7 @@ public class Backend {
 			}
 
 			// Update the Song
-			mainFrame.currentSong.setTrack(new Track(response.first));
+			mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).setTrack(new Track(response.first));
 
 			// Scrape for the Album if not scraped already
 			if (mainFrame.currentSong.getTrack().getAlbum() != null && !mainFrame.currentSong.getTrack().getAlbum().isBlank()) {
@@ -384,7 +382,7 @@ public class Backend {
 
 				if (album == null) {
 					try {
-						response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, mainFrame.currentSong.getTrack().getAlbum()));
+						response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack().getAlbum()));
 					} catch (IOException | InterruptedException ex) {
 						System.err.println("Album scrape fail");
 					}
@@ -408,14 +406,14 @@ public class Backend {
 				Queries.insertArtist(artistO);
 			}
 
-			Queries.updateSong(mainFrame.currentSong);
-			Queries.updateScraped(true, mainFrame.currentSong.getAbsolutePath());
+			Queries.updateSong(mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()));
+			Queries.updateScraped(true, mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getAbsolutePath());
 			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
 			sort(mainFrame);
-			Backend.selectSong(mainFrame, mainFrame.currentIndex);
+//			selectSong(mainFrame, mainFrame.getSongsList().getSelectedIndex());
 			refreshList(mainFrame);
-			mainFrame.getSongsList().setSelectedIndex(mainFrame.currentIndex);
+			mainFrame.getSongsList().setSelectedIndex(mainFrame.getSongsList().getSelectedIndex());
 		}
 	}
 

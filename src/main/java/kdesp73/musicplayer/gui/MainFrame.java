@@ -87,7 +87,6 @@ public final class MainFrame extends javax.swing.JFrame {
         trackLabel = new javax.swing.JLabel();
         artistLabel = new javax.swing.JLabel();
         albumLabel = new javax.swing.JLabel();
-        optionsLabel = new javax.swing.JLabel();
         albumImageLabel = new javax.swing.JLabel();
         infoBackground = new javax.swing.JPanel();
         searchButton = new javax.swing.JButton();
@@ -266,30 +265,20 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
-        optionsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        optionsLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        optionsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                optionsLabelMouseClicked(evt);
-            }
-        });
-
         javax.swing.GroupLayout controlsParentPanelLayout = new javax.swing.GroupLayout(controlsParentPanel);
         controlsParentPanel.setLayout(controlsParentPanelLayout);
         controlsParentPanelLayout.setHorizontalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(controlsParentPanelLayout.createSequentialGroup()
-                .addContainerGap(200, Short.MAX_VALUE)
+                .addContainerGap(218, Short.MAX_VALUE)
                 .addGroup(controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sliderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(basicInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(controlsParentPanelLayout.createSequentialGroup()
                         .addGap(53, 53, 53)
                         .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                        .addComponent(optionsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(17, 17, 17)))
-                .addContainerGap(200, Short.MAX_VALUE))
+                .addContainerGap(218, Short.MAX_VALUE))
         );
         controlsParentPanelLayout.setVerticalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -299,9 +288,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sliderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(controlsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(optionsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
 
@@ -508,10 +495,6 @@ public final class MainFrame extends javax.swing.JFrame {
 		UIFunctionality.prevButtonMouseClicked(this);
     }//GEN-LAST:event_prevButtonMouseClicked
 
-    private void optionsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseClicked
-		UIFunctionality.optionsLabelMouseClicked(this, evt);
-    }//GEN-LAST:event_optionsLabelMouseClicked
-
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
 		UIFunctionality.searchButtonMouseClicked(this);
     }//GEN-LAST:event_searchButtonMouseClicked
@@ -642,10 +625,6 @@ public final class MainFrame extends javax.swing.JFrame {
 		return nextButton;
 	}
 
-	public JLabel getOptionsLabel() {
-		return optionsLabel;
-	}
-
 	public JButton getPlayButton() {
 		return playButton;
 	}
@@ -728,7 +707,6 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton nextButton;
-    private javax.swing.JLabel optionsLabel;
     private javax.swing.JButton playButton;
     private javax.swing.JPanel playerBackground;
     private javax.swing.JButton prevButton;

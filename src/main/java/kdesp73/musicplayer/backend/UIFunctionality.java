@@ -121,7 +121,9 @@ public class UIFunctionality {
 	}
 
 	public static void songsListMouseClicked(JFrame frame, MouseEvent evt) {
-		if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+		if (evt.getButton() == MouseEvent.BUTTON3) {
+			optionsLabelMouseClicked(frame, evt);
+		} else if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
 			playSong(frame);
 		}
 	}
@@ -200,41 +202,39 @@ public class UIFunctionality {
 
 	public static void optionsLabelMouseClicked(JFrame frame, MouseEvent evt) {
 		if (frame instanceof MainFrame) {
-			if (evt.getButton() == MouseEvent.BUTTON1) {
-				JPopupMenu options = new JPopupMenu();
-				JMenuItem edit = new JMenuItem("Edit");
-				JMenuItem scrape = new JMenuItem("Scrape");
+			JPopupMenu options = new JPopupMenu();
+			JMenuItem edit = new JMenuItem("Edit");
+			JMenuItem scrape = new JMenuItem("Scrape");
 
-				options.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			options.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-				ActionListener menuListener = new ActionListener() {
-					String selectedItem;
+			ActionListener menuListener = new ActionListener() {
+				String selectedItem;
 
-					@Override
-					public void actionPerformed(ActionEvent event) {
-						selectedItem = event.getActionCommand();
-						if (null != selectedItem) {
-							switch (selectedItem) {
-								case "Edit" ->
-									Backend.editAction(mainFrame);
-								case "Scrape" ->
-									Backend.scrapeAction(mainFrame);
-								default -> {
-								}
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					selectedItem = event.getActionCommand();
+					if (null != selectedItem) {
+						switch (selectedItem) {
+							case "Edit" ->
+								Backend.editAction(mainFrame);
+							case "Scrape" ->
+								Backend.scrapeAction(mainFrame);
+							default -> {
 							}
 						}
 					}
-				};
-
-				edit.addActionListener(menuListener);
-				options.add(edit);
-
-				scrape.addActionListener(menuListener);
-				options.add(scrape);
-
-				if (mainFrame.currentSong != null) {
-					options.show(evt.getComponent(), evt.getX(), evt.getY());
 				}
+			};
+
+			edit.addActionListener(menuListener);
+			options.add(edit);
+
+			scrape.addActionListener(menuListener);
+			options.add(scrape);
+
+			if (mainFrame.currentSong != null) {
+				options.show(evt.getComponent(), evt.getX(), evt.getY());
 			}
 		}
 	}

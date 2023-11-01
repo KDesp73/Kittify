@@ -34,12 +34,12 @@ public class EditSongInfo extends javax.swing.JFrame {
 		this.setTitle("Edit Song Information");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		this.song = frame.currentSong;
+		this.song = frame.list.getSongs().get(frame.getSongsList().getSelectedIndex());
 		this.frame = frame;
 
-		titleTextField.setText(frame.currentSong.getTrack().getName());
-		artistTextField.setText(frame.currentSong.getTrack().getArtist());
-		albumTextField.setText(frame.currentSong.getTrack().getAlbum());
+		titleTextField.setText(song.getTrack().getName());
+		artistTextField.setText(song.getTrack().getArtist());
+		albumTextField.setText(song.getTrack().getAlbum());
 	}
 
 	/**
@@ -235,7 +235,7 @@ public class EditSongInfo extends javax.swing.JFrame {
 		this.frame.list.getSongs().set(frame.currentIndex, song);
 		this.frame.currentSong = song;
 
-		Backend.updateSongInfo(frame, this.frame.currentIndex);
+//		Backend.updateSongInfo(frame, this.frame.currentIndex);
 		Backend.refreshList(frame);
 
 		this.dispose();

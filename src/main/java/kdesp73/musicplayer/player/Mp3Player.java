@@ -19,6 +19,9 @@ import javazoom.jlgui.basicplayer.BasicPlayerException;
 import javazoom.jlgui.basicplayer.BasicPlayerListener;
 import kdesp73.musicplayer.gui.MainFrame;
 import kdesp73.musicplayer.songs.Mp3File;
+import ws.schild.jave.EncoderException;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.info.MultimediaInfo;
 
 /**
  *
@@ -136,8 +139,6 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 		System.out.println("Seconds: " + seconds);
 		System.out.println("Frames: " + secondsToFrames(seconds));
 
-//		long duration = (long) new Mp3File(this.playlist.get(playingIndex)).getMetadata().get("duration");
-//		long newPosition = (long) (duration * seconds * 0.01);
 		try {
 			player.seek(secondsToFrames(seconds));
 		} catch (BasicPlayerException e) {
@@ -146,8 +147,9 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 	}
 
 	private long secondsToFrames(long seconds) {
-		final double FRAMES_PER_SECOND = 38.46;
-		return (long) (seconds * FRAMES_PER_SECOND);
+		Mp3File file = new Mp3File(this.getCurrentSong());
+
+		return (long) (seconds * (int) file.getMetadata().get("sample-rate")) ;
 	}
 
 	@Override
