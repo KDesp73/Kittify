@@ -4,6 +4,8 @@
  */
 package kdesp73.musicplayer.gui;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -15,6 +17,7 @@ import kdesp73.databridge.helpers.QueryBuilder;
 import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.db.Database;
+import kdesp73.musicplayer.db.Queries;
 
 /**
  *
@@ -40,6 +43,26 @@ public class EditSongInfo extends javax.swing.JFrame {
 		titleTextField.setText(song.getTrack().getName());
 		artistTextField.setText(song.getTrack().getArtist());
 		albumTextField.setText(song.getTrack().getAlbum());
+		
+		String albumCover = Queries.selectLocalCoverPath(song.getTrack().getAlbum(), song.getTrack().getArtist());
+		albumCoverTextField.setText((albumCover == null) ? "" : albumCover);
+		
+		if(albumCover == null || albumCover.isBlank()){
+			this.removeAlbumCoverButton.setEnabled(false);
+			this.removeAlbumCoverButton.setToolTipText("No local album cover is set");
+		} 
+		
+		this.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.out.println("EDIT SONG FRAME CLOSED");
+				Backend.initList(frame);
+				Backend.sort(frame);
+				Backend.refreshList(frame);
+			}
+
+		});
 	}
 
 	/**
@@ -65,6 +88,7 @@ public class EditSongInfo extends javax.swing.JFrame {
         browseButton = new javax.swing.JButton();
         applyButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        removeAlbumCoverButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -106,6 +130,14 @@ public class EditSongInfo extends javax.swing.JFrame {
             }
         });
 
+        removeAlbumCoverButton.setText("Remove");
+        removeAlbumCoverButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        removeAlbumCoverButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeAlbumCoverButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);
         backgroundLayout.setHorizontalGroup(
@@ -133,7 +165,8 @@ public class EditSongInfo extends javax.swing.JFrame {
                             .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(titleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
                                 .addComponent(artistTextField)
-                                .addComponent(albumTextField)))))
+                                .addComponent(albumTextField))))
+                    .addComponent(removeAlbumCoverButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22))
         );
         backgroundLayout.setVerticalGroup(
@@ -157,7 +190,9 @@ public class EditSongInfo extends javax.swing.JFrame {
                     .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(albumCoverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(browseButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(removeAlbumCoverButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(applyButton)
                     .addComponent(cancelButton))
@@ -187,6 +222,8 @@ public class EditSongInfo extends javax.swing.JFrame {
 		JFileChooser fc = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png");
 
+		// TODO Scale if too big or small
+		
 		fc.setFileFilter(filter);
 
 		int choice = fc.showOpenDialog(this);
@@ -241,6 +278,10 @@ public class EditSongInfo extends javax.swing.JFrame {
 		this.dispose();
     }//GEN-LAST:event_applyButtonActionPerformed
 
+    private void removeAlbumCoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAlbumCoverButtonActionPerformed
+		Queries.updateLocalCoverPath(song.getTrack().getAlbum(), song.getTrack().getArtist(), "");
+    }//GEN-LAST:event_removeAlbumCoverButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField albumCoverTextField;
@@ -254,6 +295,7 @@ public class EditSongInfo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton removeAlbumCoverButton;
     private javax.swing.JTextField titleTextField;
     // End of variables declaration//GEN-END:variables
 }

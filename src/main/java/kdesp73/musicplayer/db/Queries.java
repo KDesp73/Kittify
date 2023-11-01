@@ -375,7 +375,7 @@ public class Queries {
 		db.close();
 		return artist;
 	}
-
+	
 	public static String selectAlbumCover(String album, String artist) {
 		DatabaseConnection db = Database.connection();
 

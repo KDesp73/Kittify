@@ -4,11 +4,15 @@
  */
 package kdesp73.musicplayer.backend;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +55,7 @@ public class Backend {
 
 			mainFrame.setLocationRelativeTo(null);
 			mainFrame.getRootPane().requestFocus();
+			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
 
 			mainFrame.addWindowListener(new WindowAdapter() {
 
@@ -76,6 +81,8 @@ public class Backend {
 			selectSong(mainFrame, mainFrame.currentIndex);
 
 			mainFrame.getSongsList().setFixedCellHeight(35);
+			mainFrame.getAlbumTracksList().setFixedCellHeight(35);
+			mainFrame.getAlbumTracksList().setFocusable(false);
 
 			mainFrame.getSortComboBox().setSelectedItem(Queries.selectSortBy());
 
@@ -215,8 +222,56 @@ public class Backend {
 			mainFrame.getSlider().setMaximum((int) (mainFrame.currentSong.getDurationInSeconds() + 1));
 			mainFrame.getSlider().setValue(0);
 			mainFrame.getTimeLabel().setText("00:00");
+
+			// Set info
+			updateAdditionalSongInfo(frame);
+
 		}
 
+	}
+
+	public static void updateAdditionalSongInfo(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			String artistName = mainFrame.currentSong.getTrack().getArtist();
+			String albumName = mainFrame.currentSong.getTrack().getAlbum();
+
+			Artist artist = Queries.selectArtist(artistName);
+			Album album = Queries.selectAlbum(albumName, artistName);
+
+			// ARTIST
+			if (artist != null) {
+
+				mainFrame.getArtistNameLabel().setText(artistName);
+				mainFrame.getArtistTagsLabel().setText(String.join(", ", artist.getTags()));
+				mainFrame.getArtistContentTextArea().setText(artist.getContent());
+
+				try {
+					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), GUIMethods.imageFromURL(artist.getImage()));
+				} catch (java.lang.NullPointerException e) {
+					// Load artist placeholder image
+				}
+			}
+
+			// ALBUM
+			if (album != null) {
+
+				mainFrame.getAlbumNameLabel().setText(albumName);
+				DefaultListModel listModel = new DefaultListModel();
+				for (String track : album.getTracks()) {
+					listModel.addElement(track);
+				}
+
+				mainFrame.getAlbumTracksList().setModel(listModel);
+				mainFrame.getAlbumContentTextArea().setText(album.getContent());
+
+				try {
+					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), GUIMethods.imageFromURL(Queries.selectAlbumCover(albumName, artistName)));
+				} catch (java.lang.NullPointerException e) {
+					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+				}
+			}
+
+		}
 	}
 
 	public static void setDefaultSongInfo(JFrame frame) {
@@ -255,62 +310,62 @@ public class Backend {
 				String coverPath = Queries.selectLocalCoverPath(album, artist);
 
 				if (coverPath != null) {
-					BufferedImage image = GUIMethods.imageFromURL(coverPath);
-					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), image);
+					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), coverPath);
 				} else if (coverURL != null) {
 					BufferedImage image = GUIMethods.imageFromURL(coverURL);
-					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), image);
+					if (image != null) {
+						GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), image);
+					} else {
+						GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+					}
 				} else {
 					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 				}
 			}
-
-//			// if not load imported image or placeholder
-//			if (cover == null) {
-//				System.out.println("Cover is null");
-//				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
-//				return;
-//			}
-//
-//			File albumCover = new File(cover);
-//
-//			if (albumCover.isFile()) {
-//				BufferedImage img = null;
-//
-//				try {
-//					img = ImageIO.read(new File(albumCover.getAbsolutePath()));
-//				} catch (IOException e) {
-//				}
-//
-//				if (img == null) {
-//					return;
-//				}
-//
-//				if (img.getWidth() > 392 || img.getHeight() > 324) {
-//					BufferedImage resized = GUIMethods.resizeImage(img, 392, 324);
-//					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), resized);
-//				} else {
-//					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), img);
-//				}
-//
-//			}
 		}
 	}
 
 	public static void selectSong(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			selectSong(frame, mainFrame.getSongsList().getSelectedIndex());
-
 		}
+	}
+
+	public static void downloadAlbumCoverAction(JFrame frame) {
+		System.out.println("HERE");
+		if (frame instanceof MainFrame) {
+			Mp3File selectedSong = ((MainFrame) frame).list.getSongs().get(((MainFrame) frame).getSongsList().getSelectedIndex());
+
+			String localCover = Queries.selectLocalCoverPath(selectedSong.getTrack().getAlbum(), selectedSong.getTrack().getArtist());
+			String coverURL = Queries.selectAlbumCover(selectedSong.getTrack().getAlbum(), selectedSong.getTrack().getArtist());
+
+			if (localCover != null && !localCover.isBlank()) {
+				File coverFile = new File(localCover);
+
+				if (coverFile.exists()) {
+					JOptionPane.showMessageDialog(mainFrame, "Album already has a local image");
+					return;
+				}
+			}
+
+			// Download image
+			try {
+				GUIMethods.downloadImage(new URL(coverURL), mainFrame.getProject_path() + "/covers/" + selectedSong.getTrack().getAlbum() + " - " + selectedSong.getTrack().getArtist() + ".png");
+			} catch (MalformedURLException ex) {
+				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+				System.err.println("Invalid URL");
+			} catch (IOException ex) {
+				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+				System.err.println("Downloading image failed");
+			}
+		}
+
 	}
 
 	public static void editAction(JFrame frame) {
 		if (frame instanceof MainFrame) {
-
-			new EditSongInfo(mainFrame).setVisible(true);
-
-//			selectSong(mainFrame, mainFrame.getSongsList().getSelectedIndex());
-			refreshList(mainFrame);
+			EditSongInfo editFrame = new EditSongInfo(mainFrame);
+			editFrame.setVisible(true);
 		}
 	}
 
@@ -414,6 +469,7 @@ public class Backend {
 //			selectSong(mainFrame, mainFrame.getSongsList().getSelectedIndex());
 			refreshList(mainFrame);
 			mainFrame.getSongsList().setSelectedIndex(mainFrame.getSongsList().getSelectedIndex());
+			updateSongInfo(mainFrame, mainFrame.currentIndex);
 		}
 	}
 

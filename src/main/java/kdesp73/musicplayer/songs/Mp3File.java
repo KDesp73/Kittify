@@ -150,6 +150,7 @@ public class Mp3File extends File {
 		m.put("duration", audioHeader.getDuration(TimeUnit.SECONDS, false));
 		m.put("bit-rate", audioHeader.getBitRate());
 		m.put("sample-rate", audioHeader.getSampleRate());
+		m.put("channel-count", audioHeader.getChannelCount());
 
 		return m;
 	}

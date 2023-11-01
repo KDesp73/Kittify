@@ -4,6 +4,7 @@
  */
 package kdesp73.musicplayer.gui;
 
+import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -18,11 +19,15 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import kdesp73.musicplayer.player.AudioPlayer;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.songs.SongsList;
 import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.backend.UIFunctionality;
+import static kdesp73.musicplayer.backend.UIFunctionality.playSong;
+import static kdesp73.musicplayer.backend.UIFunctionality.showOptionsPopup;
 import kdesp73.musicplayer.player.Mp3Player;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.YamlFile;
@@ -89,6 +94,22 @@ public final class MainFrame extends javax.swing.JFrame {
         albumLabel = new javax.swing.JLabel();
         albumImageLabel = new javax.swing.JLabel();
         infoBackground = new javax.swing.JPanel();
+        jSeparator1 = new javax.swing.JSeparator();
+        infoTabbedPane = new javax.swing.JTabbedPane();
+        artistInfoPanel = new javax.swing.JPanel();
+        artistImageLabel = new javax.swing.JLabel();
+        artistNameLabel = new javax.swing.JLabel();
+        artistTagsLabel = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        artistContentTextArea = new javax.swing.JTextArea();
+        albumInfoPanel = new javax.swing.JPanel();
+        albumCoverInfoLabel = new javax.swing.JLabel();
+        albumNameLabel = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        albumContentTextArea = new javax.swing.JTextArea();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        albumTracksList = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
         searchButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -270,7 +291,7 @@ public final class MainFrame extends javax.swing.JFrame {
         controlsParentPanelLayout.setHorizontalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(controlsParentPanelLayout.createSequentialGroup()
-                .addContainerGap(218, Short.MAX_VALUE)
+                .addContainerGap(162, Short.MAX_VALUE)
                 .addGroup(controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sliderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(basicInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -278,7 +299,7 @@ public final class MainFrame extends javax.swing.JFrame {
                         .addGap(53, 53, 53)
                         .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(17, 17, 17)))
-                .addContainerGap(218, Short.MAX_VALUE))
+                .addContainerGap(162, Short.MAX_VALUE))
         );
         controlsParentPanelLayout.setVerticalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -308,7 +329,7 @@ public final class MainFrame extends javax.swing.JFrame {
         playerBackgroundLayout.setVerticalGroup(
             playerBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playerBackgroundLayout.createSequentialGroup()
-                .addContainerGap(68, Short.MAX_VALUE)
+                .addContainerGap(76, Short.MAX_VALUE)
                 .addComponent(albumImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47)
                 .addComponent(controlsParentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -317,15 +338,150 @@ public final class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Player", playerBackground);
 
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        artistImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        artistNameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        artistNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        artistNameLabel.setText("Artist Name");
+
+        artistTagsLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        artistTagsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        artistTagsLabel.setText("Tags");
+
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        artistContentTextArea.setEditable(false);
+        artistContentTextArea.setColumns(20);
+        artistContentTextArea.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        artistContentTextArea.setLineWrap(true);
+        artistContentTextArea.setRows(5);
+        artistContentTextArea.setWrapStyleWord(true);
+        jScrollPane3.setViewportView(artistContentTextArea);
+
+        javax.swing.GroupLayout artistInfoPanelLayout = new javax.swing.GroupLayout(artistInfoPanel);
+        artistInfoPanel.setLayout(artistInfoPanelLayout);
+        artistInfoPanelLayout.setHorizontalGroup(
+            artistInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(artistInfoPanelLayout.createSequentialGroup()
+                .addGroup(artistInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(artistInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(artistTagsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(artistInfoPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(artistImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(artistInfoPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(artistNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        artistInfoPanelLayout.setVerticalGroup(
+            artistInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(artistInfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(artistInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addGroup(artistInfoPanelLayout.createSequentialGroup()
+                        .addComponent(artistImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(artistNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(artistTagsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(157, Short.MAX_VALUE))))
+        );
+
+        infoTabbedPane.addTab("Artist", artistInfoPanel);
+
+        albumCoverInfoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        albumNameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        albumNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        albumNameLabel.setText("Album Name");
+
+        albumContentTextArea.setEditable(false);
+        albumContentTextArea.setColumns(20);
+        albumContentTextArea.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        albumContentTextArea.setLineWrap(true);
+        albumContentTextArea.setRows(5);
+        albumContentTextArea.setWrapStyleWord(true);
+        jScrollPane4.setViewportView(albumContentTextArea);
+
+        albumTracksList.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        albumTracksList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        albumTracksList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane5.setViewportView(albumTracksList);
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel1.setText("Tracks");
+
+        javax.swing.GroupLayout albumInfoPanelLayout = new javax.swing.GroupLayout(albumInfoPanel);
+        albumInfoPanel.setLayout(albumInfoPanelLayout);
+        albumInfoPanelLayout.setHorizontalGroup(
+            albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(albumInfoPanelLayout.createSequentialGroup()
+                .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(albumInfoPanelLayout.createSequentialGroup()
+                        .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(albumNameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                            .addGroup(albumInfoPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(albumCoverInfoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane5))))
+                        .addGap(18, 18, 18))
+                    .addGroup(albumInfoPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        albumInfoPanelLayout.setVerticalGroup(
+            albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(albumInfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(albumInfoPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane4)
+                        .addContainerGap())
+                    .addGroup(albumInfoPanelLayout.createSequentialGroup()
+                        .addComponent(albumCoverInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(albumNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
+        );
+
+        infoTabbedPane.addTab("Album", albumInfoPanel);
+
         javax.swing.GroupLayout infoBackgroundLayout = new javax.swing.GroupLayout(infoBackground);
         infoBackground.setLayout(infoBackgroundLayout);
         infoBackgroundLayout.setHorizontalGroup(
             infoBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 780, Short.MAX_VALUE)
+            .addGroup(infoBackgroundLayout.createSequentialGroup()
+                .addGroup(infoBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, infoBackgroundLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(326, 326, 326))
+                    .addComponent(infoTabbedPane))
+                .addContainerGap())
         );
         infoBackgroundLayout.setVerticalGroup(
             infoBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 626, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, infoBackgroundLayout.createSequentialGroup()
+                .addComponent(infoTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 621, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tabbedPane.addTab("Info", infoBackground);
@@ -480,7 +636,11 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
-		UIFunctionality.songsListMouseClicked(this, evt);
+		if (evt.getButton() == MouseEvent.BUTTON3) {
+			showOptionsPopup(this, evt);
+		} else if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+			playSong(this);
+		}
     }//GEN-LAST:event_songsListMouseClicked
 
     private void playButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseClicked
@@ -681,18 +841,68 @@ public final class MainFrame extends javax.swing.JFrame {
 		return trackLabel;
 	}
 	
-	public JRootPane getRootPane(){
-		return this.rootPane;
+//	public JRootPane getRootPane(){
+//		return this.rootPane;
+//	}
+	
+	public JLabel getArtistImageLabel() {
+		return artistImageLabel;
 	}
+
+	public JLabel getArtistTagsLabel() {
+		return artistTagsLabel;
+	}
+
+	public JLabel getArtistNameLabel() {
+		return artistNameLabel;
+	}
+
+	public JTextArea getArtistContentTextArea() {
+		return artistContentTextArea;
+	}
+
+	public JTextArea getAlbumContentTextArea() {
+		return albumContentTextArea;
+	}
+
+	public JLabel getAlbumCoverInfoLabel() {
+		return albumCoverInfoLabel;
+	}
+
+	public JPanel getAlbumInfoPanel() {
+		return albumInfoPanel;
+	}
+
+	public JLabel getAlbumNameLabel() {
+		return albumNameLabel;
+	}
+
+	public JList<String> getAlbumTracksList() {
+		return albumTracksList;
+	}
+	
+	
+	
+	
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ApiMenu;
     private javax.swing.JMenuItem addDirectoryMenuItem;
     private javax.swing.JMenuItem addFileMenuItem;
+    private javax.swing.JTextArea albumContentTextArea;
+    private javax.swing.JLabel albumCoverInfoLabel;
     private javax.swing.JLabel albumImageLabel;
+    private javax.swing.JPanel albumInfoPanel;
     private javax.swing.JLabel albumLabel;
+    private javax.swing.JLabel albumNameLabel;
+    private javax.swing.JList<String> albumTracksList;
+    private javax.swing.JTextArea artistContentTextArea;
+    private javax.swing.JLabel artistImageLabel;
+    private javax.swing.JPanel artistInfoPanel;
     private javax.swing.JLabel artistLabel;
+    private javax.swing.JLabel artistNameLabel;
+    private javax.swing.JLabel artistTagsLabel;
     private javax.swing.JPanel background;
     private javax.swing.JPanel basicInfoPanel;
     private javax.swing.JPanel controlsPanel;
@@ -702,9 +912,15 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JPanel infoBackground;
+    private javax.swing.JTabbedPane infoTabbedPane;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton playButton;

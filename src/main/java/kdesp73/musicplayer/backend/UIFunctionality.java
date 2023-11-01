@@ -120,14 +120,6 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void songsListMouseClicked(JFrame frame, MouseEvent evt) {
-		if (evt.getButton() == MouseEvent.BUTTON3) {
-			optionsLabelMouseClicked(frame, evt);
-		} else if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
-			playSong(frame);
-		}
-	}
-
 	public static void playSong(JFrame frame) {
 		if (frame instanceof MainFrame) {
 
@@ -200,11 +192,12 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void optionsLabelMouseClicked(JFrame frame, MouseEvent evt) {
+	public static void showOptionsPopup(JFrame frame, MouseEvent evt) {
 		if (frame instanceof MainFrame) {
 			JPopupMenu options = new JPopupMenu();
 			JMenuItem edit = new JMenuItem("Edit");
 			JMenuItem scrape = new JMenuItem("Scrape");
+			JMenuItem downloadAlbumCover = new JMenuItem("Download Cover");
 
 			options.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -220,6 +213,8 @@ public class UIFunctionality {
 								Backend.editAction(mainFrame);
 							case "Scrape" ->
 								Backend.scrapeAction(mainFrame);
+							case "Download Cover" ->
+								Backend.downloadAlbumCoverAction(mainFrame);
 							default -> {
 							}
 						}
@@ -232,6 +227,9 @@ public class UIFunctionality {
 
 			scrape.addActionListener(menuListener);
 			options.add(scrape);
+			
+			downloadAlbumCover.addActionListener(menuListener);
+			options.add(downloadAlbumCover);
 
 			if (mainFrame.currentSong != null) {
 				options.show(evt.getComponent(), evt.getX(), evt.getY());

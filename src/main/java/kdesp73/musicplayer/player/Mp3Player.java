@@ -19,9 +19,6 @@ import javazoom.jlgui.basicplayer.BasicPlayerException;
 import javazoom.jlgui.basicplayer.BasicPlayerListener;
 import kdesp73.musicplayer.gui.MainFrame;
 import kdesp73.musicplayer.songs.Mp3File;
-import ws.schild.jave.EncoderException;
-import ws.schild.jave.MultimediaObject;
-import ws.schild.jave.info.MultimediaInfo;
 
 /**
  *
@@ -136,20 +133,32 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 
 	@Override
 	public void seek(int seconds) {
+		int frames = (int) secondsToFrames(seconds);
 		System.out.println("Seconds: " + seconds);
-		System.out.println("Frames: " + secondsToFrames(seconds));
+		System.out.println("Frames: " + frames);
 
 		try {
-			player.seek(secondsToFrames(seconds));
+			player.seek(frames);
 		} catch (BasicPlayerException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private long secondsToFrames(long seconds) {
+		/*
+		double sampleRate = audioFile.getSampleRate();
+size_t offsetInSeconds = 2;
+size_t sampleToRead = sampleRate * offsetInSeconds * audioFile.getChannelCount();
+AudioSample sample = audioFile.getSampleAt(sampleToRead);
+		 */
+		
 		Mp3File file = new Mp3File(this.getCurrentSong());
-
-		return (long) (seconds * (int) file.getMetadata().get("sample-rate")) ;
+		int sampleRate = (int) file.getMetadata().get("sample-rate");
+		System.out.println("Channel Count: " + (int) file.getMetadata().get("channel-count"));
+		int sampleToRead = (int) (sampleRate * seconds * (int) file.getMetadata().get("channel-count"));
+		System.out.println("Sample to Read: " + sampleToRead);
+		
+		return sampleRate * seconds / ( 2 * (int) file.getMetadata().get("channel-count") );
 	}
 
 	@Override
