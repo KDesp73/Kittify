@@ -286,9 +286,8 @@ public class Backend {
 				try {
 					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), GUIMethods.imageFromURL(Queries.selectAlbumCover(albumName, artistName)));
 				} catch (java.lang.NullPointerException e) {
-				} finally{
 					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
-				}
+				} 
 			} else {
 				Backend.setDefaultAlbumAdditionalInfo(frame);
 			}
