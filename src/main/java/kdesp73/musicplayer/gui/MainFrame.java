@@ -100,12 +100,12 @@ public final class MainFrame extends javax.swing.JFrame {
         artistImageLabel = new javax.swing.JLabel();
         artistNameLabel = new javax.swing.JLabel();
         artistTagsLabel = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        artistContentScrollPane = new javax.swing.JScrollPane();
         artistContentTextArea = new javax.swing.JTextArea();
         albumInfoPanel = new javax.swing.JPanel();
         albumCoverInfoLabel = new javax.swing.JLabel();
         albumNameLabel = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
+        albumContentScrollPane = new javax.swing.JScrollPane();
         albumContentTextArea = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         albumTracksList = new javax.swing.JList<>();
@@ -174,6 +174,9 @@ public final class MainFrame extends javax.swing.JFrame {
             }
         });
         slider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                sliderMousePressed(evt);
+            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 sliderMouseReleased(evt);
             }
@@ -329,9 +332,9 @@ public final class MainFrame extends javax.swing.JFrame {
         playerBackgroundLayout.setVerticalGroup(
             playerBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playerBackgroundLayout.createSequentialGroup()
-                .addContainerGap(76, Short.MAX_VALUE)
+                .addGap(76, 76, 76)
                 .addComponent(albumImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(47, 47, 47)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(controlsParentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47))
         );
@@ -350,7 +353,7 @@ public final class MainFrame extends javax.swing.JFrame {
         artistTagsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         artistTagsLabel.setText("Tags");
 
-        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        artistContentScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         artistContentTextArea.setEditable(false);
         artistContentTextArea.setColumns(20);
@@ -358,7 +361,7 @@ public final class MainFrame extends javax.swing.JFrame {
         artistContentTextArea.setLineWrap(true);
         artistContentTextArea.setRows(5);
         artistContentTextArea.setWrapStyleWord(true);
-        jScrollPane3.setViewportView(artistContentTextArea);
+        artistContentScrollPane.setViewportView(artistContentTextArea);
 
         javax.swing.GroupLayout artistInfoPanelLayout = new javax.swing.GroupLayout(artistInfoPanel);
         artistInfoPanel.setLayout(artistInfoPanelLayout);
@@ -375,7 +378,7 @@ public final class MainFrame extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(artistNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addComponent(artistContentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addContainerGap())
         );
         artistInfoPanelLayout.setVerticalGroup(
@@ -383,7 +386,7 @@ public final class MainFrame extends javax.swing.JFrame {
             .addGroup(artistInfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(artistInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
+                    .addComponent(artistContentScrollPane)
                     .addGroup(artistInfoPanelLayout.createSequentialGroup()
                         .addComponent(artistImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -397,7 +400,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
         albumCoverInfoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        albumNameLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        albumNameLabel.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
         albumNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         albumNameLabel.setText("Album Name");
 
@@ -407,7 +410,7 @@ public final class MainFrame extends javax.swing.JFrame {
         albumContentTextArea.setLineWrap(true);
         albumContentTextArea.setRows(5);
         albumContentTextArea.setWrapStyleWord(true);
-        jScrollPane4.setViewportView(albumContentTextArea);
+        albumContentScrollPane.setViewportView(albumContentTextArea);
 
         albumTracksList.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         albumTracksList.setModel(new javax.swing.AbstractListModel<String>() {
@@ -440,7 +443,7 @@ public final class MainFrame extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(albumContentScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         albumInfoPanelLayout.setVerticalGroup(
             albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -448,7 +451,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(albumInfoPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane4)
+                        .addComponent(albumContentScrollPane)
                         .addContainerGap())
                     .addGroup(albumInfoPanelLayout.createSequentialGroup()
                         .addComponent(albumCoverInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -636,7 +639,7 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
-		if (evt.getButton() == MouseEvent.BUTTON3) {
+		if (evt.getButton() == MouseEvent.BUTTON3 && songsList.getSelectedIndex()  >= 0) {
 			showOptionsPopup(this, evt);
 		} else if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
 			playSong(this);
@@ -648,7 +651,9 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_playButtonMouseClicked
 
     private void songsListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_songsListKeyPressed
-		UIFunctionality.songsListKeyPressed(this, evt);
+		if (evt.getKeyChar() == '\n') {
+			playSong(this);
+		}
     }//GEN-LAST:event_songsListKeyPressed
 
     private void prevButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevButtonMouseClicked
@@ -678,6 +683,12 @@ public final class MainFrame extends javax.swing.JFrame {
     private void playButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseReleased
         UIFunctionality.playButtonMouseClicked(this);
     }//GEN-LAST:event_playButtonMouseReleased
+
+    private void sliderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMousePressed
+        if(evt.getButton() == MouseEvent.BUTTON1){
+//			player.pause();
+		}
+    }//GEN-LAST:event_sliderMousePressed
 
 	// Getters
 	
@@ -880,8 +891,14 @@ public final class MainFrame extends javax.swing.JFrame {
 	public JList<String> getAlbumTracksList() {
 		return albumTracksList;
 	}
-	
-	
+
+	public JScrollPane getAlbumContentScrollPane() {
+		return albumContentScrollPane;
+	}
+
+	public JScrollPane getArtistContentScrollPane() {
+		return artistContentScrollPane;
+	}
 	
 	
 
@@ -890,6 +907,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu ApiMenu;
     private javax.swing.JMenuItem addDirectoryMenuItem;
     private javax.swing.JMenuItem addFileMenuItem;
+    private javax.swing.JScrollPane albumContentScrollPane;
     private javax.swing.JTextArea albumContentTextArea;
     private javax.swing.JLabel albumCoverInfoLabel;
     private javax.swing.JLabel albumImageLabel;
@@ -897,6 +915,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel albumLabel;
     private javax.swing.JLabel albumNameLabel;
     private javax.swing.JList<String> albumTracksList;
+    private javax.swing.JScrollPane artistContentScrollPane;
     private javax.swing.JTextArea artistContentTextArea;
     private javax.swing.JLabel artistImageLabel;
     private javax.swing.JPanel artistInfoPanel;
@@ -917,8 +936,6 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JMenuBar menuBar;

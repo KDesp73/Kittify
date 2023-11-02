@@ -57,7 +57,7 @@ public class Mp3File extends File {
 		this.track.setArtist(artist);
 		this.track.setAlbum(album);
 		this.metadata = getMetadata();
-		this.coverPath = (System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/album-image-placeholder.png");
+		this.coverPath = null;
 		this.timeOfImport = this.calculateTimeOfImport();
 		this.extension = FileOperations.getExtensionFromPath(this.getAbsolutePath());
 
@@ -96,7 +96,7 @@ public class Mp3File extends File {
 		this.extension = FileOperations.getExtensionFromPath(this.getAbsolutePath());
 		this.timeOfImport = this.calculateTimeOfImport();
 		this.track.setName(FileOperations.getJustFilenameFromPath(pathname));
-		this.coverPath = (System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/album-image-placeholder.png");
+		this.coverPath = null;
 		this.metadata = getMetadata();
 
 		if (metadata == null) {

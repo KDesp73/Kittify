@@ -4,3 +4,4 @@ data/*.mp3
 .project
 .settings/
 /target/
+covers/

@@ -56,10 +56,11 @@ public class EditSongInfo extends javax.swing.JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				System.out.println("EDIT SONG FRAME CLOSED");
-				Backend.initList(frame);
+//				Backend.initList(frame);
 				Backend.sort(frame);
-				Backend.refreshList(frame);
+				Backend.selectSong(frame, frame.list.searchSongName(frame.currentSong.getTrack().getName()));
+				
+				
 			}
 
 		});

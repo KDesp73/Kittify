@@ -4,8 +4,6 @@
  */
 package kdesp73.musicplayer.backend;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -16,7 +14,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -56,6 +53,10 @@ public class Backend {
 			mainFrame.setLocationRelativeTo(null);
 			mainFrame.getRootPane().requestFocus();
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
+			mainFrame.getSongsList().setFixedCellHeight(35);
+			mainFrame.getAlbumTracksList().setFixedCellHeight(35);
+			mainFrame.getAlbumTracksList().setFocusable(false);
+			mainFrame.getSortComboBox().setSelectedItem(Queries.selectSortBy());
 
 			mainFrame.addWindowListener(new WindowAdapter() {
 
@@ -67,24 +68,20 @@ public class Backend {
 			});
 
 			updateSongs(frame);
+
+			sort(frame);
 			if (!mainFrame.list.getSongs().isEmpty()) {
-				sort(mainFrame);
 				mainFrame.currentIndex = (mainFrame.list.searchSongPath(Queries.selectLastPlayed()) < 0) ? 0 : mainFrame.list.searchSongPath(Queries.selectLastPlayed());
 				mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
 			} else {
 				setDefaultSongInfo(frame);
+				setDefaultSongAdditionalInfo(frame);
 			}
 
 			mainFrame.player = new Mp3Player(mainFrame.currentIndex, mainFrame.list.getPaths());
-			((Mp3Player) mainFrame.player).setFrame(mainFrame);
+			mainFrame.player.setFrame(mainFrame);
 
 			selectSong(mainFrame, mainFrame.currentIndex);
-
-			mainFrame.getSongsList().setFixedCellHeight(35);
-			mainFrame.getAlbumTracksList().setFixedCellHeight(35);
-			mainFrame.getAlbumTracksList().setFocusable(false);
-
-			mainFrame.getSortComboBox().setSelectedItem(Queries.selectSortBy());
 
 			mainFrame.scrapeAtStart = Queries.selectScrapeAtStart();
 			mainFrame.getScrapeAtStartMenuItem().setSelected(mainFrame.scrapeAtStart);
@@ -115,6 +112,10 @@ public class Backend {
 
 			int selected = mainFrame.getSortComboBox().getSelectedIndex();
 
+			if (mainFrame.list == null) {
+				return null;
+			}
+
 			switch (selected) {
 				case 0 -> {
 					mainFrame.list.sortByName();
@@ -131,13 +132,14 @@ public class Backend {
 					refreshList(mainFrame, "Album");
 					return "Album";
 				}
-				default ->
-					throw new AssertionError();
+				default -> {
+					return null;
+				}
 			}
 		}
 
 		if (mainFrame.player != null) {
-			mainFrame.player.playlist = mainFrame.list.getPaths();
+			mainFrame.player.setPlaylist(mainFrame.list.getPaths());
 		}
 
 		return null;
@@ -151,12 +153,21 @@ public class Backend {
 			} catch (java.lang.StringIndexOutOfBoundsException e) {
 				e.printStackTrace();
 			}
+
+			if (mainFrame.player != null) {
+				mainFrame.player.setPlaylist(mainFrame.list.getPaths());
+			}
 		}
 	}
 
 	public static void refreshList(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			String sortBy = Queries.selectSortBy();
+
+			if (sortBy == null) {
+				return;
+			}
+
 			DefaultListModel listModel = new DefaultListModel();
 			for (Mp3File song : mainFrame.list.getSongs()) {
 				String listText = "";
@@ -210,33 +221,38 @@ public class Backend {
 			}
 
 			updateSongInfo(frame, index);
+			updateAdditionalSongInfo(frame, index);
 
 			mainFrame.currentSong = mainFrame.list.getSongs().get(index);
 			mainFrame.currentIndex = index;
 
 			mainFrame.player.setSong(index);
 
-			mainFrame.getSongsList().ensureIndexIsVisible(index);
 			mainFrame.getSongsList().setSelectedIndex(index);
+			mainFrame.getSongsList().ensureIndexIsVisible(index);
 
 			mainFrame.getSlider().setMaximum((int) (mainFrame.currentSong.getDurationInSeconds() + 1));
 			mainFrame.getSlider().setValue(0);
 			mainFrame.getTimeLabel().setText("00:00");
-
-			// Set info
-			updateAdditionalSongInfo(frame);
-
 		}
 
 	}
 
 	public static void updateAdditionalSongInfo(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			String artistName = mainFrame.currentSong.getTrack().getArtist();
-			String albumName = mainFrame.currentSong.getTrack().getAlbum();
+			updateAdditionalSongInfo(frame, mainFrame.getSongsList().getSelectedIndex());
+		}
+	}
+
+	public static void updateAdditionalSongInfo(JFrame frame, int index) {
+		if (frame instanceof MainFrame) {
+			String artistName = mainFrame.list.getSongs().get(index).getTrack().getArtist();
+			String albumName = mainFrame.list.getSongs().get(index).getTrack().getAlbum();
 
 			Artist artist = Queries.selectArtist(artistName);
 			Album album = Queries.selectAlbum(albumName, artistName);
+
+			mainFrame.getArtistContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getArtistContentScrollPane().getVerticalScrollBar().getMinimum());
 
 			// ARTIST
 			if (artist != null) {
@@ -248,10 +264,13 @@ public class Backend {
 				try {
 					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), GUIMethods.imageFromURL(artist.getImage()));
 				} catch (java.lang.NullPointerException e) {
-					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/artist-image-placeholder.png");
+					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), mainFrame.getProject_path() + "/assets/artist-image-placeholder.png");
 				}
+			} else {
+				Backend.setDefaultArtistAdditionalInfo(frame);
 			}
 
+			mainFrame.getAlbumContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getAlbumContentScrollPane().getVerticalScrollBar().getMinimum());
 			// ALBUM
 			if (album != null) {
 
@@ -267,9 +286,40 @@ public class Backend {
 				try {
 					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), GUIMethods.imageFromURL(Queries.selectAlbumCover(albumName, artistName)));
 				} catch (java.lang.NullPointerException e) {
+				} finally{
 					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 				}
+			} else {
+				Backend.setDefaultAlbumAdditionalInfo(frame);
 			}
+
+		}
+	}
+
+	public static void setDefaultSongAdditionalInfo(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			setDefaultArtistAdditionalInfo(frame);
+			setDefaultAlbumAdditionalInfo(frame);
+		}
+	}
+
+	public static void setDefaultAlbumAdditionalInfo(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			mainFrame.getAlbumNameLabel().setText("Album");
+			mainFrame.getAlbumContentTextArea().setText("");
+//			mainFrame.getAlbumTracksList().removeAll();
+			mainFrame.getAlbumTracksList().setModel(new DefaultListModel<String>());
+			GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+
+		}
+	}
+
+	public static void setDefaultArtistAdditionalInfo(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			mainFrame.getArtistNameLabel().setText("Artist");
+			mainFrame.getArtistContentTextArea().setText("");
+			mainFrame.getArtistTagsLabel().setText("Tags");
+			GUIMethods.loadImage(mainFrame.getArtistImageLabel(), mainFrame.getProject_path() + "/assets/artist-image-placeholder.png");
 
 		}
 	}
@@ -294,34 +344,38 @@ public class Backend {
 			String album = mainFrame.list.getSongs().get(index).getTrack().getAlbum();
 			String cover = mainFrame.list.getSongs().get(index).getCoverPath();
 
+			System.out.println("album: " + album);
+			System.out.println("cover: " + cover);
+
 			mainFrame.getTrackLabel().setText(title);
 			mainFrame.getArtistLabel().setText((artist == null) ? "Unknown Artist" : artist);
 			mainFrame.getAlbumLabel().setText((album == null) ? "Unknown Album" : album);
 
 			Queries.updateSong(mainFrame.list.getSongs().get(index));
 
+//			GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 			if (cover != null && cover.isBlank()) {
 				Queries.updateLocalCoverPath(album, artist, cover);
 			}
 
 			// If album has been scraped load album cover
 			if (album != null && !album.isBlank() && !album.equals("Unknown Album")) {
+
 				String coverURL = Queries.selectAlbumCover(album, artist);
 				String coverPath = Queries.selectLocalCoverPath(album, artist);
 
-				if (coverPath != null) {
+				if (coverPath != null && !coverPath.isBlank()) {
 					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), coverPath);
-				} else if (coverURL != null) {
+					return;
+				} else if (coverURL != null && !coverURL.isBlank()) {
 					BufferedImage image = GUIMethods.imageFromURL(coverURL);
 					if (image != null) {
 						GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), image);
-					} else {
-						GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+						return;
 					}
-				} else {
-					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 				}
 			}
+			GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 		}
 	}
 
@@ -359,7 +413,7 @@ public class Backend {
 				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 				System.err.println("Downloading image failed");
 			}
-			
+
 			Queries.updateLocalCoverPath(selectedSong.getTrack().getAlbum(), selectedSong.getTrack().getArtist(), imagePath);
 			JOptionPane.showMessageDialog(mainFrame, "Downloaded image at covers/ directory");
 		}
@@ -368,8 +422,7 @@ public class Backend {
 
 	public static void editAction(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			EditSongInfo editFrame = new EditSongInfo(mainFrame);
-			editFrame.setVisible(true);
+			new EditSongInfo(mainFrame).setVisible(true);
 		}
 	}
 
@@ -469,11 +522,10 @@ public class Backend {
 			Queries.updateScraped(true, mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getAbsolutePath());
 			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
+//			initList(mainFrame);
 			sort(mainFrame);
-//			selectSong(mainFrame, mainFrame.getSongsList().getSelectedIndex());
-			refreshList(mainFrame);
-			mainFrame.getSongsList().setSelectedIndex(mainFrame.getSongsList().getSelectedIndex());
-			updateSongInfo(mainFrame, mainFrame.currentIndex);
+			selectSong(mainFrame, mainFrame.list.searchSongName(title));
+			sort(mainFrame);
 		}
 	}
 

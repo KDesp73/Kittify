@@ -32,7 +32,14 @@ public class GUIMethods {
 
 	public static BufferedImage imageFromURL(String imageUrl) {
 		try {
-			URL url = new URL(imageUrl);
+			URL url = null;
+			try {
+				url = new URL(imageUrl);
+			} catch (java.net.MalformedURLException e) {
+				System.err.println("Issue with url");
+				return null;
+			}
+
 			BufferedImage image = null;
 			try {
 				image = ImageIO.read(url);
@@ -56,7 +63,6 @@ public class GUIMethods {
 
 	public static void downloadImage(URL url, String path) throws IOException {
 		System.out.println("Downloading in: \"" + path + "\"");
-		
 
 		try {
 			InputStream inputStream = url.openStream();

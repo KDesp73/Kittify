@@ -86,7 +86,11 @@ public class UIFunctionality {
 
 	public static void sortComboBoxActionPerformed(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			Queries.updateSortBy(Backend.sort(mainFrame));
+			String sortedBy = Backend.sort(mainFrame);
+			
+			if(sortedBy == null) return;
+			
+			Queries.updateSortBy(sortedBy);
 
 			mainFrame.player.playlist = ((MainFrame) frame).list.getPaths();
 		}
@@ -94,12 +98,14 @@ public class UIFunctionality {
 
 	public static void editDirectoriesMenuItemActionPerformed(JFrame frame) {
 		if (frame instanceof MainFrame) {
+			mainFrame.player.stop();
 			new EditDirectories(mainFrame).setVisible(true);
 		}
 	}
 
 	public static void editFilesMenuItemActionPerformed(JFrame frame) {
 		if (frame instanceof MainFrame) {
+			mainFrame.player.stop();
 			new EditFiles(mainFrame).setVisible(true);
 		}
 	}
@@ -122,7 +128,11 @@ public class UIFunctionality {
 
 	public static void playSong(JFrame frame) {
 		if (frame instanceof MainFrame) {
-
+			mainFrame.currentIndex = mainFrame.getSongsList().getSelectedIndex();
+			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
+			
+			
+			mainFrame.player.stop();
 			mainFrame.player.timer.stop();
 
 			Backend.selectSong(mainFrame);
@@ -145,11 +155,6 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void songsListKeyPressed(JFrame frame, KeyEvent evt) {
-		if (evt.getKeyChar() == '\n') {
-			playSong(frame);
-		}
-	}
 
 	public static void prevButtonMouseClicked(JFrame frame) {
 		if (frame instanceof MainFrame) {
@@ -189,6 +194,7 @@ public class UIFunctionality {
 			System.out.println("Skip: " + skip);
 
 			mainFrame.player.seek(skip);
+//			mainFrame.player.resume();
 		}
 	}
 

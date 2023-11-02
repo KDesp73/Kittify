@@ -119,6 +119,14 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
 	}
+	
+	public void resume(){
+		try {
+			player.resume();
+		} catch (BasicPlayerException ex) {
+			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
 	@Override
 	public void pause() {
@@ -235,5 +243,10 @@ AudioSample sample = audioFile.getSampleAt(sampleToRead);
 	@Override
 	public void setController(BasicController bc) {
 		controller = bc;
+	}
+	
+	public void setPlaylist(ArrayList<String> playlist){
+		this.playlist.clear();
+		this.playlist.addAll(playlist);
 	}
 }
