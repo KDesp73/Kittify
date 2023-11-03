@@ -48,16 +48,20 @@ public class SongTimer extends Thread {
 		if (!pause) {
 			for (int i = startAt; i < file.getDurationInSeconds(); i++) {
 				try {
-					Thread.sleep(1010);
+					Thread.sleep(1000);
 				} catch (InterruptedException ex) {
 					Logger.getLogger(SongTimer.class.getName()).log(Level.SEVERE, null, ex);
 				}
-
-				slider.setValue(slider.getValue() + 1);
-				timerLabel.setText(Backend.secondsToMinutes(slider.getValue()));
-
+				
+				nextSecond();
+				
 			}
 		}
+	}
+
+	private void nextSecond() {
+		slider.setValue(slider.getValue() + 1);
+		timerLabel.setText(Backend.secondsToMinutes(slider.getValue()));
 	}
 
 	public void pause() {
@@ -73,7 +77,7 @@ public class SongTimer extends Thread {
 	public void proceed() {
 		this.startAt = slider.getValue();
 		this.pause = false;
-		
+
 		this.start();
 	}
 

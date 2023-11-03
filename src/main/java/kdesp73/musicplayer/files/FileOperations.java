@@ -77,6 +77,27 @@ public class FileOperations {
         }
         return p;
     }
+    
+	
+	public static List<String> findFiles(String directory, HashSet<String> extensions) throws IOException {
+        List<String> p = new ArrayList<>();
+        try (Stream<Path> paths = Files.walk(Path.of(directory), 10)) {
+            List<String>pathlist = paths
+                    .map(path -> Files.isDirectory(path) ? path.toString() + '/' : path.toString())
+                    .collect(Collectors.toList());
+
+            for (String path : pathlist) {
+                if (path.contains(".")) {
+                    if(extensions.contains(FileOperations.getExtensionFromPath(path))) {
+                        p.add(path);
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+        }
+        return p;
+    }
 
     public static List<String> getFilenames(List<String> paths) {
         List<String> filenames = new ArrayList<>();

@@ -27,6 +27,61 @@ import kdesp73.musicplayer.gui.MainFrame;
  */
 public class Queries {
 
+	public static void updateMode(String mode) {
+		mode = Utils.replaceQuotes(mode);
+
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().update("Settings").set("mode", mode).build());
+
+		db.close();
+	}
+
+	public static String selectMode() {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("mode").from("Settings").build());
+
+		String mode = null;
+		try {
+			rs.next();
+			mode = rs.getString(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+
+		return mode;
+	}
+	public static void updateTheme(String theme) {
+		theme = Utils.replaceQuotes(theme);
+
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().update("Settings").set("theme", theme).build());
+
+		db.close();
+	}
+
+	public static String selectTheme() {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("theme").from("Settings").build());
+
+		String theme = null;
+		try {
+			rs.next();
+			theme = rs.getString(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+
+		return theme;
+	}
+
 	public static void updateLocalArtistImagePath(String artist, String path) {
 		DatabaseConnection db = Database.connection();
 
@@ -51,7 +106,7 @@ public class Queries {
 		db.close();
 		return path;
 	}
-	
+
 	public static void updateLocalCoverPath(String album, String artist, String path) {
 		DatabaseConnection db = Database.connection();
 
@@ -76,8 +131,6 @@ public class Queries {
 		db.close();
 		return path;
 	}
-	
-	
 
 	public static boolean selectScrapeAtStart() {
 		DatabaseConnection db = Database.connection();
@@ -375,7 +428,7 @@ public class Queries {
 		db.close();
 		return artist;
 	}
-	
+
 	public static String selectAlbumCover(String album, String artist) {
 		DatabaseConnection db = Database.connection();
 

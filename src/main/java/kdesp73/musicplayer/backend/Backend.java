@@ -4,6 +4,8 @@
  */
 package kdesp73.musicplayer.backend;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -17,6 +19,11 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeEvent;
 import kdesp73.musicplayer.api.API;
 import kdesp73.musicplayer.api.Album;
 import kdesp73.musicplayer.api.Artist;
@@ -30,9 +37,13 @@ import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.musicplayer.gui.EditSongInfo;
 import kdesp73.musicplayer.gui.GUIMethods;
 import kdesp73.musicplayer.gui.MainFrame;
+import kdesp73.musicplayer.gui.ThemesFrame;
 import kdesp73.musicplayer.player.Mp3Player;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.songs.SongsList;
+import kdesp73.themeLib.Theme;
+import kdesp73.themeLib.ThemeCollection;
+import kdesp73.themeLib.YamlFile;
 
 /**
  *
@@ -90,6 +101,24 @@ public class Backend {
 				mainFrame.list.scrapeSongs();
 			}
 
+			Timer timer = new Timer(100, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (mainFrame.getSlider().getValue() == mainFrame.getSlider().getMaximum()) {
+						mainFrame.getSlider().setValue(0);
+						UIFunctionality.nextAction(mainFrame);
+					}
+				}
+			});
+
+			mainFrame.getSlider().addChangeListener((ChangeEvent e) -> {
+				if (!timer.isRunning()) {
+					timer.start();
+				}
+			});
+
+			setMode(mainFrame, Queries.selectMode());
+			setTheme(mainFrame, Queries.selectTheme());
 		}
 	}
 
@@ -252,14 +281,13 @@ public class Backend {
 			Artist artist = Queries.selectArtist(artistName);
 			Album album = Queries.selectAlbum(albumName, artistName);
 
-			mainFrame.getArtistContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getArtistContentScrollPane().getVerticalScrollBar().getMinimum());
-
 			// ARTIST
 			if (artist != null) {
 
 				mainFrame.getArtistNameLabel().setText(artistName);
-				mainFrame.getArtistTagsLabel().setText(String.join(", ", artist.getTags()));
+//				mainFrame.getArtistTagsLabel().setText(String.join(", ", artist.getTags()));
 				mainFrame.getArtistContentTextArea().setText(artist.getContent());
+				mainFrame.getArtistContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getArtistContentScrollPane().getVerticalScrollBar().getMinimum());
 
 				try {
 					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), GUIMethods.imageFromURL(artist.getImage()));
@@ -270,7 +298,6 @@ public class Backend {
 				Backend.setDefaultArtistAdditionalInfo(frame);
 			}
 
-			mainFrame.getAlbumContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getAlbumContentScrollPane().getVerticalScrollBar().getMinimum());
 			// ALBUM
 			if (album != null) {
 
@@ -282,12 +309,13 @@ public class Backend {
 
 				mainFrame.getAlbumTracksList().setModel(listModel);
 				mainFrame.getAlbumContentTextArea().setText(album.getContent());
+				mainFrame.getAlbumContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getAlbumContentScrollPane().getVerticalScrollBar().getMinimum());
 
 				try {
 					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), GUIMethods.imageFromURL(Queries.selectAlbumCover(albumName, artistName)));
 				} catch (java.lang.NullPointerException e) {
 					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
-				} 
+				}
 			} else {
 				Backend.setDefaultAlbumAdditionalInfo(frame);
 			}
@@ -317,7 +345,7 @@ public class Backend {
 		if (frame instanceof MainFrame) {
 			mainFrame.getArtistNameLabel().setText("Artist");
 			mainFrame.getArtistContentTextArea().setText("");
-			mainFrame.getArtistTagsLabel().setText("Tags");
+//			mainFrame.getArtistTagsLabel().setText("Tags");
 			GUIMethods.loadImage(mainFrame.getArtistImageLabel(), mainFrame.getProject_path() + "/assets/artist-image-placeholder.png");
 
 		}
@@ -526,6 +554,39 @@ public class Backend {
 			selectSong(mainFrame, mainFrame.list.searchSongName(title));
 			sort(mainFrame);
 		}
+	}
+
+	public static void setMode(JFrame frame, String mode) {
+		switch (mode) {
+			case "Light" -> {
+				try {
+					UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+					setTheme(frame, mainFrame.getThemes_path() + "");
+				} catch (UnsupportedLookAndFeelException ex) {
+					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+
+			case "Dark" -> {
+				try {
+//					UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
+					UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkIJTheme());
+					setTheme(frame, mainFrame.getThemes_path() + "dark.yml");
+				} catch (UnsupportedLookAndFeelException ex) {
+					Logger.getLogger(ThemesFrame.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+			default -> {
+				System.err.println("Invalid input");
+			}
+		}
+		SwingUtilities.updateComponentTreeUI(frame);
+	}
+	
+	public static void setTheme(JFrame frame, String path){
+		if(!new File(path).isFile()) return;
+		
+		ThemeCollection.applyTheme(frame, new Theme(new YamlFile(path)));
 	}
 
 }

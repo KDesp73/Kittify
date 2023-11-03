@@ -110,7 +110,8 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void nextButtonActionPerformed(JFrame frame) {
+	public static void nextAction(JFrame frame) {
+		System.out.println("Next Song");
 		if (frame instanceof MainFrame) {
 			int index = mainFrame.getSongsList().getSelectedIndex();
 
@@ -277,5 +278,7 @@ public class UIFunctionality {
 			mainFrame.scrapeAtStart = flag;
 		}
 	}
+	
+	
 
 }

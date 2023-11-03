@@ -1,0 +1,37 @@
+name: Default
+
+# All values below should be in hex form without the '#'
+
+bg: 212121
+fg: EDEDED
+
+bg_2: 121212
+fg_2: b3b3b3
+
+btn: 444444
+btn_fg: FFFFFF
+
+textbox: 212121
+textbox_fg: FFFFFF
+
+list: 212121
+list_fg: b3b3b3 
+list_focus: 343434
+
+scrollbar: "0B3948"
+progress_bar: "44AF69"
+
+slider_track:
+slider_thumb:
+
+# extra slots for additional colors
+extra_0: 000000
+extra_1: 000001
+extra_2: 000002
+extra_3: 000003
+extra_4: 000004
+extra_5: 000005
+extra_6: 000006
+extra_7: 000007
+extra_8: 000008
+extra_9: 000009
