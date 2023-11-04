@@ -127,7 +127,14 @@ public class Backend {
 			setMode(mainFrame, Queries.selectMode());
 			setTheme(mainFrame, Queries.selectTheme());
 
+			
+			mainFrame.shuffleOn = Queries.selectShuffle();
+			mainFrame.repeatOn = Queries.selectRepeat();
 			loadIcons(frame);
+			
+			if(mainFrame.shuffleOn){
+				shuffleList(frame);
+			}
 		}
 	}
 
@@ -148,9 +155,8 @@ public class Backend {
 	public static void shuffleList(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			Collections.shuffle(mainFrame.list.getSongs(), new Random());
+			mainFrame.player.playlist = mainFrame.list.getPaths();
 		}
-		
-		sort(frame);
 	}
 
 	public static String sort(JFrame frame) {
@@ -639,6 +645,9 @@ public class Backend {
 		String prevWhite = assets + "backward-step-solid-white.png";
 		String shuffleWhite = assets + "shuffle-solid-white.png";
 		String repeatWhite = assets + "repeat-solid-white.png";
+		
+		String shuffleBlue = assets + "shuffle-solid-blue.png";
+		String repeatBlue = assets + "repeat-solid-blue.png";
 
 		if (frame instanceof MainFrame) {
 			BufferedImage playOriginal = null, nextOriginal, prevOriginal, shuffleOriginal, repeatOriginal;
@@ -665,6 +674,21 @@ public class Backend {
 					return;
 				}
 			} else {return;}
+			
+			if(((MainFrame) frame).repeatOn){
+				try {
+					repeatOriginal = ImageIO.read(new File(repeatBlue));
+				} catch (IOException ex) {
+					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+			if(((MainFrame) frame).shuffleOn){
+				try {
+					shuffleOriginal = ImageIO.read(new File(shuffleBlue));
+				} catch (IOException ex) {
+					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
 
 			playResized = GUIMethods.resizeImage(playOriginal, 50, 50);
 			nextResized = GUIMethods.resizeImage(nextOriginal, 40, 40);
@@ -677,6 +701,13 @@ public class Backend {
 			GUIMethods.loadImage(((MainFrame) frame).getPrevLabel(), prevResized);
 			GUIMethods.loadImage(((MainFrame) frame).getShuffleLabel(), shuffleResized);
 			GUIMethods.loadImage(((MainFrame) frame).getRepeatLabel(), repeatResized);
+		}
+	}
+	
+	public static void resetSlider(JFrame frame){
+		if(frame instanceof MainFrame){
+			((MainFrame) frame).getSlider().setValue(0);
+			((MainFrame) frame).getTimeLabel().setText("00:00");
 		}
 	}
 

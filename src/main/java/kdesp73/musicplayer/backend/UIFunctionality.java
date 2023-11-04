@@ -125,6 +125,13 @@ public class UIFunctionality {
 				return;
 			}
 
+			if (mainFrame.repeatOn) {
+				mainFrame.player.stop();
+				mainFrame.player.play();
+				Backend.resetSlider(frame);
+				return;
+			}
+
 			mainFrame.player.timer.stop();
 			mainFrame.player.next();
 			Backend.selectSong(mainFrame, index + 1);
@@ -170,6 +177,13 @@ public class UIFunctionality {
 			int index = mainFrame.getSongsList().getSelectedIndex();
 
 			if (index == 0) {
+				return;
+			}
+
+			if (mainFrame.repeatOn) {
+				mainFrame.player.stop();
+				mainFrame.player.play();
+				Backend.resetSlider(frame);
 				return;
 			}
 
@@ -299,22 +313,24 @@ public class UIFunctionality {
 				Backend.shuffleList(frame);
 				Backend.loadIcon(mainFrame.getShuffleLabel(), assets + "shuffle-solid-blue.png", new Dimension(30, 30));
 			}
-			
+
 			mainFrame.shuffleOn = !mainFrame.shuffleOn;
+			Queries.updateShuffle(mainFrame.shuffleOn);
 		}
 	}
-	
-	public static void repeat(JFrame frame){
-		if(frame instanceof MainFrame){
-			if(mainFrame.repeatOn){
+
+	public static void repeat(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			if (mainFrame.repeatOn) {
 				// Handle repeat
 				Backend.loadIcon(mainFrame.getRepeatLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "repeat-solid.png" : "repeat-solid-white.png"), new Dimension(30, 30));
 			} else {
 				// Handle repeat
 				Backend.loadIcon(mainFrame.getRepeatLabel(), assets + "repeat-solid-blue.png", new Dimension(30, 30));
 			}
-			
+
 			mainFrame.repeatOn = !mainFrame.repeatOn;
+			Queries.updateRepeat(mainFrame.repeatOn);
 		}
 	}
 }

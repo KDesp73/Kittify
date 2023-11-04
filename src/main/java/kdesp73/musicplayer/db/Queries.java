@@ -26,7 +26,60 @@ import kdesp73.musicplayer.gui.MainFrame;
  * @author konstantinos
  */
 public class Queries {
+	
+	public static boolean selectShuffle() {
+		DatabaseConnection db = Database.connection();
 
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("shuffle_on").from("Settings").build());
+
+		boolean shuffleOn = false;
+		try {
+			rs.next();
+			shuffleOn = rs.getBoolean(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+
+		return shuffleOn;
+	}
+	
+	public static boolean selectRepeat() {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("repeat_on").from("Settings").build());
+
+		boolean repeatOn = false;
+		try {
+			rs.next();
+			repeatOn = rs.getBoolean(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+
+		return repeatOn;
+	}
+
+
+	public static void updateShuffle(boolean shuffleOn) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().update("Settings").set("shuffle_on", shuffleOn).build());
+
+		db.close();
+	}
+	
+	public static void updateRepeat(boolean repeatOn) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().update("Settings").set("repeat_on", repeatOn).build());
+
+		db.close();
+	}
+	
 	public static void updateMode(String mode) {
 		mode = Utils.replaceQuotes(mode);
 
@@ -54,6 +107,7 @@ public class Queries {
 
 		return mode;
 	}
+	
 	public static void updateTheme(String theme) {
 		theme = Utils.replaceQuotes(theme);
 
