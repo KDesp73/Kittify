@@ -14,13 +14,10 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import kdesp73.musicplayer.player.AudioPlayer;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.songs.SongsList;
@@ -40,7 +37,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	private String project_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/");
 	private String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
-	private Theme theme = new Theme(new YamlFile(themes_path + "kdesp.yml"));
 
 	public int currentIndex = 0;
 	public Mp3File currentSong = null;
@@ -744,11 +740,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public String getThemes_path() {
 		return themes_path;
 	}
-
-	public Theme getTheme() {
-		return theme;
-	}
-
+	
 	public int getCurrentIndex() {
 		return currentIndex;
 	}

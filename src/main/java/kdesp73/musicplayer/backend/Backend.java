@@ -561,7 +561,7 @@ public class Backend {
 			case "Light" -> {
 				try {
 					UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
-					setTheme(frame, mainFrame.getThemes_path() + "");
+					setTheme(frame, mainFrame.getThemes_path() + "light.yml");
 				} catch (UnsupportedLookAndFeelException ex) {
 					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 				}
