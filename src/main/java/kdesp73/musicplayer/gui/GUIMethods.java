@@ -25,10 +25,6 @@ import javax.swing.ImageIcon;
 
 public class GUIMethods {
 
-	public static void loadSVGToLabel(String svgFilePath, JLabel label) {
-		
-	}
-
 	public static BufferedImage imageFromURL(String imageUrl) {
 		try {
 			URL url = null;

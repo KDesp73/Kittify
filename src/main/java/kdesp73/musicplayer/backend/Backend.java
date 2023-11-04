@@ -19,6 +19,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -123,6 +124,8 @@ public class Backend {
 
 			setMode(mainFrame, Queries.selectMode());
 			setTheme(mainFrame, Queries.selectTheme());
+
+			loadIcons(frame);
 		}
 	}
 
@@ -139,9 +142,9 @@ public class Backend {
 		sort(frame);
 		refreshList(frame);
 	}
-	
-	public static void shuffleList(JFrame frame){
-		if(frame instanceof MainFrame){
+
+	public static void shuffleList(JFrame frame) {
+		if (frame instanceof MainFrame) {
 			Collections.shuffle(mainFrame.list.getSongs(), new Random());
 		}
 	}
@@ -593,12 +596,73 @@ public class Backend {
 			}
 		}
 		SwingUtilities.updateComponentTreeUI(frame);
+		Queries.updateTheme(mode);
+		loadIcons(frame);
 	}
-	
-	public static void setTheme(JFrame frame, String path){
-		if(!new File(path).isFile()) return;
-		
+
+	public static void setTheme(JFrame frame, String path) {
+		if (!new File(path).isFile()) {
+			return;
+		}
+
 		ThemeCollection.applyTheme(frame, new Theme(new YamlFile(path)));
+	}
+
+	public static void loadIcons(JFrame frame) {
+		if(frame == null) return;
+		
+		String assets = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/";
+
+		String play = assets + "circle-play-solid.png";
+		String next = assets + "forward-step-solid.png";
+		String prev = assets + "backward-step-solid.png";
+		String shuffle = assets + "shuffle-solid.png";
+		String repeat = assets + "repeat-solid.png";
+
+		String playWhite = assets + "circle-play-solid-white.png";
+		String nextWhite = assets + "forward-step-solid-white.png";
+		String prevWhite = assets + "backward-step-solid-white.png";
+		String shuffleWhite = assets + "shuffle-solid-white.png";
+		String repeatWhite = assets + "repeat-solid-white.png";
+
+		if (frame instanceof MainFrame) {
+			BufferedImage playOriginal = null, nextOriginal, prevOriginal, shuffleOriginal, repeatOriginal;
+			BufferedImage playResized, prevResized, nextResized, shuffleResized, repeatResized;
+			
+			if (Queries.selectTheme().equals("Dark")) {
+				try {
+					playOriginal = ImageIO.read(new File(playWhite));
+					nextOriginal = ImageIO.read(new File(nextWhite));
+					prevOriginal = ImageIO.read(new File(prevWhite));
+					shuffleOriginal = ImageIO.read(new File(shuffleWhite));
+					repeatOriginal = ImageIO.read(new File(repeatWhite));
+				} catch (IOException ex) {
+					return;
+				}
+			} else if(Queries.selectTheme().equals("Light")) {
+				try {
+					playOriginal = ImageIO.read(new File(play));
+					nextOriginal = ImageIO.read(new File(next));
+					prevOriginal = ImageIO.read(new File(prev));
+					shuffleOriginal = ImageIO.read(new File(shuffle));
+					repeatOriginal = ImageIO.read(new File(repeat));
+				} catch (IOException ex) {
+					return;
+				}
+			} else {return;}
+
+			playResized = GUIMethods.resizeImage(playOriginal, 50, 50);
+			nextResized = GUIMethods.resizeImage(nextOriginal, 40, 40);
+			prevResized = GUIMethods.resizeImage(prevOriginal, 40, 40);
+			shuffleResized = GUIMethods.resizeImage(shuffleOriginal, 30, 30);
+			repeatResized = GUIMethods.resizeImage(repeatOriginal, 30, 30);
+
+			GUIMethods.loadImage(((MainFrame) frame).getPlayPauseLabel(), playResized);
+			GUIMethods.loadImage(((MainFrame) frame).getNextLabel(), nextResized);
+			GUIMethods.loadImage(((MainFrame) frame).getPrevLabel(), prevResized);
+			GUIMethods.loadImage(((MainFrame) frame).getShuffleLabel(), shuffleResized);
+			GUIMethods.loadImage(((MainFrame) frame).getRepeatLabel(), repeatResized);
+		}
 	}
 
 }

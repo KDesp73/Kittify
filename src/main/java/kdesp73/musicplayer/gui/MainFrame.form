@@ -170,7 +170,7 @@
                       <Component id="jScrollPane2" min="-2" pref="340" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="tabbedPane" pref="739" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -297,7 +297,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
                           <Component id="albumImageLabel" min="-2" pref="300" max="-2" attributes="0"/>
-                          <EmptySpace pref="33" max="32767" attributes="0"/>
+                          <EmptySpace pref="47" max="32767" attributes="0"/>
                           <Component id="controlsParentPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -321,13 +321,13 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="basicInfoPanel" max="32767" attributes="0"/>
                                   <Component id="sliderPanel" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="controlsPanel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="controlsPanel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -338,9 +338,9 @@
                               <Component id="basicInfoPanel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="sliderPanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace pref="10" max="32767" attributes="0"/>
                               <Component id="controlsPanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="57" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -404,73 +404,6 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="controlsPanel">
-
-                      <Layout>
-                        <DimensionLayout dim="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                                  <Component id="prevButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="32767" attributes="0"/>
-                                  <Component id="playButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="32767" attributes="0"/>
-                                  <Component id="nextButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                        </DimensionLayout>
-                        <DimensionLayout dim="1">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="playButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="prevButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                        </DimensionLayout>
-                      </Layout>
-                      <SubComponents>
-                        <Component class="javax.swing.JButton" name="playButton">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="Play"/>
-                            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                              <Color id="Hand Cursor"/>
-                            </Property>
-                          </Properties>
-                          <Events>
-                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="playButtonMouseClicked"/>
-                            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="playButtonMouseReleased"/>
-                          </Events>
-                        </Component>
-                        <Component class="javax.swing.JButton" name="nextButton">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="Next"/>
-                            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                              <Color id="Hand Cursor"/>
-                            </Property>
-                          </Properties>
-                          <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nextButtonActionPerformed"/>
-                          </Events>
-                        </Component>
-                        <Component class="javax.swing.JButton" name="prevButton">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="Prev"/>
-                            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                              <Color id="Hand Cursor"/>
-                            </Property>
-                          </Properties>
-                          <Events>
-                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="prevButtonMouseClicked"/>
-                          </Events>
-                        </Component>
-                      </SubComponents>
-                    </Container>
                     <Container class="javax.swing.JPanel" name="basicInfoPanel">
                       <Properties>
                         <Property name="name" type="java.lang.String" value="" noResource="true"/>
@@ -522,6 +455,95 @@
                         </Component>
                       </SubComponents>
                     </Container>
+                    <Container class="javax.swing.JPanel" name="controlsPanel">
+
+                      <Layout>
+                        <DimensionLayout dim="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace pref="80" max="32767" attributes="0"/>
+                                  <Component id="shuffleLabel" min="-2" pref="30" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="prevLabel" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="playPauseLabel" min="-2" pref="60" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="nextLabel" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="repeatLabel" min="-2" pref="30" max="-2" attributes="0"/>
+                                  <EmptySpace pref="80" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                        <DimensionLayout dim="1">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="playPauseLabel" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="shuffleLabel" pref="40" max="32767" attributes="0"/>
+                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                                  <Component id="nextLabel" pref="40" max="32767" attributes="0"/>
+                                                  <Component id="prevLabel" max="32767" attributes="0"/>
+                                                  <Component id="repeatLabel" alignment="0" max="32767" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                          <EmptySpace min="0" pref="10" max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                      </Layout>
+                      <SubComponents>
+                        <Component class="javax.swing.JLabel" name="playPauseLabel">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                              <Color id="Hand Cursor"/>
+                            </Property>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="prevLabel">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                              <Color id="Hand Cursor"/>
+                            </Property>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="nextLabel">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                              <Color id="Hand Cursor"/>
+                            </Property>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="repeatLabel">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                              <Color id="Hand Cursor"/>
+                            </Property>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="shuffleLabel">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                              <Color id="Hand Cursor"/>
+                            </Property>
+                          </Properties>
+                        </Component>
+                      </SubComponents>
+                    </Container>
                   </SubComponents>
                 </Container>
                 <Component class="javax.swing.JLabel" name="albumImageLabel">
@@ -553,7 +575,7 @@
                                   <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="326" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="infoTabbedPane" pref="733" max="32767" attributes="0"/>
+                              <Component id="infoTabbedPane" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>

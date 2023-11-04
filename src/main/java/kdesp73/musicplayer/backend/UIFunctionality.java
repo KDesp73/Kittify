@@ -123,7 +123,7 @@ public class UIFunctionality {
 			mainFrame.player.next();
 			Backend.selectSong(mainFrame, index + 1);
 
-			mainFrame.getPlayButton().setText("Pause");
+//			mainFrame.getPlayButton().setText("Pause");
 		}
 	}
 
@@ -139,7 +139,7 @@ public class UIFunctionality {
 			Backend.selectSong(mainFrame);
 
 			mainFrame.player.play(mainFrame.getSongsList().getSelectedIndex());
-			mainFrame.getPlayButton().setText("Pause");
+//			mainFrame.getPlayButton().setText("Pause");
 		}
 	}
 
@@ -148,10 +148,10 @@ public class UIFunctionality {
 			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
 			if (mainFrame.player.isPlaying()) {
 				mainFrame.player.pause();
-				mainFrame.getPlayButton().setText("Play");
+//				mainFrame.getPlayButton().setText("Play");
 			} else {
 				mainFrame.player.play();
-				mainFrame.getPlayButton().setText("Pause");
+//				mainFrame.getPlayButton().setText("Pause");
 			}
 		}
 	}
@@ -169,7 +169,7 @@ public class UIFunctionality {
 			mainFrame.player.prev();
 			Backend.selectSong(mainFrame, index - 1);
 
-			mainFrame.getPlayButton().setText("Pause");
+//			mainFrame.getPlayButton().setText("Pause");
 		}
 	}
 
