@@ -14,7 +14,7 @@
     
 	<dependencies>
 		<!--Themes-->
-		<dependency>
+		<dependency> 
 			<groupId>kdesp73</groupId>
 			<artifactId>SwingThemesLibrary</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
@@ -74,6 +74,25 @@
 			<artifactId>imgscalr-lib</artifactId>
 			<version>4.2</version>
 		</dependency>
+		
+		<!--SVG-->
+		<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-bridge -->
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-bridge</artifactId>
+			<version>1.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-gvt</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-svggen</artifactId>
+			<version>1.14</version>
+		</dependency>
+
 		
 		<!--Player-->	
 		<dependency>

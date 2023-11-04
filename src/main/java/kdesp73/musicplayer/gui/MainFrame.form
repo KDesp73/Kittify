@@ -170,7 +170,7 @@
                       <Component id="jScrollPane2" min="-2" pref="340" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="tabbedPane" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" pref="739" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -286,9 +286,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="controlsParentPanel" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace pref="176" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="albumImageLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="192" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -297,8 +297,9 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
                           <Component id="albumImageLabel" min="-2" pref="300" max="-2" attributes="0"/>
-                          <EmptySpace pref="86" max="32767" attributes="0"/>
+                          <EmptySpace pref="33" max="32767" attributes="0"/>
                           <Component id="controlsParentPanel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -316,30 +317,30 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="sliderPanel" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="basicInfoPanel" max="32767" attributes="0"/>
+                                  <Component id="sliderPanel" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="controlsPanel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="controlsPanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace pref="7" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="basicInfoPanel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="sliderPanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="controlsPanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                              <EmptySpace pref="57" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -352,10 +353,12 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="timeLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="slider" max="32767" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="timeLabel" min="-2" pref="57" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="durationLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -366,6 +369,7 @@
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="timeLabel" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                                       <Component id="slider" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="durationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
                               </Group>
@@ -392,6 +396,11 @@
                             <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="sliderMousePressed"/>
                             <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="sliderMouseReleased"/>
                           </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="durationLabel">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="00:00"/>
+                          </Properties>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -463,21 +472,20 @@
                       </SubComponents>
                     </Container>
                     <Container class="javax.swing.JPanel" name="basicInfoPanel">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="" noResource="true"/>
+                      </Properties>
 
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="artistLabel" max="32767" attributes="0"/>
                                       <Group type="102" attributes="0">
-                                          <Component id="albumLabel" min="-2" pref="281" max="-2" attributes="0"/>
-                                          <EmptySpace min="0" pref="51" max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="trackLabel" min="-2" pref="189" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="artistLabel" max="32767" attributes="0"/>
+                                          <Component id="trackLabel" min="-2" pref="607" max="-2" attributes="0"/>
+                                          <EmptySpace min="0" pref="108" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -488,13 +496,10 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="trackLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="artistLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="trackLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="artistLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="albumLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="8" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -502,20 +507,16 @@
                       <SubComponents>
                         <Component class="javax.swing.JLabel" name="trackLabel">
                           <Properties>
+                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                              <Font name="Dialog" size="18" style="0"/>
+                            </Property>
                             <Property name="text" type="java.lang.String" value="Track"/>
                             <Property name="name" type="java.lang.String" value="fg_2" noResource="true"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="artistLabel">
                           <Properties>
-                            <Property name="horizontalAlignment" type="int" value="11"/>
                             <Property name="text" type="java.lang.String" value="Artist"/>
-                            <Property name="name" type="java.lang.String" value="fg_2" noResource="true"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JLabel" name="albumLabel">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="Album"/>
                             <Property name="name" type="java.lang.String" value="fg_2" noResource="true"/>
                           </Properties>
                         </Component>
@@ -552,7 +553,7 @@
                                   <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="326" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="infoTabbedPane" max="32767" attributes="0"/>
+                              <Component id="infoTabbedPane" pref="733" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -563,7 +564,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="infoTabbedPane" min="-2" pref="621" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jSeparator1" pref="1" max="32767" attributes="0"/>
+                          <Component id="jSeparator1" pref="4" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -595,14 +596,14 @@
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace pref="12" max="32767" attributes="0"/>
+                                  <EmptySpace pref="35" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                       <Component id="artistImageLabel" pref="300" max="32767" attributes="0"/>
                                       <Component id="artistNameLabel" pref="300" max="32767" attributes="0"/>
                                       <Component id="tagsContainer" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace type="unrelated" max="32767" attributes="0"/>
-                                  <Component id="artistContentScrollPane" pref="332" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" pref="37" max="32767" attributes="0"/>
+                                  <Component id="artistContentScrollPane" pref="355" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -702,23 +703,15 @@
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="jScrollPane5" max="32767" attributes="0"/>
-                                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                      </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="jLabel1" min="-2" pref="111" max="-2" attributes="0"/>
-                                          <EmptySpace pref="207" max="32767" attributes="0"/>
+                                          <EmptySpace min="0" pref="266" max="32767" attributes="0"/>
                                       </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="albumNameLabel" pref="306" max="32767" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="albumCoverInfoLabel" max="32767" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="albumCoverInfoLabel" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane5" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="albumNameLabel" alignment="1" pref="377" max="32767" attributes="0"/>
                                   </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="albumContentScrollPane" min="-2" pref="338" max="-2" attributes="0"/>
                               </Group>
                           </Group>

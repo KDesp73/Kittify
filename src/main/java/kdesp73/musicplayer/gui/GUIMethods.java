@@ -5,15 +5,10 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -29,6 +24,10 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class GUIMethods {
+
+	public static void loadSVGToLabel(String svgFilePath, JLabel label) {
+		
+	}
 
 	public static BufferedImage imageFromURL(String imageUrl) {
 		try {

@@ -44,18 +44,20 @@ public final class MainFrame extends javax.swing.JFrame {
 	public boolean scrapeAtStart = false;
 
 	public Mp3Player player;
+	private ThemesFrame tf;
 
-	public static MainFrame create(){
+	public static MainFrame create() {
 		MainFrame frame = new MainFrame();
 		Backend.setMainFrame(frame);
 		Backend.setup(frame);
 		return frame;
 	}
-	
+
 	public MainFrame() {
 		initComponents();
-	}
 
+		tf = new ThemesFrame(this);
+	}
 
 	/**
 	 * This method is called from within the
@@ -80,6 +82,7 @@ public final class MainFrame extends javax.swing.JFrame {
         sliderPanel = new javax.swing.JPanel();
         timeLabel = new javax.swing.JLabel();
         slider = new javax.swing.JSlider();
+        durationLabel = new javax.swing.JLabel();
         controlsPanel = new javax.swing.JPanel();
         playButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
@@ -87,7 +90,6 @@ public final class MainFrame extends javax.swing.JFrame {
         basicInfoPanel = new javax.swing.JPanel();
         trackLabel = new javax.swing.JLabel();
         artistLabel = new javax.swing.JLabel();
-        albumLabel = new javax.swing.JLabel();
         albumImageLabel = new javax.swing.JLabel();
         infoBackground = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -185,16 +187,20 @@ public final class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        durationLabel.setText("00:00");
+
         javax.swing.GroupLayout sliderPanelLayout = new javax.swing.GroupLayout(sliderPanel);
         sliderPanel.setLayout(sliderPanelLayout);
         sliderPanelLayout.setHorizontalGroup(
             sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sliderPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(slider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(timeLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(slider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(durationLabel)
+                .addGap(12, 12, 12))
         );
         sliderPanelLayout.setVerticalGroup(
             sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,7 +208,8 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(slider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(slider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(durationLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -257,15 +264,14 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        basicInfoPanel.setName(""); // NOI18N
+
+        trackLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         trackLabel.setText("Track");
         trackLabel.setName("fg_2"); // NOI18N
 
-        artistLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         artistLabel.setText("Artist");
         artistLabel.setName("fg_2"); // NOI18N
-
-        albumLabel.setText("Album");
-        albumLabel.setName("fg_2"); // NOI18N
 
         javax.swing.GroupLayout basicInfoPanelLayout = new javax.swing.GroupLayout(basicInfoPanel);
         basicInfoPanel.setLayout(basicInfoPanelLayout);
@@ -274,25 +280,20 @@ public final class MainFrame extends javax.swing.JFrame {
             .addGroup(basicInfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(artistLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(basicInfoPanelLayout.createSequentialGroup()
-                        .addComponent(albumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 51, Short.MAX_VALUE))
-                    .addGroup(basicInfoPanelLayout.createSequentialGroup()
-                        .addComponent(trackLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(artistLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(trackLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 108, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         basicInfoPanelLayout.setVerticalGroup(
             basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(basicInfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(trackLabel)
-                    .addComponent(artistLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(albumLabel)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addComponent(trackLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(artistLabel)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout controlsParentPanelLayout = new javax.swing.GroupLayout(controlsParentPanel);
@@ -300,26 +301,26 @@ public final class MainFrame extends javax.swing.JFrame {
         controlsParentPanelLayout.setHorizontalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(controlsParentPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addContainerGap()
+                .addGroup(controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(basicInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(sliderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(basicInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(controlsParentPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlsParentPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         controlsParentPanelLayout.setVerticalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(controlsParentPanelLayout.createSequentialGroup()
-                .addContainerGap(7, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(basicInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sliderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         albumImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -331,17 +332,18 @@ public final class MainFrame extends javax.swing.JFrame {
             playerBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(controlsParentPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(playerBackgroundLayout.createSequentialGroup()
-                .addContainerGap(176, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(albumImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         playerBackgroundLayout.setVerticalGroup(
             playerBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playerBackgroundLayout.createSequentialGroup()
                 .addGap(84, 84, 84)
                 .addComponent(albumImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
-                .addComponent(controlsParentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(controlsParentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         tabbedPane.addTab("Player", playerBackground);
@@ -386,13 +388,13 @@ public final class MainFrame extends javax.swing.JFrame {
         artistInfoPanelLayout.setHorizontalGroup(
             artistInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(artistInfoPanelLayout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(35, Short.MAX_VALUE)
                 .addGroup(artistInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(artistImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                     .addComponent(artistNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                     .addComponent(tagsContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(artistContentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 37, Short.MAX_VALUE)
+                .addComponent(artistContentScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
                 .addContainerGap())
         );
         artistInfoPanelLayout.setVerticalGroup(
@@ -452,17 +454,12 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(albumInfoPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane5)
-                        .addGap(18, 18, 18))
-                    .addGroup(albumInfoPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 207, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, albumInfoPanelLayout.createSequentialGroup()
-                        .addComponent(albumNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                    .addGroup(albumInfoPanelLayout.createSequentialGroup()
-                        .addComponent(albumCoverInfoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGap(0, 266, Short.MAX_VALUE))
+                    .addComponent(albumCoverInfoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5)
+                    .addComponent(albumNameLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(albumContentScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         albumInfoPanelLayout.setVerticalGroup(
@@ -496,7 +493,7 @@ public final class MainFrame extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(326, 326, 326))
-                    .addComponent(infoTabbedPane))
+                    .addComponent(infoTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE))
                 .addContainerGap())
         );
         infoBackgroundLayout.setVerticalGroup(
@@ -504,7 +501,7 @@ public final class MainFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, infoBackgroundLayout.createSequentialGroup()
                 .addComponent(infoTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 621, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 4, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -533,7 +530,7 @@ public final class MainFrame extends javax.swing.JFrame {
                         .addComponent(sortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabbedPane))
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE))
         );
         backgroundLayout.setVerticalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -676,7 +673,7 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
-		if (evt.getButton() == MouseEvent.BUTTON3 && songsList.getSelectedIndex()  >= 0) {
+		if (evt.getButton() == MouseEvent.BUTTON3 && songsList.getSelectedIndex() >= 0) {
 			showOptionsPopup(this, evt);
 		} else if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
 			playSong(this);
@@ -710,29 +707,30 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_scrapeAtStartMenuItemActionPerformed
 
     private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
-        UIFunctionality.sliderMouseDragged(this);
+		UIFunctionality.sliderMouseDragged(this);
     }//GEN-LAST:event_sliderMouseDragged
 
     private void sliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseReleased
-        UIFunctionality.sliderMouseReleased(this);
+		UIFunctionality.sliderMouseReleased(this);
     }//GEN-LAST:event_sliderMouseReleased
 
     private void playButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseReleased
-        UIFunctionality.playButtonMouseClicked(this);
+		UIFunctionality.playButtonMouseClicked(this);
     }//GEN-LAST:event_playButtonMouseReleased
 
     private void sliderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMousePressed
-        if(evt.getButton() == MouseEvent.BUTTON1){
+		if (evt.getButton() == MouseEvent.BUTTON1) {
 //			player.pause();
 		}
     }//GEN-LAST:event_sliderMousePressed
 
     private void themesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_themesMenuItemActionPerformed
-        new ThemesFrame(this).setVisible(true);
+		if(tf.isActive()) return;
+		
+		tf.setVisible(true);
     }//GEN-LAST:event_themesMenuItemActionPerformed
 
 	// Getters
-	
 	public String getProject_path() {
 		return project_path;
 	}
@@ -740,7 +738,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public String getThemes_path() {
 		return themes_path;
 	}
-	
+
 	public int getCurrentIndex() {
 		return currentIndex;
 	}
@@ -777,10 +775,9 @@ public final class MainFrame extends javax.swing.JFrame {
 		return albumImageLabel;
 	}
 
-	public JLabel getAlbumLabel() {
-		return albumLabel;
-	}
-
+//	public JLabel getAlbumLabel() {
+//		return albumLabel;
+//	}
 	public JLabel getArtistLabel() {
 		return artistLabel;
 	}
@@ -888,11 +885,10 @@ public final class MainFrame extends javax.swing.JFrame {
 	public JLabel getTrackLabel() {
 		return trackLabel;
 	}
-	
+
 //	public JRootPane getRootPane(){
 //		return this.rootPane;
 //	}
-	
 	public JLabel getArtistImageLabel() {
 		return artistImageLabel;
 	}
@@ -932,8 +928,10 @@ public final class MainFrame extends javax.swing.JFrame {
 	public JScrollPane getArtistContentScrollPane() {
 		return artistContentScrollPane;
 	}
-	
-	
+
+	public JLabel getDurationLabel() {
+		return durationLabel;
+	}
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -946,7 +944,6 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel albumCoverInfoLabel;
     private javax.swing.JLabel albumImageLabel;
     private javax.swing.JPanel albumInfoPanel;
-    private javax.swing.JLabel albumLabel;
     private javax.swing.JLabel albumNameLabel;
     private javax.swing.JList<String> albumTracksList;
     private javax.swing.JScrollPane artistContentScrollPane;
@@ -959,6 +956,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel basicInfoPanel;
     private javax.swing.JPanel controlsPanel;
     private javax.swing.JPanel controlsParentPanel;
+    private javax.swing.JLabel durationLabel;
     private javax.swing.JMenuItem editDirectoriesMenuItem;
     private javax.swing.JMenuItem editFilesMenuItem;
     private javax.swing.JMenu editMenu;

@@ -13,9 +13,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -61,6 +64,7 @@ public class Backend {
 	public static void setup(JFrame frame) {
 		if (frame instanceof MainFrame) {
 
+			mainFrame.setResizable(false);
 			mainFrame.setLocationRelativeTo(null);
 			mainFrame.getRootPane().requestFocus();
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
@@ -134,6 +138,12 @@ public class Backend {
 
 		sort(frame);
 		refreshList(frame);
+	}
+	
+	public static void shuffleList(JFrame frame){
+		if(frame instanceof MainFrame){
+			Collections.shuffle(mainFrame.list.getSongs(), new Random());
+		}
 	}
 
 	public static String sort(JFrame frame) {
@@ -355,8 +365,9 @@ public class Backend {
 		if (frame instanceof MainFrame) {
 			mainFrame.getTrackLabel().setText("Title");
 			mainFrame.getArtistLabel().setText("Artist");
-			mainFrame.getAlbumLabel().setText("Album");
+//			mainFrame.getAlbumLabel().setText("Album");
 			mainFrame.getTimeLabel().setText("00:00");
+			mainFrame.getDurationLabel().setText("00:00");
 
 			GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 		}
@@ -376,7 +387,8 @@ public class Backend {
 
 			mainFrame.getTrackLabel().setText(title);
 			mainFrame.getArtistLabel().setText((artist == null) ? "Unknown Artist" : artist);
-			mainFrame.getAlbumLabel().setText((album == null) ? "Unknown Album" : album);
+//			mainFrame.getAlbumLabel().setText((album == null) ? "Unknown Album" : album);
+			mainFrame.getDurationLabel().setText(Backend.secondsToMinutes((int) mainFrame.list.getSongs().get(index).getDurationInSeconds()));
 
 			Queries.updateSong(mainFrame.list.getSongs().get(index));
 
@@ -561,7 +573,7 @@ public class Backend {
 			case "Light" -> {
 				try {
 					UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
-					setTheme(frame, mainFrame.getThemes_path() + "light.yml");
+					setTheme(frame, System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/" + "light.yml");
 				} catch (UnsupportedLookAndFeelException ex) {
 					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 				}
@@ -571,7 +583,7 @@ public class Backend {
 				try {
 //					UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
 					UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkIJTheme());
-					setTheme(frame, mainFrame.getThemes_path() + "dark.yml");
+					setTheme(frame, System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/" + "dark.yml");
 				} catch (UnsupportedLookAndFeelException ex) {
 					Logger.getLogger(ThemesFrame.class.getName()).log(Level.SEVERE, null, ex);
 				}
