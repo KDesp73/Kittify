@@ -34,7 +34,7 @@ import kdesp73.themeLib.YamlFile;
  * @author konstantinos
  */
 public final class MainFrame extends javax.swing.JFrame {
-
+	private String accentColor = "2979ff";
 	private String project_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/");
 	private String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 
@@ -42,6 +42,9 @@ public final class MainFrame extends javax.swing.JFrame {
 	public Mp3File currentSong = null;
 	public SongsList list;
 	public boolean scrapeAtStart = false;
+	
+	public boolean shuffleOn = false;
+	public boolean repeatOn = false;
 
 	public Mp3Player player;
 	private ThemesFrame tf;
@@ -249,18 +252,43 @@ public final class MainFrame extends javax.swing.JFrame {
 
         playPauseLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         playPauseLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        playPauseLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playPauseLabelMouseClicked(evt);
+            }
+        });
 
         prevLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         prevLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        prevLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                prevLabelMouseClicked(evt);
+            }
+        });
 
         nextLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nextLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        nextLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nextLabelMouseClicked(evt);
+            }
+        });
 
         repeatLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         repeatLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        repeatLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                repeatLabelMouseClicked(evt);
+            }
+        });
 
         shuffleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         shuffleLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        shuffleLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                shuffleLabelMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout controlsPanelLayout = new javax.swing.GroupLayout(controlsPanel);
         controlsPanel.setLayout(controlsPanelLayout);
@@ -715,6 +743,26 @@ public final class MainFrame extends javax.swing.JFrame {
 		
 		tf.setVisible(true);
     }//GEN-LAST:event_themesMenuItemActionPerformed
+
+    private void playPauseLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playPauseLabelMouseClicked
+		UIFunctionality.togglePlayPause(this);
+    }//GEN-LAST:event_playPauseLabelMouseClicked
+
+    private void nextLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextLabelMouseClicked
+		UIFunctionality.nextAction(this);
+    }//GEN-LAST:event_nextLabelMouseClicked
+
+    private void prevLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevLabelMouseClicked
+		UIFunctionality.prevAction(this);
+    }//GEN-LAST:event_prevLabelMouseClicked
+
+    private void shuffleLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_shuffleLabelMouseClicked
+		UIFunctionality.shuffle(this);
+    }//GEN-LAST:event_shuffleLabelMouseClicked
+
+    private void repeatLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_repeatLabelMouseClicked
+		UIFunctionality.repeat(this);
+    }//GEN-LAST:event_repeatLabelMouseClicked
 
 	// Getters
 	public String getProject_path() {

@@ -5,11 +5,13 @@
 package kdesp73.musicplayer.backend;
 
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -26,6 +28,8 @@ import kdesp73.musicplayer.gui.MainFrame;
  * @author konstantinos
  */
 public class UIFunctionality {
+
+	private static String assets = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/";
 
 	private static MainFrame mainFrame;
 
@@ -87,9 +91,11 @@ public class UIFunctionality {
 	public static void sortComboBoxActionPerformed(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			String sortedBy = Backend.sort(mainFrame);
-			
-			if(sortedBy == null) return;
-			
+
+			if (sortedBy == null) {
+				return;
+			}
+
 			Queries.updateSortBy(sortedBy);
 
 			mainFrame.player.playlist = ((MainFrame) frame).list.getPaths();
@@ -124,6 +130,8 @@ public class UIFunctionality {
 			Backend.selectSong(mainFrame, index + 1);
 
 //			mainFrame.getPlayButton().setText("Pause");
+			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(50, 50));
+
 		}
 	}
 
@@ -131,8 +139,7 @@ public class UIFunctionality {
 		if (frame instanceof MainFrame) {
 			mainFrame.currentIndex = mainFrame.getSongsList().getSelectedIndex();
 			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
-			
-			
+
 			mainFrame.player.stop();
 			mainFrame.player.timer.stop();
 
@@ -140,24 +147,25 @@ public class UIFunctionality {
 
 			mainFrame.player.play(mainFrame.getSongsList().getSelectedIndex());
 //			mainFrame.getPlayButton().setText("Pause");
+			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(50, 50));
+
 		}
 	}
 
-	public static void playButtonMouseClicked(JFrame frame) {
+	public static void togglePlayPause(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
 			if (mainFrame.player.isPlaying()) {
 				mainFrame.player.pause();
-//				mainFrame.getPlayButton().setText("Play");
+				Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-play-solid.png" : "circle-play-solid-white.png"), new Dimension(50, 50));
 			} else {
 				mainFrame.player.play();
-//				mainFrame.getPlayButton().setText("Pause");
+				Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(50, 50));
 			}
 		}
 	}
 
-
-	public static void prevButtonMouseClicked(JFrame frame) {
+	public static void prevAction(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			int index = mainFrame.getSongsList().getSelectedIndex();
 
@@ -170,6 +178,8 @@ public class UIFunctionality {
 			Backend.selectSong(mainFrame, index - 1);
 
 //			mainFrame.getPlayButton().setText("Pause");
+			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(50, 50));
+
 		}
 	}
 
@@ -234,7 +244,7 @@ public class UIFunctionality {
 
 			scrape.addActionListener(menuListener);
 			options.add(scrape);
-			
+
 			downloadAlbumCover.addActionListener(menuListener);
 			options.add(downloadAlbumCover);
 
@@ -278,7 +288,33 @@ public class UIFunctionality {
 			mainFrame.scrapeAtStart = flag;
 		}
 	}
-	
-	
 
+	public static void shuffle(JFrame frame) {
+		if (frame instanceof MainFrame) {
+
+			if (mainFrame.shuffleOn) {
+				Backend.sort(frame);
+				Backend.loadIcon(mainFrame.getShuffleLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "shuffle-solid.png" : "shuffle-solid-white.png"), new Dimension(30, 30));
+			} else {
+				Backend.shuffleList(frame);
+				Backend.loadIcon(mainFrame.getShuffleLabel(), assets + "shuffle-solid-blue.png", new Dimension(30, 30));
+			}
+			
+			mainFrame.shuffleOn = !mainFrame.shuffleOn;
+		}
+	}
+	
+	public static void repeat(JFrame frame){
+		if(frame instanceof MainFrame){
+			if(mainFrame.repeatOn){
+				// Handle repeat
+				Backend.loadIcon(mainFrame.getRepeatLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "repeat-solid.png" : "repeat-solid-white.png"), new Dimension(30, 30));
+			} else {
+				// Handle repeat
+				Backend.loadIcon(mainFrame.getRepeatLabel(), assets + "repeat-solid-blue.png", new Dimension(30, 30));
+			}
+			
+			mainFrame.repeatOn = !mainFrame.repeatOn;
+		}
+	}
 }

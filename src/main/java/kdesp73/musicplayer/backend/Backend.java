@@ -4,6 +4,7 @@
  */
 package kdesp73.musicplayer.backend;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -22,6 +23,7 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -147,6 +149,8 @@ public class Backend {
 		if (frame instanceof MainFrame) {
 			Collections.shuffle(mainFrame.list.getSongs(), new Random());
 		}
+		
+		sort(frame);
 	}
 
 	public static String sort(JFrame frame) {
@@ -608,6 +612,17 @@ public class Backend {
 		ThemeCollection.applyTheme(frame, new Theme(new YamlFile(path)));
 	}
 
+	public static void loadIcon(JLabel label, String path, Dimension dimension){
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File(path));
+		} catch (IOException ex) {
+			Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+		GUIMethods.loadImage(label, GUIMethods.resizeImage(image, dimension.width, dimension.height));
+	}
+	
 	public static void loadIcons(JFrame frame) {
 		if(frame == null) return;
 		
