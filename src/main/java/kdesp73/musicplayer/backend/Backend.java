@@ -6,6 +6,7 @@ package kdesp73.musicplayer.backend;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -140,6 +141,8 @@ public class Backend {
 			}
 
 			setupTagsPanel(mainFrame.getTagsContainer());
+
+			GUIMethods.setFontFamilyRecursively(mainFrame, "Nimbus Sans", Font.PLAIN);
 		}
 	}
 
@@ -288,7 +291,7 @@ public class Backend {
 			mainFrame.getSongsList().setSelectedIndex(index);
 			mainFrame.getSongsList().ensureIndexIsVisible(index);
 
-			mainFrame.getSlider().setMaximum((int) (mainFrame.currentSong.getDurationInSeconds() + 1));
+			mainFrame.getSlider().setMaximum((int) (mainFrame.currentSong.getDurationInSeconds()));
 			mainFrame.getSlider().setValue(0);
 			mainFrame.getTimeLabel().setText("00:00");
 		}
@@ -354,6 +357,7 @@ public class Backend {
 
 	public static void addTags(Artist artist) {
 		mainFrame.getTagsContainer().removeAll();
+		mainFrame.getTagsContainer().repaint();
 		Theme theme;
 		if (Queries.selectTheme().equals("Dark")) {
 			theme = new Theme(new YamlFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/dark.yml"));
@@ -378,7 +382,7 @@ public class Backend {
 			mainFrame.getAlbumNameLabel().setText("Album");
 			mainFrame.getAlbumContentTextArea().setText("");
 //			mainFrame.getAlbumTracksList().removeAll();
-			mainFrame.getAlbumTracksList().setModel(new DefaultListModel<String>());
+			mainFrame.getAlbumTracksList().setModel(new DefaultListModel<>());
 			GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 
 		}
@@ -402,7 +406,12 @@ public class Backend {
 			mainFrame.getTimeLabel().setText("00:00");
 			mainFrame.getDurationLabel().setText("00:00");
 
-			GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+//			GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+			try {
+				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(mainFrame.getProject_path() + "/assets/album-image-placeholder.png")), 420, 420));
+			} catch (IOException ex) {
+				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 
 	}
@@ -437,17 +446,26 @@ public class Backend {
 				String coverPath = Queries.selectLocalCoverPath(album, artist);
 
 				if (coverPath != null && !coverPath.isBlank()) {
-					GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), coverPath);
+					try {
+						GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(coverPath)), 420, 420));
+					} catch (IOException ex) {
+						Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+					}
 					return;
 				} else if (coverURL != null && !coverURL.isBlank()) {
 					BufferedImage image = GUIMethods.imageFromURL(coverURL);
 					if (image != null) {
-						GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), image);
+						GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(image, 420, 420));
 						return;
 					}
 				}
 			}
-			GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+
+			try {
+				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(mainFrame.getProject_path() + "/assets/album-image-placeholder.png")), 420, 420));
+			} catch (IOException ex) {
+				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 
@@ -719,11 +737,11 @@ public class Backend {
 				}
 			}
 
-			playResized = GUIMethods.resizeImage(playOriginal, 50, 50);
-			nextResized = GUIMethods.resizeImage(nextOriginal, 40, 40);
-			prevResized = GUIMethods.resizeImage(prevOriginal, 40, 40);
-			shuffleResized = GUIMethods.resizeImage(shuffleOriginal, 30, 30);
-			repeatResized = GUIMethods.resizeImage(repeatOriginal, 30, 30);
+			playResized = GUIMethods.resizeImage(playOriginal, 40, 40);
+			nextResized = GUIMethods.resizeImage(nextOriginal, 30, 30);
+			prevResized = GUIMethods.resizeImage(prevOriginal, 30, 30);
+			shuffleResized = GUIMethods.resizeImage(shuffleOriginal, 20, 20);
+			repeatResized = GUIMethods.resizeImage(repeatOriginal, 20, 20);
 
 			GUIMethods.loadImage(((MainFrame) frame).getPlayPauseLabel(), playResized);
 			GUIMethods.loadImage(((MainFrame) frame).getNextLabel(), nextResized);

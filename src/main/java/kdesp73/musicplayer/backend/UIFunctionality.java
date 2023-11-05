@@ -137,7 +137,7 @@ public class UIFunctionality {
 			Backend.selectSong(mainFrame, index + 1);
 
 //			mainFrame.getPlayButton().setText("Pause");
-			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(50, 50));
+			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(40, 40));
 
 		}
 	}
@@ -154,7 +154,7 @@ public class UIFunctionality {
 
 			mainFrame.player.play(mainFrame.getSongsList().getSelectedIndex());
 //			mainFrame.getPlayButton().setText("Pause");
-			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(50, 50));
+			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(40, 40));
 
 		}
 	}
@@ -164,10 +164,10 @@ public class UIFunctionality {
 			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
 			if (mainFrame.player.isPlaying()) {
 				mainFrame.player.pause();
-				Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-play-solid.png" : "circle-play-solid-white.png"), new Dimension(50, 50));
+				Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-play-solid.png" : "circle-play-solid-white.png"), new Dimension(40, 40));
 			} else {
 				mainFrame.player.play();
-				Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(50, 50));
+				Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(40, 40));
 			}
 		}
 	}
@@ -192,7 +192,7 @@ public class UIFunctionality {
 			Backend.selectSong(mainFrame, index - 1);
 
 //			mainFrame.getPlayButton().setText("Pause");
-			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(50, 50));
+			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(40, 40));
 
 		}
 	}
@@ -308,10 +308,10 @@ public class UIFunctionality {
 
 			if (mainFrame.shuffleOn) {
 				Backend.sort(frame);
-				Backend.loadIcon(mainFrame.getShuffleLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "shuffle-solid.png" : "shuffle-solid-white.png"), new Dimension(30, 30));
+				Backend.loadIcon(mainFrame.getShuffleLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "shuffle-solid.png" : "shuffle-solid-white.png"), new Dimension(20, 20));
 			} else {
 				Backend.shuffleList(frame);
-				Backend.loadIcon(mainFrame.getShuffleLabel(), assets + "shuffle-solid-blue.png", new Dimension(30, 30));
+				Backend.loadIcon(mainFrame.getShuffleLabel(), assets + "shuffle-solid-blue.png", new Dimension(20, 20));
 			}
 
 			mainFrame.shuffleOn = !mainFrame.shuffleOn;
@@ -323,10 +323,10 @@ public class UIFunctionality {
 		if (frame instanceof MainFrame) {
 			if (mainFrame.repeatOn) {
 				// Handle repeat
-				Backend.loadIcon(mainFrame.getRepeatLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "repeat-solid.png" : "repeat-solid-white.png"), new Dimension(30, 30));
+				Backend.loadIcon(mainFrame.getRepeatLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "repeat-solid.png" : "repeat-solid-white.png"), new Dimension(20, 20));
 			} else {
 				// Handle repeat
-				Backend.loadIcon(mainFrame.getRepeatLabel(), assets + "repeat-solid-blue.png", new Dimension(30, 30));
+				Backend.loadIcon(mainFrame.getRepeatLabel(), assets + "repeat-solid-blue.png", new Dimension(20, 20));
 			}
 
 			mainFrame.repeatOn = !mainFrame.repeatOn;

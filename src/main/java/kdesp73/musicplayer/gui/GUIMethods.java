@@ -97,17 +97,30 @@ public class GUIMethods {
 		return false;
 	}
 
-	public static void changeFont(Component component, int fontSize, String font) {
-		component.setFont(new Font(font, Font.PLAIN, fontSize));
-	}
+	public static void setFontRecursively(Component component, Font newFont) {
+        if (component instanceof Container) {
+            Container container = (Container) component;
+            Component[] children = container.getComponents();
+            for (Component child : children) {
+                setFontRecursively(child, newFont);
+            }
+        }
+        component.setFont(newFont);
+    }
+	
+	public static void setFontFamilyRecursively(Component component, String fontFamily, int fontStyle) {
+        Font currentFont = component.getFont();
+        Font newFont = new Font(fontFamily, fontStyle, currentFont.getSize());
 
-	public static void changeGlobalFont(Container container, int size, String font) {
-		for (Component child : container.getComponents()) {
-			if (child instanceof JLabel) {
-				GUIMethods.changeFont(child, size, font);
-			}
-		}
-	}
+        if (component instanceof Container) {
+            Container container = (Container) component;
+            Component[] children = container.getComponents();
+            for (Component child : children) {
+                setFontFamilyRecursively(child, fontFamily, fontStyle);
+            }
+        }
+        component.setFont(newFont);
+    }
 
 	public static String rgbToHex(int R, int G, int B) {
 		return String.format("#%02x%02x%02x", R, G, B);
