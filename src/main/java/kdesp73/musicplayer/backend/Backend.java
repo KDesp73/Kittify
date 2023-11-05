@@ -582,6 +582,8 @@ public class Backend {
 			if (mainFrame.currentSong.getTrack().getAlbum() != null && !mainFrame.currentSong.getTrack().getAlbum().isBlank()) {
 
 				Album album = Queries.selectAlbum(mainFrame.currentSong.getTrack().getAlbum(), artist);
+				
+				System.out.println("album after scrape: " + album);
 
 				if (album == null) {
 					try {
@@ -589,7 +591,8 @@ public class Backend {
 					} catch (IOException | InterruptedException ex) {
 						System.err.println("Album scrape fail");
 					}
-
+					
+					System.out.println("album json:" + response.first);
 					album = new Album(response.first);
 					Queries.insertAlbum(album);
 				}
@@ -616,6 +619,8 @@ public class Backend {
 //			initList(mainFrame);
 			sort(mainFrame);
 			selectSong(mainFrame, mainFrame.list.searchSongName(title));
+			Backend.updateAdditionalSongInfo(frame, mainFrame.list.searchSongName(title));
+			Backend.updateSongInfo(frame, mainFrame.list.searchSongName(title));
 			sort(mainFrame);
 		}
 	}

@@ -54,6 +54,7 @@ public class API {
 	private String setupString(String s) {
 		s = s.replaceAll(Pattern.quote("."), " ");
 		s = s.replaceAll(" ", "%20");
+		
 		return s;
 	}
 

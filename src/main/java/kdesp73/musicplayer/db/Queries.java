@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +15,6 @@ import java.util.regex.Pattern;
 import kdesp73.databridge.connections.DatabaseConnection;
 import kdesp73.databridge.helpers.QueryBuilder;
 import kdesp73.musicplayer.songs.Mp3File;
-import kdesp73.musicplayer.songs.SongsList;
 import kdesp73.musicplayer.api.Album;
 import kdesp73.musicplayer.api.Artist;
 import kdesp73.musicplayer.gui.MainFrame;
@@ -26,7 +24,7 @@ import kdesp73.musicplayer.gui.MainFrame;
  * @author konstantinos
  */
 public class Queries {
-	
+
 	public static boolean selectShuffle() {
 		DatabaseConnection db = Database.connection();
 
@@ -44,7 +42,7 @@ public class Queries {
 
 		return shuffleOn;
 	}
-	
+
 	public static boolean selectRepeat() {
 		DatabaseConnection db = Database.connection();
 
@@ -63,7 +61,6 @@ public class Queries {
 		return repeatOn;
 	}
 
-
 	public static void updateShuffle(boolean shuffleOn) {
 		DatabaseConnection db = Database.connection();
 
@@ -71,7 +68,7 @@ public class Queries {
 
 		db.close();
 	}
-	
+
 	public static void updateRepeat(boolean repeatOn) {
 		DatabaseConnection db = Database.connection();
 
@@ -79,7 +76,7 @@ public class Queries {
 
 		db.close();
 	}
-	
+
 	public static void updateMode(String mode) {
 		mode = Utils.replaceQuotes(mode);
 
@@ -107,7 +104,7 @@ public class Queries {
 
 		return mode;
 	}
-	
+
 	public static void updateTheme(String theme) {
 		theme = Utils.replaceQuotes(theme);
 
@@ -338,7 +335,7 @@ public class Queries {
 	public static void insertAlbum(Album album) {
 		DatabaseConnection db = Database.connection();
 
-		ResultSet rs = db.executeQuery("SELECT EXISTS(SELECT 1 FROM Albums WHERE mbid= \'" + Utils.replaceQuotes(album.getMbid()) + "\')");
+		ResultSet rs = db.executeQuery("SELECT EXISTS(SELECT 1 FROM Albums WHERE name= \'" + Utils.replaceQuotes(album.getName()) + "\' AND artist = \'" + album.getArtist() + "\')");
 
 		try {
 			rs.next();
@@ -350,6 +347,7 @@ public class Queries {
 		} catch (SQLException ex) {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		
 
 		String query = "INSERT INTO Albums "
 				+ "(artist, mbid, cover_url, name, url, content, tracks) "
