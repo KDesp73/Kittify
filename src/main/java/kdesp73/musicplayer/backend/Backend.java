@@ -4,7 +4,6 @@
  */
 package kdesp73.musicplayer.backend;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -72,7 +71,7 @@ public class Backend {
 	public static void setup(JFrame frame) {
 		if (frame instanceof MainFrame) {
 
-			mainFrame.setResizable(false);
+//			mainFrame.setResizable(false);
 			mainFrame.setLocationRelativeTo(null);
 			mainFrame.getRootPane().requestFocus();
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
@@ -356,6 +355,8 @@ public class Backend {
 	}
 
 	public static void addTags(Artist artist) {
+		if(artist == null) return;
+		
 		mainFrame.getTagsContainer().removeAll();
 		mainFrame.getTagsContainer().repaint();
 		Theme theme;
@@ -392,9 +393,9 @@ public class Backend {
 		if (frame instanceof MainFrame) {
 			mainFrame.getArtistNameLabel().setText("Artist");
 			mainFrame.getArtistContentTextArea().setText("");
-//			mainFrame.getArtistTagsLabel().setText("Tags");
 			GUIMethods.loadImage(mainFrame.getArtistImageLabel(), mainFrame.getProject_path() + "/assets/artist-image-placeholder.png");
-
+			mainFrame.getTagsContainer().removeAll();
+			mainFrame.getTagsContainer().repaint();
 		}
 	}
 
