@@ -7,6 +7,7 @@ package kdesp73.musicplayer.gui;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -18,6 +19,9 @@ import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.db.Queries;
+import kdesp73.themeLib.Theme;
+import kdesp73.themeLib.ThemeCollection;
+import kdesp73.themeLib.YamlFile;
 
 /**
  *
@@ -27,6 +31,7 @@ public class EditSongInfo extends javax.swing.JFrame {
 
 	Mp3File song;
 	MainFrame frame;
+	String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 
 	public EditSongInfo(MainFrame frame) {
 		initComponents();
@@ -64,6 +69,8 @@ public class EditSongInfo extends javax.swing.JFrame {
 			}
 
 		});
+		
+		ThemeCollection.applyTheme(this, new Theme(new YamlFile(themes_path + ((Queries.selectTheme().equals("Dark") ? "dark.yml" : "light.yml")))));
 	}
 
 	/**
@@ -93,19 +100,26 @@ public class EditSongInfo extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        background.setName("bg"); // NOI18N
+
         jLabel1.setText("Title:");
 
         titleTextField.setText("jTextField1");
+        titleTextField.setName("textbox"); // NOI18N
 
         jLabel2.setText("Artist:");
 
         artistTextField.setText("jTextField1");
+        artistTextField.setName("textbox"); // NOI18N
 
         jLabel3.setText("Album:");
 
         albumTextField.setText("jTextField1");
+        albumTextField.setName("textbox"); // NOI18N
 
         jLabel4.setText("Album Cover:");
+
+        albumCoverTextField.setName("textbox"); // NOI18N
 
         browseButton.setText("Browse");
         browseButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));

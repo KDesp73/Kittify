@@ -142,7 +142,7 @@ public class Backend {
 
 			setupTagsPanel(mainFrame.getTagsContainer());
 
-			GUIMethods.setFontFamilyRecursively(mainFrame, "Nimbus Sans", Font.PLAIN);
+			GUIMethods.setFontFamilyRecursively(mainFrame, "sans-serif", Font.PLAIN);
 		}
 	}
 

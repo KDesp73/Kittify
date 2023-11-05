@@ -31,7 +31,6 @@ public class EditDirectories extends javax.swing.JFrame {
 	MainFrame frame;
 	List<String> paths;
 	String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
-	Theme theme = new Theme(new YamlFile(themes_path + "kdesp.yml"));
 
 	/**
 	 * Creates new form EditDirectories
@@ -58,6 +57,8 @@ public class EditDirectories extends javax.swing.JFrame {
 			}
 
 		});
+		
+		ThemeCollection.applyTheme(this, new Theme(new YamlFile(themes_path + ((Queries.selectTheme().equals("Dark") ? "dark.yml" : "light.yml")))));
 
 	}
 
