@@ -27,7 +27,7 @@ public class ThemesFrame extends javax.swing.JFrame {
 		initComponents();
 
 		this.frame = frame;
-
+		
 		this.setLocationRelativeTo(null);
 		this.setTitle("Themes");
 		this.setResizable(false);
@@ -37,6 +37,10 @@ public class ThemesFrame extends javax.swing.JFrame {
 		this.modeComboBox.setSelectedItem(mode);
 
 		Backend.setMode(this, mode);
+	}
+	
+	public void setFrame(JFrame frame){
+		this.frame = frame;
 	}
 
 	/**
@@ -85,7 +89,7 @@ public class ThemesFrame extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(232, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -96,7 +100,7 @@ public class ThemesFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(background, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();

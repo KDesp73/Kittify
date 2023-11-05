@@ -37,7 +37,7 @@ public class UIFunctionality {
 		UIFunctionality.mainFrame = mainFrame;
 	}
 
-	public static void addFileMenuItemActionPerformed(JFrame frame) {
+	public static void addFile(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			String dir = "";
 			JFileChooser fc = new JFileChooser();
@@ -65,7 +65,7 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void addDirectoryMenuItemActionPerformed(JFrame frame) {
+	public static void addDirectory(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			String dir = "";
 			JFileChooser fc = new JFileChooser();
@@ -102,14 +102,14 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void editDirectoriesMenuItemActionPerformed(JFrame frame) {
+	public static void editDirectories(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
 			new EditDirectories(mainFrame).setVisible(true);
 		}
 	}
 
-	public static void editFilesMenuItemActionPerformed(JFrame frame) {
+	public static void editFiles(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
 			new EditFiles(mainFrame).setVisible(true);
@@ -268,7 +268,7 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void searchButtonMouseClicked(JFrame frame) {
+	public static void search(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			String search = JOptionPane.showInputDialog(mainFrame, "Search Song");
 
@@ -288,13 +288,13 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void scrapeAllMenuItemActionPerformed(JFrame frame) {
+	public static void scrapeAll(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.list.scrapeSongs();
 		}
 	}
 
-	public static void scrapeAtStartMenuItemActionPerformed(JFrame frame) {
+	public static void scrapeAtStartToggle(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			boolean flag = mainFrame.getScrapeAtStartMenuItem().isSelected();
 

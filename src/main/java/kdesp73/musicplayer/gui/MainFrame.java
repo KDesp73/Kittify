@@ -47,10 +47,11 @@ public final class MainFrame extends javax.swing.JFrame {
 	public boolean repeatOn = false;
 
 	public Mp3Player player;
-	private ThemesFrame tf;
+	private static ThemesFrame tf;
 
 	public static MainFrame create() {
 		MainFrame frame = new MainFrame();
+		tf = new ThemesFrame(frame);
 		Backend.setMainFrame(frame);
 		Backend.setup(frame);
 		return frame;
@@ -58,8 +59,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	public MainFrame() {
 		initComponents();
-
-		tf = new ThemesFrame(this);
 	}
 
 	/**
@@ -172,6 +171,8 @@ public final class MainFrame extends javax.swing.JFrame {
         controlsParentPanel.setBackground(new java.awt.Color(153, 0, 51));
         controlsParentPanel.setName("bg"); // NOI18N
 
+        sliderPanel.setName("extra_0"); // NOI18N
+
         timeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         timeLabel.setText("00:00");
 
@@ -218,7 +219,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        basicInfoPanel.setName(""); // NOI18N
+        basicInfoPanel.setName("extra_0"); // NOI18N
 
         trackLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         trackLabel.setText("Track");
@@ -249,6 +250,8 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addComponent(artistLabel)
                 .addContainerGap())
         );
+
+        controlsPanel.setName("extra_0"); // NOI18N
 
         playPauseLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         playPauseLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -679,11 +682,11 @@ public final class MainFrame extends javax.swing.JFrame {
 
 
     private void addFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFileMenuItemActionPerformed
-		UIFunctionality.addFileMenuItemActionPerformed(this);
+		UIFunctionality.addFile(this);
     }//GEN-LAST:event_addFileMenuItemActionPerformed
 
     private void addDirectoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDirectoryMenuItemActionPerformed
-		UIFunctionality.addDirectoryMenuItemActionPerformed(this);
+		UIFunctionality.addDirectory(this);
     }//GEN-LAST:event_addDirectoryMenuItemActionPerformed
 
     private void sortComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortComboBoxActionPerformed
@@ -691,11 +694,11 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_sortComboBoxActionPerformed
 
     private void editDirectoriesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDirectoriesMenuItemActionPerformed
-		UIFunctionality.editDirectoriesMenuItemActionPerformed(this);
+		UIFunctionality.editDirectories(this);
     }//GEN-LAST:event_editDirectoriesMenuItemActionPerformed
 
     private void editFilesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFilesMenuItemActionPerformed
-		UIFunctionality.editFilesMenuItemActionPerformed(this);
+		UIFunctionality.editFiles(this);
     }//GEN-LAST:event_editFilesMenuItemActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
@@ -713,15 +716,15 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_songsListKeyPressed
 
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
-		UIFunctionality.searchButtonMouseClicked(this);
+		UIFunctionality.search(this);
     }//GEN-LAST:event_searchButtonMouseClicked
 
     private void scrapeAllMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrapeAllMenuItemActionPerformed
-		UIFunctionality.scrapeAllMenuItemActionPerformed(this);
+		UIFunctionality.scrapeAll(this);
     }//GEN-LAST:event_scrapeAllMenuItemActionPerformed
 
     private void scrapeAtStartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrapeAtStartMenuItemActionPerformed
-		UIFunctionality.scrapeAtStartMenuItemActionPerformed(this);
+		UIFunctionality.scrapeAtStartToggle(this);
     }//GEN-LAST:event_scrapeAtStartMenuItemActionPerformed
 
     private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
@@ -970,6 +973,10 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	public JLabel getShuffleLabel() {
 		return shuffleLabel;
+	}
+
+	public JPanel getTagsContainer() {
+		return tagsContainer;
 	}
 
 	

@@ -4,6 +4,7 @@
  */
 package kdesp73.musicplayer.backend;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +26,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -43,7 +45,9 @@ import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.musicplayer.gui.EditSongInfo;
 import kdesp73.musicplayer.gui.GUIMethods;
 import kdesp73.musicplayer.gui.MainFrame;
+import kdesp73.musicplayer.gui.Tag;
 import kdesp73.musicplayer.gui.ThemesFrame;
+import kdesp73.musicplayer.gui.WrapLayout;
 import kdesp73.musicplayer.player.Mp3Player;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.songs.SongsList;
@@ -135,6 +139,8 @@ public class Backend {
 			if(mainFrame.shuffleOn){
 				shuffleList(frame);
 			}
+			
+			setupTagsPanel(mainFrame.getTagsContainer());
 		}
 	}
 
@@ -308,10 +314,22 @@ public class Backend {
 			if (artist != null) {
 
 				mainFrame.getArtistNameLabel().setText(artistName);
-//				mainFrame.getArtistTagsLabel().setText(String.join(", ", artist.getTags()));
 				mainFrame.getArtistContentTextArea().setText(artist.getContent());
 				mainFrame.getArtistContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getArtistContentScrollPane().getVerticalScrollBar().getMinimum());
-
+				
+				mainFrame.getTagsContainer().removeAll();
+				
+				Theme theme;
+				if(Queries.selectTheme().equals("Dark")){
+					theme = new Theme(new YamlFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/dark.yml"));
+				} else {
+					theme = new Theme(new YamlFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/light.yml"));
+				}
+				
+				for(String tag : artist.getTags()){
+					mainFrame.getTagsContainer().add(new Tag(tag.trim().replace("\n", ""), theme.getExtra(0), theme.getFg()));
+				}
+				
 				try {
 					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), GUIMethods.imageFromURL(artist.getImage()));
 				} catch (java.lang.NullPointerException e) {
@@ -709,6 +727,10 @@ public class Backend {
 			((MainFrame) frame).getSlider().setValue(0);
 			((MainFrame) frame).getTimeLabel().setText("00:00");
 		}
+	}
+	
+	public static void setupTagsPanel(JPanel panel){
+		panel.setLayout(new WrapLayout(WrapLayout.LEFT));
 	}
 
 }

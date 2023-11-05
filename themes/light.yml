@@ -25,7 +25,7 @@ slider_track:
 slider_thumb:
 
 # extra slots for additional colors
-extra_0: 000000
+extra_0: d2d3db
 extra_1: 000001
 extra_2: 000002
 extra_3: 000003

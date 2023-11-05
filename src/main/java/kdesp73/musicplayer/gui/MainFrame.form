@@ -347,6 +347,9 @@
                   </Layout>
                   <SubComponents>
                     <Container class="javax.swing.JPanel" name="sliderPanel">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="extra_0" noResource="true"/>
+                      </Properties>
 
                       <Layout>
                         <DimensionLayout dim="0">
@@ -406,7 +409,7 @@
                     </Container>
                     <Container class="javax.swing.JPanel" name="basicInfoPanel">
                       <Properties>
-                        <Property name="name" type="java.lang.String" value="" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="extra_0" noResource="true"/>
                       </Properties>
 
                       <Layout>
@@ -456,6 +459,9 @@
                       </SubComponents>
                     </Container>
                     <Container class="javax.swing.JPanel" name="controlsPanel">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="extra_0" noResource="true"/>
+                      </Properties>
 
                       <Layout>
                         <DimensionLayout dim="0">
