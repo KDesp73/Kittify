@@ -11,7 +11,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -21,6 +25,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.gui.EditDirectories;
 import kdesp73.musicplayer.gui.EditFiles;
+import kdesp73.musicplayer.gui.GUIMethods;
 import kdesp73.musicplayer.gui.MainFrame;
 
 /**
@@ -331,6 +336,47 @@ public class UIFunctionality {
 
 			mainFrame.repeatOn = !mainFrame.repeatOn;
 			Queries.updateRepeat(mainFrame.repeatOn);
+		}
+	}
+
+	public static void prevLabelMousePressed(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			try {
+				GUIMethods.loadImage(mainFrame.getPrevLabel(), GUIMethods.resizeImage(ImageIO.read(new File(assets + "backward-step-solid-blue.png")), 30, 30));
+			} catch (IOException ex) {
+				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+
+	}
+
+	public static void prevLabelMouseReleased(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			try {
+				GUIMethods.loadImage(mainFrame.getPrevLabel(), GUIMethods.resizeImage(ImageIO.read(new File(assets + ((Queries.selectTheme().equals("Light")) ? "backward-step-solid.png" : "backward-step-solid-white.png"))), 30, 30));
+			} catch (IOException ex) {
+				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+	
+	public static void nextLabelMousePressed(JFrame frame){
+		if(frame instanceof MainFrame){
+			try {
+				GUIMethods.loadImage(mainFrame.getNextLabel(), GUIMethods.resizeImage(ImageIO.read(new File(assets + "forward-step-solid-blue.png")), 30, 30));
+			} catch (IOException ex) {
+				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+	
+	public static void nextLabelMouseReleased(JFrame frame){
+		if(frame instanceof MainFrame){
+			try {
+				GUIMethods.loadImage(mainFrame.getNextLabel(), GUIMethods.resizeImage(ImageIO.read(new File(assets + ((Queries.selectTheme().equals("Light")) ? "forward-step-solid.png" : "forward-step-solid-white.png"))), 30, 30));
+			} catch (IOException ex) {
+				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 }

@@ -5,7 +5,12 @@
 package kdesp73.musicplayer.gui;
 
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
@@ -25,6 +30,7 @@ import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.backend.UIFunctionality;
 import static kdesp73.musicplayer.backend.UIFunctionality.playSong;
 import static kdesp73.musicplayer.backend.UIFunctionality.showOptionsPopup;
+import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.player.Mp3Player;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.YamlFile;
@@ -34,15 +40,17 @@ import kdesp73.themeLib.YamlFile;
  * @author konstantinos
  */
 public final class MainFrame extends javax.swing.JFrame {
+
 	private String accentColor = "2979ff";
 	private String project_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/");
 	private String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
+	private String assets_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/";
 
 	public int currentIndex = 0;
 	public Mp3File currentSong = null;
 	public SongsList list;
 	public boolean scrapeAtStart = false;
-	
+
 	public boolean shuffleOn = false;
 	public boolean repeatOn = false;
 
@@ -266,6 +274,12 @@ public final class MainFrame extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 prevLabelMouseClicked(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                prevLabelMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                prevLabelMouseReleased(evt);
+            }
         });
 
         nextLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -273,6 +287,12 @@ public final class MainFrame extends javax.swing.JFrame {
         nextLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 nextLabelMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                nextLabelMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                nextLabelMouseReleased(evt);
             }
         });
 
@@ -765,10 +785,28 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_repeatLabelMouseClicked
 
     private void themesMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_themesMenuMousePressed
-        if(tf.isActive()) return;
-		
+		if (tf.isActive()) {
+			return;
+		}
+
 		tf.setVisible(true);
     }//GEN-LAST:event_themesMenuMousePressed
+
+    private void prevLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevLabelMousePressed
+		UIFunctionality.prevLabelMousePressed(this);
+    }//GEN-LAST:event_prevLabelMousePressed
+
+    private void prevLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevLabelMouseReleased
+		UIFunctionality.prevLabelMouseReleased(this);
+    }//GEN-LAST:event_prevLabelMouseReleased
+
+    private void nextLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextLabelMousePressed
+        UIFunctionality.nextLabelMousePressed(this);
+    }//GEN-LAST:event_nextLabelMousePressed
+
+    private void nextLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextLabelMouseReleased
+        UIFunctionality.nextLabelMouseReleased(this);
+    }//GEN-LAST:event_nextLabelMouseReleased
 
 	// Getters
 	public String getProject_path() {
@@ -865,7 +903,6 @@ public final class MainFrame extends javax.swing.JFrame {
 	public JPanel getPlayerBackground() {
 		return playerBackground;
 	}
-
 
 	public JMenuItem getScrapeAllMenuItem() {
 		return scrapeAllMenuItem;
@@ -982,9 +1019,7 @@ public final class MainFrame extends javax.swing.JFrame {
 		return tagsContainer;
 	}
 
-	
-	
-	
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ApiMenu;
     private javax.swing.JMenuItem aboutMenuItem;
