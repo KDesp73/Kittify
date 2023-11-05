@@ -30,6 +30,16 @@ public class Tag extends javax.swing.JLayeredPane {
 		label.setText(text);
 		label.setForeground(fg);
 	}
+	
+	public Tag(String text, String name) {
+		initComponents();
+
+		this.text = text;
+		this.setName(name);
+		
+		label.setText(text);
+		label.setForeground(fg);
+	}
 
 
 	@Override

@@ -131,15 +131,14 @@ public class Backend {
 			setMode(mainFrame, Queries.selectMode());
 			setTheme(mainFrame, Queries.selectTheme());
 
-			
 			mainFrame.shuffleOn = Queries.selectShuffle();
 			mainFrame.repeatOn = Queries.selectRepeat();
 			loadIcons(frame);
-			
-			if(mainFrame.shuffleOn){
+
+			if (mainFrame.shuffleOn) {
 				shuffleList(frame);
 			}
-			
+
 			setupTagsPanel(mainFrame.getTagsContainer());
 		}
 	}
@@ -316,20 +315,9 @@ public class Backend {
 				mainFrame.getArtistNameLabel().setText(artistName);
 				mainFrame.getArtistContentTextArea().setText(artist.getContent());
 				mainFrame.getArtistContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getArtistContentScrollPane().getVerticalScrollBar().getMinimum());
-				
-				mainFrame.getTagsContainer().removeAll();
-				
-				Theme theme;
-				if(Queries.selectTheme().equals("Dark")){
-					theme = new Theme(new YamlFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/dark.yml"));
-				} else {
-					theme = new Theme(new YamlFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/light.yml"));
-				}
-				
-				for(String tag : artist.getTags()){
-					mainFrame.getTagsContainer().add(new Tag(tag.trim().replace("\n", ""), theme.getExtra(0), theme.getFg()));
-				}
-				
+
+				addTags(artist);
+
 				try {
 					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), GUIMethods.imageFromURL(artist.getImage()));
 				} catch (java.lang.NullPointerException e) {
@@ -361,6 +349,20 @@ public class Backend {
 				Backend.setDefaultAlbumAdditionalInfo(frame);
 			}
 
+		}
+	}
+
+	public static void addTags(Artist artist) {
+		mainFrame.getTagsContainer().removeAll();
+		Theme theme;
+		if (Queries.selectTheme().equals("Dark")) {
+			theme = new Theme(new YamlFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/dark.yml"));
+		} else {
+			theme = new Theme(new YamlFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/light.yml"));
+		}
+
+		for (String tag : artist.getTags()) {
+			mainFrame.getTagsContainer().add(new Tag(tag.trim().replace("\n", ""), theme.getExtra(0), theme.getFg()));
 		}
 	}
 
@@ -626,6 +628,11 @@ public class Backend {
 		SwingUtilities.updateComponentTreeUI(frame);
 		Queries.updateTheme(mode);
 		loadIcons(frame);
+
+		if (frame instanceof MainFrame && ((MainFrame) frame).currentSong != null) {
+			addTags(Queries.selectArtist(((MainFrame) frame).currentSong.getTrack().getArtist()));
+
+		}
 	}
 
 	public static void setTheme(JFrame frame, String path) {
@@ -636,20 +643,22 @@ public class Backend {
 		ThemeCollection.applyTheme(frame, new Theme(new YamlFile(path)));
 	}
 
-	public static void loadIcon(JLabel label, String path, Dimension dimension){
+	public static void loadIcon(JLabel label, String path, Dimension dimension) {
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(new File(path));
 		} catch (IOException ex) {
 			Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
+
 		GUIMethods.loadImage(label, GUIMethods.resizeImage(image, dimension.width, dimension.height));
 	}
-	
+
 	public static void loadIcons(JFrame frame) {
-		if(frame == null) return;
-		
+		if (frame == null) {
+			return;
+		}
+
 		String assets = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/";
 
 		String play = assets + "circle-play-solid.png";
@@ -663,14 +672,14 @@ public class Backend {
 		String prevWhite = assets + "backward-step-solid-white.png";
 		String shuffleWhite = assets + "shuffle-solid-white.png";
 		String repeatWhite = assets + "repeat-solid-white.png";
-		
+
 		String shuffleBlue = assets + "shuffle-solid-blue.png";
 		String repeatBlue = assets + "repeat-solid-blue.png";
 
 		if (frame instanceof MainFrame) {
 			BufferedImage playOriginal = null, nextOriginal, prevOriginal, shuffleOriginal, repeatOriginal;
 			BufferedImage playResized, prevResized, nextResized, shuffleResized, repeatResized;
-			
+
 			if (Queries.selectTheme().equals("Dark")) {
 				try {
 					playOriginal = ImageIO.read(new File(playWhite));
@@ -681,7 +690,7 @@ public class Backend {
 				} catch (IOException ex) {
 					return;
 				}
-			} else if(Queries.selectTheme().equals("Light")) {
+			} else if (Queries.selectTheme().equals("Light")) {
 				try {
 					playOriginal = ImageIO.read(new File(play));
 					nextOriginal = ImageIO.read(new File(next));
@@ -691,16 +700,18 @@ public class Backend {
 				} catch (IOException ex) {
 					return;
 				}
-			} else {return;}
-			
-			if(((MainFrame) frame).repeatOn){
+			} else {
+				return;
+			}
+
+			if (((MainFrame) frame).repeatOn) {
 				try {
 					repeatOriginal = ImageIO.read(new File(repeatBlue));
 				} catch (IOException ex) {
 					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
-			if(((MainFrame) frame).shuffleOn){
+			if (((MainFrame) frame).shuffleOn) {
 				try {
 					shuffleOriginal = ImageIO.read(new File(shuffleBlue));
 				} catch (IOException ex) {
@@ -721,15 +732,15 @@ public class Backend {
 			GUIMethods.loadImage(((MainFrame) frame).getRepeatLabel(), repeatResized);
 		}
 	}
-	
-	public static void resetSlider(JFrame frame){
-		if(frame instanceof MainFrame){
+
+	public static void resetSlider(JFrame frame) {
+		if (frame instanceof MainFrame) {
 			((MainFrame) frame).getSlider().setValue(0);
 			((MainFrame) frame).getTimeLabel().setText("00:00");
 		}
 	}
-	
-	public static void setupTagsPanel(JPanel panel){
+
+	public static void setupTagsPanel(JPanel panel) {
 		panel.setLayout(new WrapLayout(WrapLayout.LEFT));
 	}
 
