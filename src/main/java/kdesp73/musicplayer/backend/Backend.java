@@ -657,7 +657,7 @@ public class Backend {
 			selectSong(mainFrame, mainFrame.list.searchSongName(title));
 			Backend.updateAdditionalSongInfo(frame, mainFrame.list.searchSongName(title));
 			Backend.updateSongInfo(frame, mainFrame.list.searchSongName(title));
-			sort(mainFrame);
+//			sort(mainFrame);
 		}
 	}
 

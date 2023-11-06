@@ -419,11 +419,13 @@ public class UIFunctionality {
 				((MainFrame) frame).getVolumeSlider().setValue(0);
 
 				Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), ((mode.equals("Dark") ? Images.volumeXMarkWhite : Images.volumeXMark)), 28, "w");
+				mainFrame.getVolumeToggleLabel().setToolTipText("Unmute");
 			} else {
 				Backend.changeVolume(frame, ((MainFrame) frame).volume);
 				((MainFrame) frame).getVolumeSlider().setValue(((MainFrame) frame).volume);
 
 				Backend.loadVolumeIcon(frame, ((MainFrame) frame).volume);
+				mainFrame.getVolumeToggleLabel().setToolTipText("Mute");
 			}
 
 			((MainFrame) frame).volumeOn = !((MainFrame) frame).volumeOn;

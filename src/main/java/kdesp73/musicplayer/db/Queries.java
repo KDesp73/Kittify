@@ -361,7 +361,7 @@ public class Queries {
 	public static void insertAlbum(Album album) {
 		DatabaseConnection db = Database.connection();
 
-		ResultSet rs = db.executeQuery("SELECT EXISTS(SELECT 1 FROM Albums WHERE name= \'" + Utils.replaceQuotes(album.getName()) + "\' AND artist = \'" + album.getArtist() + "\')");
+		ResultSet rs = db.executeQuery("SELECT EXISTS(SELECT 1 FROM Albums WHERE name= \'" + Utils.replaceQuotes(album.getName()) + "\' AND artist = \'" + Utils.replaceQuotes(album.getArtist()) + "\')");
 
 		try {
 			rs.next();

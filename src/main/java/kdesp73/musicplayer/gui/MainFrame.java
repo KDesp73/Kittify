@@ -160,6 +160,7 @@ public final class MainFrame extends javax.swing.JFrame {
         });
 
         prevLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        prevLabel.setToolTipText("");
         prevLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         prevLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -174,6 +175,7 @@ public final class MainFrame extends javax.swing.JFrame {
         });
 
         nextLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nextLabel.setToolTipText("");
         nextLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         nextLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -188,6 +190,7 @@ public final class MainFrame extends javax.swing.JFrame {
         });
 
         repeatLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        repeatLabel.setToolTipText("");
         repeatLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         repeatLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -196,6 +199,7 @@ public final class MainFrame extends javax.swing.JFrame {
         });
 
         shuffleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        shuffleLabel.setToolTipText("");
         shuffleLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         shuffleLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -203,6 +207,7 @@ public final class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        volumeToggleLabel.setToolTipText("Mute");
         volumeToggleLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         volumeToggleLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
