@@ -89,7 +89,11 @@ public class UIFunctionality {
 
 			Queries.insertDirectory(dir);
 
-			Backend.updateSongs(mainFrame);
+			Backend.initList(frame);
+			Backend.sort(frame);
+			Backend.refreshList(frame);
+			
+			mainFrame.player.playlist = mainFrame.list.getPaths();
 		}
 	}
 
@@ -122,23 +126,32 @@ public class UIFunctionality {
 	}
 
 	public static void nextAction(JFrame frame) {
-		if(mainFrame.list.getSongs().isEmpty()) return;
+		if (mainFrame.list.getSongs().isEmpty()) {
+			return;
+		}
 		System.out.println("Next Song");
 		if (frame instanceof MainFrame) {
 			int index = mainFrame.getSongsList().getSelectedIndex();
 
-			if (index == mainFrame.list.getSongs().size() - 1) {
-				return;
-			}
-
 			if (mainFrame.repeatOn) {
+				if (mainFrame.player.timer != null) {
+					mainFrame.player.timer.stop();
+				}
 				mainFrame.player.stop();
-				mainFrame.player.play();
 				Backend.resetSlider(frame);
+				mainFrame.player.play();
 				return;
 			}
 
-			mainFrame.player.timer.stop();
+			if (index == mainFrame.list.getSongs().size() - 1 || mainFrame.currentIndex == mainFrame.list.getSongs().size() - 1) {
+				mainFrame.currentIndex = -1;
+				index = -1;
+			}
+
+			if (mainFrame.player.timer != null) {
+				mainFrame.player.timer.stop();
+			}
+			mainFrame.player.stop();
 			mainFrame.player.next();
 			Backend.selectSong(mainFrame, index + 1);
 
@@ -154,8 +167,9 @@ public class UIFunctionality {
 			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
 
 			mainFrame.player.stop();
-			if(mainFrame.player.timer != null)
+			if (mainFrame.player.timer != null) {
 				mainFrame.player.timer.stop();
+			}
 
 			Backend.selectSong(mainFrame);
 
@@ -168,7 +182,9 @@ public class UIFunctionality {
 
 	public static void togglePlayPause(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			if(mainFrame.list.getSongs().isEmpty()) return;
+			if (mainFrame.list.getSongs().isEmpty()) {
+				return;
+			}
 			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
 			if (mainFrame.player.isPlaying()) {
 				mainFrame.player.pause();
@@ -182,12 +198,10 @@ public class UIFunctionality {
 
 	public static void prevAction(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			if(mainFrame.list.getSongs().isEmpty()) return;
-			int index = mainFrame.getSongsList().getSelectedIndex();
-
-			if (index == 0) {
+			if (mainFrame.list.getSongs().isEmpty()) {
 				return;
 			}
+			int index = mainFrame.getSongsList().getSelectedIndex();
 
 			if (mainFrame.repeatOn) {
 				mainFrame.player.stop();
@@ -196,7 +210,14 @@ public class UIFunctionality {
 				return;
 			}
 
-			mainFrame.player.timer.stop();
+			if (index == 0 || mainFrame.currentIndex == 0) {
+				mainFrame.currentIndex = mainFrame.list.getSongs().size();
+				index = mainFrame.list.getSongs().size();
+			}
+
+			if (mainFrame.player.timer != null) {
+				mainFrame.player.timer.stop();
+			}
 			mainFrame.player.prev();
 			Backend.selectSong(mainFrame, index - 1);
 
@@ -299,6 +320,11 @@ public class UIFunctionality {
 
 	public static void scrapeAll(JFrame frame) {
 		if (frame instanceof MainFrame) {
+			if (mainFrame.list.getSongs().isEmpty()) {
+				JOptionPane.showMessageDialog(mainFrame, "No songs loaded", "Scrape Aborted", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
 			mainFrame.list.scrapeSongs();
 		}
 	}
@@ -384,29 +410,6 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void changeVolume(JFrame frame) {
-		if (frame instanceof MainFrame) {
-			if(!mainFrame.player.isPlaying()) return;
-			
-			int value = mainFrame.getVolumeSlider().getValue();
-			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
-			mainFrame.volume = value;
-			Backend.loadVolumeIcon(frame, value);
-		}
-	}
-
-
-
-	public static void changeVolume(JFrame frame, int value) {
-		if (frame instanceof MainFrame) {
-			if(!mainFrame.player.isPlaying()) return;
-			
-			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
-			mainFrame.volume = value;
-			Backend.loadVolumeIcon(frame, value);
-		}
-	}
-
 	public static void volumeToggle(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			String mode = Queries.selectTheme();
@@ -417,25 +420,25 @@ public class UIFunctionality {
 
 				Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), ((mode.equals("Dark") ? Images.volumeXMarkWhite : Images.volumeXMark)), 28, "w");
 			} else {
-				UIFunctionality.changeVolume(frame, ((MainFrame) frame).volume);
+				Backend.changeVolume(frame, ((MainFrame) frame).volume);
 				((MainFrame) frame).getVolumeSlider().setValue(((MainFrame) frame).volume);
 
 				Backend.loadVolumeIcon(frame, ((MainFrame) frame).volume);
 			}
-			
+
 			((MainFrame) frame).volumeOn = !((MainFrame) frame).volumeOn;
 		}
 	}
-	
-	public static void volumeToggleLabelMousePressed(JFrame frame){
+
+	public static void volumeToggleLabelMousePressed(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			String volumeRegion = Backend.getVolumeRegion(((MainFrame) frame).volume);
-			
-			if(!((MainFrame) frame).volumeOn){
+
+			if (!((MainFrame) frame).volumeOn) {
 				Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), Images.volumeXMarkBlue, 28, "w");
 				return;
 			}
-			
+
 			switch (volumeRegion) {
 				case "high":
 					Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), Images.volumeHighBlue, 31, "w");

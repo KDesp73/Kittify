@@ -34,7 +34,7 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 
 	public Mp3Player() {
 		super(0, null);
-		
+
 		this.player = new BasicPlayer();
 		this.volume = 1;
 		player.addBasicPlayerListener(this);
@@ -115,14 +115,15 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 	public void stop() {
 		try {
 			player.stop();
-			if(timer != null)
+			if (timer != null) {
 				timer.stop();
+			}
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}
 	}
-	
-	public void resume(){
+
+	public void resume() {
 		try {
 			player.resume();
 		} catch (BasicPlayerException ex) {
@@ -149,6 +150,7 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 
 		try {
 			player.seek(frames);
+			player.setGain(volume);
 		} catch (BasicPlayerException e) {
 			e.printStackTrace();
 		}
@@ -161,21 +163,20 @@ size_t offsetInSeconds = 2;
 size_t sampleToRead = sampleRate * offsetInSeconds * audioFile.getChannelCount();
 AudioSample sample = audioFile.getSampleAt(sampleToRead);
 		 */
-		
+
 		Mp3File file = new Mp3File(this.getCurrentSong());
 		int sampleRate = (int) file.getMetadata().get("sample-rate");
 		System.out.println("Channel Count: " + (int) file.getMetadata().get("channel-count"));
 		int sampleToRead = (int) (sampleRate * seconds * (int) file.getMetadata().get("channel-count"));
 		System.out.println("Sample to Read: " + sampleToRead);
-		
-		return sampleRate * seconds / ( 2 * (int) file.getMetadata().get("channel-count") );
+
+		return sampleRate * seconds / (2 * (int) file.getMetadata().get("channel-count"));
 	}
 
 	@Override
 	public void setVolume(int value, int maxValue) {
 		try {
 			this.volume = value;
-			
 
 			if (value == 0) {
 				player.setGain(0);
@@ -200,13 +201,23 @@ AudioSample sample = audioFile.getSampleAt(sampleToRead);
 
 	@Override
 	public void next() {
-		this.playingIndex++;
+		if (playingIndex == playlist.size() - 1) {
+			this.playingIndex = 0;
+		} else {
+			this.playingIndex++;
+		}
+
 		play(playingIndex);
 	}
 
 	@Override
 	public void prev() {
-		this.playingIndex--;
+		if (playingIndex == 0) {
+			this.playingIndex = playlist.size() - 1;
+		} else {
+			this.playingIndex--;
+		}
+		
 		play(playingIndex);
 	}
 
@@ -247,8 +258,8 @@ AudioSample sample = audioFile.getSampleAt(sampleToRead);
 	public void setController(BasicController bc) {
 		controller = bc;
 	}
-	
-	public void setPlaylist(ArrayList<String> playlist){
+
+	public void setPlaylist(ArrayList<String> playlist) {
 		this.playlist.clear();
 		this.playlist.addAll(playlist);
 	}

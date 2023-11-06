@@ -91,7 +91,10 @@ public class Backend {
 
 				@Override
 				public void windowClosing(WindowEvent e) {
-					Queries.updateLastPlayed(mainFrame.currentSong.getAbsolutePath());
+					if (mainFrame.currentSong != null) {
+						Queries.updateLastPlayed(mainFrame.currentSong.getAbsolutePath());
+
+					}
 					Queries.updateVolume(mainFrame.getVolumeSlider().getValue());
 
 				}
@@ -124,7 +127,7 @@ public class Backend {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (mainFrame.getSlider().getValue() == mainFrame.getSlider().getMaximum()) {
-						mainFrame.getSlider().setValue(0);
+						Backend.resetSlider(frame);
 						UIFunctionality.nextAction(mainFrame);
 					}
 				}
@@ -791,6 +794,33 @@ public class Backend {
 				loadIcon(((MainFrame) frame).getRepeatLabel(), Images.repeat, new Dimension(20, 20));
 			}
 			loadVolumeIcon(frame, Queries.selectVolume());
+		}
+	}
+
+	public static void changeVolume(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			int value = mainFrame.getVolumeSlider().getValue();
+			mainFrame.volume = value;
+			Backend.loadVolumeIcon(frame, value);
+
+			if (!mainFrame.player.isPlaying()) {
+				return;
+			}
+
+			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
+		}
+	}
+
+	public static void changeVolume(JFrame frame, int value) {
+		if (frame instanceof MainFrame) {
+			mainFrame.volume = value;
+			Backend.loadVolumeIcon(frame, value);
+
+			if (!mainFrame.player.isPlaying()) {
+				return;
+			}
+
+			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
 		}
 	}
 
