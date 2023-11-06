@@ -4,6 +4,7 @@
  */
 package kdesp73.musicplayer;
 
+import ealvatag.tag.FieldKey;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +14,7 @@ import kdesp73.musicplayer.api.Artist;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.musicplayer.gui.GUIMethods;
+import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.tray.Tray;
 
 /**
@@ -28,6 +30,8 @@ public class Test {
 	static String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 	
 	public static void main(String[] args) throws MalformedURLException, IOException{
-		Queries.clearDatabase();
+		Mp3File file = new Mp3File(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/data/The Velvet Underground - After Hours.mp3");
+		
+		file.setMetadata(FieldKey.TRACK, "");
 	}
 }

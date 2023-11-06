@@ -241,11 +241,11 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace pref="259" max="32767" attributes="0"/>
+                              <EmptySpace pref="256" max="32767" attributes="0"/>
                               <Component id="centralPanel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="volumePanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="207" max="32767" attributes="0"/>
+                              <EmptySpace pref="211" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -274,7 +274,7 @@
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="basicInfoPanel" max="32767" attributes="0"/>
                                       <Component id="sliderPanel" alignment="1" max="32767" attributes="0"/>
-                                      <Component id="controlsPanel" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="controlsPanel" alignment="1" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -307,7 +307,7 @@
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace pref="81" max="32767" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
                                       <Component id="shuffleLabel" min="-2" pref="30" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="prevLabel" min="-2" pref="40" max="-2" attributes="0"/>
@@ -317,7 +317,7 @@
                                       <Component id="nextLabel" min="-2" pref="40" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="repeatLabel" min="-2" pref="30" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                                       <Component id="volumeToggleLabel" min="-2" pref="43" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                                   </Group>

@@ -15,6 +15,7 @@ import kdesp73.musicplayer.tray.Tray;
 public class Main {
 
 	public static void main(String[] args) {
+		System.setProperty("sun.java2d.uiScale", "1");
 		try {
 //			UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkIJTheme());
 			UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
