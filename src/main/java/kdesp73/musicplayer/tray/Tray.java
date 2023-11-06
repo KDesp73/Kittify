@@ -68,7 +68,7 @@ public class Tray {
 
 		Menu menu = systemTray.getMenu();
 
-		menu.add(new MenuItem("Play", e -> {
+		MenuItem playPause = new MenuItem("Play", e -> {
 			final MenuItem item = (MenuItem) e.getSource();
 			if (!frame.player.isPlaying()) {
 				item.setText("Pause");
@@ -79,18 +79,31 @@ public class Tray {
 			}
 			UIFunctionality.togglePlayPause(frame);
 
-		}));
+		});
+		
+		menu.add(playPause);
 
 		menu.add(new MenuItem("Next", e -> {
 			systemTray.setStatus("Playing");
 			UIFunctionality.nextAction(frame);
+			playPause.setText("Pause");
 		}));
 
 		menu.add(new MenuItem("Previous", e -> {
 			systemTray.setStatus("Playing");
 			UIFunctionality.prevAction(frame);
+			playPause.setText("Pause");
 		}));
-		
+
+		menu.add(new MenuItem("Mute", e -> {
+			final MenuItem item = (MenuItem) e.getSource();
+			if (!frame.volumeOn) {
+				item.setText("Mute");
+			} else {
+				item.setText("Unmute");
+			}
+			UIFunctionality.volumeToggle(frame);
+		}));
 
 		menu.add(new JSeparator());
 		menu.add(new MenuItem("About", e -> {
@@ -103,7 +116,9 @@ public class Tray {
 
 		menu.add(new MenuItem("Quit", e -> {
 			systemTray.shutdown();
+			frame.player.stop();
 			frame.dispose();
+			System.exit(0);
 		})).setShortcut('q'); // case does not matter
 
 	}
