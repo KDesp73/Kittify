@@ -31,6 +31,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import kdesp73.musicplayer.api.API;
 import kdesp73.musicplayer.api.Album;
@@ -766,6 +767,7 @@ public class Backend {
 
 	public static void setupTagsPanel(JPanel panel) {
 		panel.setLayout(new WrapLayout(WrapLayout.LEFT));
+		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 	}
 
 }

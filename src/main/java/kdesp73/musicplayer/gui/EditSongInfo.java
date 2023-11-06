@@ -11,13 +11,9 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import kdesp73.databridge.connections.DatabaseConnection;
-import kdesp73.databridge.helpers.QueryBuilder;
 import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.songs.Mp3File;
-import kdesp73.musicplayer.db.Database;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.ThemeCollection;
@@ -61,9 +57,8 @@ public class EditSongInfo extends javax.swing.JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-//				Backend.initList(frame);
 				Backend.sort(frame);
-				Backend.selectSong(frame, frame.list.searchSongName(frame.currentSong.getTrack().getName()));
+//				Backend.selectSong(frame, frame.list.searchSongName(frame.currentSong.getTrack().getName()));
 				
 				
 			}

@@ -6,14 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
-import kdesp73.musicplayer.songs.Mp3File;
-import kdesp73.musicplayer.db.Queries;
-import kdesp73.musicplayer.gui.MainFrame;
 
 public class API {
 
