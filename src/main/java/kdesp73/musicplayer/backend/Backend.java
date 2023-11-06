@@ -4,14 +4,17 @@
  */
 package kdesp73.musicplayer.backend;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -87,8 +90,9 @@ public class Backend {
 				@Override
 				public void windowClosing(WindowEvent e) {
 					Queries.updateLastPlayed(mainFrame.currentSong.getAbsolutePath());
-				}
+					Queries.updateVolume(mainFrame.getVolumeSlider().getValue());
 
+				}
 			});
 
 			updateSongs(frame);
@@ -144,11 +148,11 @@ public class Backend {
 			setupTagsPanel(mainFrame.getTagsContainer());
 
 			GUIMethods.setFontFamilyRecursively(mainFrame, "sans-serif", Font.PLAIN);
-			
-			mainFrame.getRootPane().addKeyListener(new KeyListener(){
+
+			mainFrame.getRootPane().addKeyListener(new KeyListener() {
 				@Override
 				public void keyTyped(KeyEvent e) {
-					if(e.getKeyChar() == ' '){
+					if (e.getKeyChar() == ' ') {
 						UIFunctionality.togglePlayPause(mainFrame);
 					}
 				}
@@ -163,13 +167,19 @@ public class Backend {
 //					throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 				}
 			});
+
+			mainFrame.getBackgroundSplitPane().setPreferredSize(new Dimension(mainFrame.getPreferredSize().width, mainFrame.getPreferredSize().height - 24));
+			mainFrame.getCentralPanel().setBackground(mainFrame.getCentralPanel().getParent().getBackground());
+
+			mainFrame.volume = Queries.selectVolume();
+			mainFrame.getVolumeSlider().setValue(mainFrame.volume);
 		}
 	}
 
 	public static void addExtensions() {
 		FileOperations.acceptedExtensions.add("mp3");
-		FileOperations.acceptedExtensions.add("wav");
-		FileOperations.acceptedExtensions.add("mpeg");
+//		FileOperations.acceptedExtensions.add("wav");
+//		FileOperations.acceptedExtensions.add("mpeg");
 	}
 
 	public static void updateSongs(JFrame frame) {
@@ -376,8 +386,10 @@ public class Backend {
 	}
 
 	public static void addTags(Artist artist) {
-		if(artist == null) return;
-		
+		if (artist == null) {
+			return;
+		}
+
 		mainFrame.getTagsContainer().removeAll();
 		mainFrame.getTagsContainer().repaint();
 		Theme theme;
@@ -603,7 +615,7 @@ public class Backend {
 			if (mainFrame.currentSong.getTrack().getAlbum() != null && !mainFrame.currentSong.getTrack().getAlbum().isBlank()) {
 
 				Album album = Queries.selectAlbum(mainFrame.currentSong.getTrack().getAlbum(), artist);
-				
+
 				System.out.println("album after scrape: " + album);
 
 				if (album == null) {
@@ -612,7 +624,7 @@ public class Backend {
 					} catch (IOException | InterruptedException ex) {
 						System.err.println("Album scrape fail");
 					}
-					
+
 					System.out.println("album json:" + response.first);
 					album = new Album(response.first);
 					Queries.insertAlbum(album);

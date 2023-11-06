@@ -378,4 +378,19 @@ public class UIFunctionality {
 			}
 		}
 	}
+	
+	public static void changeVolume(JFrame frame){
+		if(frame instanceof MainFrame){
+			int value = mainFrame.getVolumeSlider().getValue();
+			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
+			mainFrame.volume = value;
+		}
+	}
+	
+	public static void changeVolume(JFrame frame, int value){
+		if(frame instanceof MainFrame){
+			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
+			mainFrame.volume = value;
+		}
+	}
 }

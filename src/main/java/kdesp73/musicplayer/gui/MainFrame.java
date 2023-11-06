@@ -5,12 +5,15 @@
 package kdesp73.musicplayer.gui;
 
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -29,7 +32,7 @@ import static kdesp73.musicplayer.backend.UIFunctionality.showOptionsPopup;
 import kdesp73.musicplayer.player.Mp3Player;
 import javax.swing.SwingConstants;
 import javax.swing.JSplitPane;
-
+import kdesp73.musicplayer.db.Queries;
 
 /**
  *
@@ -45,10 +48,13 @@ public final class MainFrame extends javax.swing.JFrame {
 	public int currentIndex = 0;
 	public Mp3File currentSong = null;
 	public SongsList list;
-	public boolean scrapeAtStart = false;
 
+	public boolean scrapeAtStart = false;
 	public boolean shuffleOn = false;
 	public boolean repeatOn = false;
+	public boolean volumeOn = true;
+	
+	public int volume = 100;
 
 	public Mp3Player player;
 	private static ThemesFrame tf;
@@ -63,32 +69,34 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	public MainFrame() {
 		initComponents();
-		
-//		leftPanel.setPreferredSize(new Dimension(352, 197));
 	}
-
 
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSlider1 = new javax.swing.JSlider();
         background = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, tabbedPane);
         tabbedPane = new javax.swing.JTabbedPane();
         playerBackground = new javax.swing.JPanel();
-        controlsParentPanel = new javax.swing.JPanel();
-        sliderPanel = new RoundedPanel();
-        timeLabel = new javax.swing.JLabel();
-        slider = new javax.swing.JSlider();
-        durationLabel = new javax.swing.JLabel();
-        basicInfoPanel = new RoundedPanel();
-        trackLabel = new javax.swing.JLabel();
-        artistLabel = new javax.swing.JLabel();
+        controlsParentPanel = new javax.swing.JLayeredPane();
+        centralPanel = new javax.swing.JPanel();
         controlsPanel = new RoundedPanel(30);
         playPauseLabel = new javax.swing.JLabel();
         prevLabel = new javax.swing.JLabel();
         nextLabel = new javax.swing.JLabel();
         repeatLabel = new javax.swing.JLabel();
         shuffleLabel = new javax.swing.JLabel();
+        volumeToggleLabel = new javax.swing.JLabel();
+        basicInfoPanel = new RoundedPanel();
+        trackLabel = new javax.swing.JLabel();
+        artistLabel = new javax.swing.JLabel();
+        sliderPanel = new RoundedPanel();
+        timeLabel = new javax.swing.JLabel();
+        slider = new javax.swing.JSlider();
+        durationLabel = new javax.swing.JLabel();
+        volumePanel = new RoundedPanel();
+        volumeSlider = new javax.swing.JSlider();
         albumImageLabel = new javax.swing.JLabel();
         infoBackground = new javax.swing.JPanel();
         infoTabbedPane = new javax.swing.JTabbedPane();
@@ -130,6 +138,7 @@ public final class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         background.setName("bg_2"); // NOI18N
+        background.setPreferredSize(new java.awt.Dimension(500, 300));
 
         tabbedPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
@@ -137,86 +146,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
         controlsParentPanel.setBackground(new java.awt.Color(51, 51, 51));
         controlsParentPanel.setName("bg"); // NOI18N
-
-        sliderPanel.setName("extra_0"); // NOI18N
-
-        timeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        timeLabel.setText("00:00");
-
-        slider.setValue(0);
-        slider.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
-        slider.setName("slider"); // NOI18N
-        slider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                sliderMouseDragged(evt);
-            }
-        });
-        slider.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                sliderMousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                sliderMouseReleased(evt);
-            }
-        });
-
-        durationLabel.setText("00:00");
-
-        javax.swing.GroupLayout sliderPanelLayout = new javax.swing.GroupLayout(sliderPanel);
-        sliderPanel.setLayout(sliderPanelLayout);
-        sliderPanelLayout.setHorizontalGroup(
-            sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sliderPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(timeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(slider, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(durationLabel)
-                .addGap(12, 12, 12))
-        );
-        sliderPanelLayout.setVerticalGroup(
-            sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sliderPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(slider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(durationLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        basicInfoPanel.setName("extra_0"); // NOI18N
-
-        trackLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        trackLabel.setText("Track");
-        trackLabel.setName("fg_2"); // NOI18N
-
-        artistLabel.setText("Artist");
-        artistLabel.setName("fg_2"); // NOI18N
-
-        javax.swing.GroupLayout basicInfoPanelLayout = new javax.swing.GroupLayout(basicInfoPanel);
-        basicInfoPanel.setLayout(basicInfoPanelLayout);
-        basicInfoPanelLayout.setHorizontalGroup(
-            basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(basicInfoPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(artistLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(basicInfoPanelLayout.createSequentialGroup()
-                        .addComponent(trackLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        basicInfoPanelLayout.setVerticalGroup(
-            basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(basicInfoPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(trackLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(artistLabel)
-                .addContainerGap())
-        );
 
         controlsPanel.setName("extra_0"); // NOI18N
 
@@ -272,12 +201,19 @@ public final class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        volumeToggleLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        volumeToggleLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                volumeToggleLabelMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout controlsPanelLayout = new javax.swing.GroupLayout(controlsPanel);
         controlsPanel.setLayout(controlsPanelLayout);
         controlsPanelLayout.setHorizontalGroup(
             controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlsPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(81, Short.MAX_VALUE)
                 .addComponent(shuffleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(prevLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -287,7 +223,9 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addComponent(nextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(repeatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(43, 43, 43)
+                .addComponent(volumeToggleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
         );
         controlsPanelLayout.setVerticalGroup(
             controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,35 +238,173 @@ public final class MainFrame extends javax.swing.JFrame {
                         .addGap(16, 16, 16)
                         .addGroup(controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(shuffleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                            .addComponent(nextLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                            .addComponent(nextLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(prevLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(repeatLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(repeatLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(volumeToggleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 10, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        basicInfoPanel.setName("extra_0"); // NOI18N
+
+        trackLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        trackLabel.setText("Track");
+        trackLabel.setName("fg_2"); // NOI18N
+
+        artistLabel.setText("Artist");
+        artistLabel.setName("fg_2"); // NOI18N
+
+        javax.swing.GroupLayout basicInfoPanelLayout = new javax.swing.GroupLayout(basicInfoPanel);
+        basicInfoPanel.setLayout(basicInfoPanelLayout);
+        basicInfoPanelLayout.setHorizontalGroup(
+            basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(basicInfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(artistLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(basicInfoPanelLayout.createSequentialGroup()
+                        .addComponent(trackLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        basicInfoPanelLayout.setVerticalGroup(
+            basicInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(basicInfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(trackLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(artistLabel)
+                .addContainerGap())
+        );
+
+        sliderPanel.setName("extra_0"); // NOI18N
+
+        timeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        timeLabel.setText("00:00");
+
+        slider.setValue(0);
+        slider.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        slider.setName("slider"); // NOI18N
+        slider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                sliderMouseDragged(evt);
+            }
+        });
+        slider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                sliderMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                sliderMouseReleased(evt);
+            }
+        });
+
+        durationLabel.setText("00:00");
+
+        javax.swing.GroupLayout sliderPanelLayout = new javax.swing.GroupLayout(sliderPanel);
+        sliderPanel.setLayout(sliderPanelLayout);
+        sliderPanelLayout.setHorizontalGroup(
+            sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sliderPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(timeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(slider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(durationLabel)
+                .addGap(12, 12, 12))
+        );
+        sliderPanelLayout.setVerticalGroup(
+            sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sliderPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(sliderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(slider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(durationLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout centralPanelLayout = new javax.swing.GroupLayout(centralPanel);
+        centralPanel.setLayout(centralPanelLayout);
+        centralPanelLayout.setHorizontalGroup(
+            centralPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(centralPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(centralPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(basicInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sliderPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(controlsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        centralPanelLayout.setVerticalGroup(
+            centralPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(centralPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(basicInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sliderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        volumePanel.setAutoscrolls(true);
+        volumePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        volumePanel.setName("extra_0"); // NOI18N
+
+        volumeSlider.setOrientation(javax.swing.JSlider.VERTICAL);
+        volumeSlider.setValue(100);
+        volumeSlider.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        volumeSlider.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                volumeSliderMouseDragged(evt);
+            }
+        });
+        volumeSlider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                volumeSliderMouseReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout volumePanelLayout = new javax.swing.GroupLayout(volumePanel);
+        volumePanel.setLayout(volumePanelLayout);
+        volumePanelLayout.setHorizontalGroup(
+            volumePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(volumePanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(volumeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        volumePanelLayout.setVerticalGroup(
+            volumePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(volumePanelLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(volumeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        controlsParentPanel.setLayer(centralPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        controlsParentPanel.setLayer(volumePanel, javax.swing.JLayeredPane.PALETTE_LAYER);
 
         javax.swing.GroupLayout controlsParentPanelLayout = new javax.swing.GroupLayout(controlsParentPanel);
         controlsParentPanel.setLayout(controlsParentPanelLayout);
         controlsParentPanelLayout.setHorizontalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(controlsParentPanelLayout.createSequentialGroup()
-                .addContainerGap(275, Short.MAX_VALUE)
-                .addGroup(controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(basicInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 429, Short.MAX_VALUE)
-                    .addComponent(sliderPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(controlsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(274, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlsParentPanelLayout.createSequentialGroup()
+                .addContainerGap(261, Short.MAX_VALUE)
+                .addComponent(centralPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(volumePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(209, Short.MAX_VALUE))
         );
         controlsParentPanelLayout.setVerticalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlsParentPanelLayout.createSequentialGroup()
+            .addComponent(centralPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(controlsParentPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(basicInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sliderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
+                .addComponent(volumePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         albumImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -338,7 +414,7 @@ public final class MainFrame extends javax.swing.JFrame {
         playerBackground.setLayout(playerBackgroundLayout);
         playerBackgroundLayout.setHorizontalGroup(
             playerBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(controlsParentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(controlsParentPanel)
             .addGroup(playerBackgroundLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(albumImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -347,9 +423,9 @@ public final class MainFrame extends javax.swing.JFrame {
         playerBackgroundLayout.setVerticalGroup(
             playerBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playerBackgroundLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(61, Short.MAX_VALUE)
                 .addComponent(albumImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                 .addComponent(controlsParentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -411,7 +487,6 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addGroup(artistInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(artistContentScrollPane)
                     .addGroup(artistInfoPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(artistImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(artistNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -456,7 +531,7 @@ public final class MainFrame extends javax.swing.JFrame {
         albumInfoPanelLayout.setHorizontalGroup(
             albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(albumInfoPanelLayout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(albumNameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
                     .addComponent(albumCoverInfoLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -472,7 +547,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(albumContentScrollPane)
                     .addGroup(albumInfoPanelLayout.createSequentialGroup()
-                        .addGap(0, 62, Short.MAX_VALUE)
+                        .addGap(0, 162, Short.MAX_VALUE)
                         .addComponent(albumCoverInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(albumNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -489,13 +564,13 @@ public final class MainFrame extends javax.swing.JFrame {
         infoBackgroundLayout.setHorizontalGroup(
             infoBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoBackgroundLayout.createSequentialGroup()
-                .addComponent(infoTabbedPane)
-                .addContainerGap())
+                .addComponent(infoTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 958, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         infoBackgroundLayout.setVerticalGroup(
             infoBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoBackgroundLayout.createSequentialGroup()
-                .addComponent(infoTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE)
+                .addComponent(infoTabbedPane)
                 .addContainerGap())
         );
 
@@ -582,7 +657,8 @@ public final class MainFrame extends javax.swing.JFrame {
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addComponent(leftPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 978, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 958, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         backgroundLayout.setVerticalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -682,11 +758,11 @@ public final class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(background)
+            .addComponent(background, javax.swing.GroupLayout.DEFAULT_SIZE, 1290, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(background)
+            .addComponent(background, javax.swing.GroupLayout.DEFAULT_SIZE, 811, Short.MAX_VALUE)
         );
 
         pack();
@@ -714,6 +790,10 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editFilesMenuItemActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
+
 		if (evt.getButton() == MouseEvent.BUTTON3 && songsList.getSelectedIndex() >= 0) {
 			showOptionsPopup(this, evt);
 		} else if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
@@ -728,6 +808,10 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_songsListKeyPressed
 
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
+
 		UIFunctionality.search(this);
     }//GEN-LAST:event_searchButtonMouseClicked
 
@@ -740,40 +824,68 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_scrapeAtStartMenuItemActionPerformed
 
     private void sliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseDragged
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		UIFunctionality.sliderMouseDragged(this);
     }//GEN-LAST:event_sliderMouseDragged
 
     private void sliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMouseReleased
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		UIFunctionality.sliderMouseReleased(this);
     }//GEN-LAST:event_sliderMouseReleased
 
     private void sliderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMousePressed
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		if (evt.getButton() == MouseEvent.BUTTON1) {
 //			player.pause();
 		}
     }//GEN-LAST:event_sliderMousePressed
 
     private void playPauseLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playPauseLabelMouseClicked
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		UIFunctionality.togglePlayPause(this);
     }//GEN-LAST:event_playPauseLabelMouseClicked
 
     private void nextLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextLabelMouseClicked
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		UIFunctionality.nextAction(this);
     }//GEN-LAST:event_nextLabelMouseClicked
 
     private void prevLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevLabelMouseClicked
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		UIFunctionality.prevAction(this);
     }//GEN-LAST:event_prevLabelMouseClicked
 
     private void shuffleLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_shuffleLabelMouseClicked
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		UIFunctionality.shuffle(this);
     }//GEN-LAST:event_shuffleLabelMouseClicked
 
     private void repeatLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_repeatLabelMouseClicked
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		UIFunctionality.repeat(this);
     }//GEN-LAST:event_repeatLabelMouseClicked
 
     private void themesMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_themesMenuMousePressed
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
+
 		if (tf.isActive()) {
 			return;
 		}
@@ -782,20 +894,53 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_themesMenuMousePressed
 
     private void prevLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevLabelMousePressed
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		UIFunctionality.prevLabelMousePressed(this);
     }//GEN-LAST:event_prevLabelMousePressed
 
     private void prevLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevLabelMouseReleased
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
 		UIFunctionality.prevLabelMouseReleased(this);
+
     }//GEN-LAST:event_prevLabelMouseReleased
 
     private void nextLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextLabelMousePressed
-        UIFunctionality.nextLabelMousePressed(this);
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
+		UIFunctionality.nextLabelMousePressed(this);
+
     }//GEN-LAST:event_nextLabelMousePressed
 
     private void nextLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextLabelMouseReleased
-        UIFunctionality.nextLabelMouseReleased(this);
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
+		UIFunctionality.nextLabelMouseReleased(this);
     }//GEN-LAST:event_nextLabelMouseReleased
+
+    private void volumeToggleLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeToggleLabelMouseClicked
+		if(volumeOn){
+			this.player.setVolume(0, 100);
+			this.volumeSlider.setValue(0);
+			// swap icon
+		} else {
+			UIFunctionality.changeVolume(this, volume);
+			volumeSlider.setValue(volume);
+		}
+
+    }//GEN-LAST:event_volumeToggleLabelMouseClicked
+
+    private void volumeSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeSliderMouseReleased
+    }//GEN-LAST:event_volumeSliderMouseReleased
+
+    private void volumeSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeSliderMouseDragged
+        UIFunctionality.changeVolume(this);
+    }//GEN-LAST:event_volumeSliderMouseDragged
 
 	// Getters
 	public String getProject_path() {
@@ -850,7 +995,7 @@ public final class MainFrame extends javax.swing.JFrame {
 		return basicInfoPanel;
 	}
 
-	public JPanel getControlsParentPanel() {
+	public JLayeredPane getControlsParentPanel() {
 		return controlsParentPanel;
 	}
 
@@ -876,10 +1021,6 @@ public final class MainFrame extends javax.swing.JFrame {
 
 	public JMenuItem getjMenuItem1() {
 		return editFilesMenuItem;
-	}
-
-	public JScrollPane getjScrollPane1() {
-		return jScrollPane1;
 	}
 
 	public JScrollPane getjScrollPane2() {
@@ -1002,6 +1143,26 @@ public final class MainFrame extends javax.swing.JFrame {
 		return tagsContainer;
 	}
 
+	public JSplitPane getBackgroundSplitPane() {
+		return background;
+	}
+
+	public JLabel getVolumeToggleLabel() {
+		return volumeToggleLabel;
+	}
+
+	public JPanel getCentralPanel() {
+		return centralPanel;
+	}
+
+	public JPanel getVolumePanel() {
+		return volumePanel;
+	}
+
+	public JSlider getVolumeSlider() {
+		return volumeSlider;
+	}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ApiMenu;
@@ -1023,8 +1184,9 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel artistNameLabel;
     private javax.swing.JSplitPane background;
     private javax.swing.JPanel basicInfoPanel;
+    private javax.swing.JPanel centralPanel;
     private javax.swing.JPanel controlsPanel;
-    private javax.swing.JPanel controlsParentPanel;
+    private javax.swing.JLayeredPane controlsParentPanel;
     private javax.swing.JLabel durationLabel;
     private javax.swing.JMenuItem editDirectoriesMenuItem;
     private javax.swing.JMenuItem editFilesMenuItem;
@@ -1034,10 +1196,10 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JPanel infoBackground;
     private javax.swing.JTabbedPane infoTabbedPane;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JSlider jSlider1;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel nextLabel;
@@ -1059,5 +1221,8 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu themesMenu;
     private javax.swing.JLabel timeLabel;
     private javax.swing.JLabel trackLabel;
+    private javax.swing.JPanel volumePanel;
+    private javax.swing.JSlider volumeSlider;
+    private javax.swing.JLabel volumeToggleLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -173,6 +173,7 @@ AudioSample sample = audioFile.getSampleAt(sampleToRead);
 	public void setVolume(int value, int maxValue) {
 		try {
 			this.volume = value;
+			
 
 			if (value == 0) {
 				player.setGain(0);

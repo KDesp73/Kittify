@@ -24,7 +24,26 @@ import kdesp73.musicplayer.gui.MainFrame;
  * @author konstantinos
  */
 public class Queries {
+	
+	
 
+	public static int selectVolume() {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("volume").from("Settings").build());
+
+		int volume = 100;
+		try {
+			rs.next();
+			volume = rs.getInt(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+
+		return volume;
+	}
 	public static boolean selectShuffle() {
 		DatabaseConnection db = Database.connection();
 
@@ -61,6 +80,13 @@ public class Queries {
 		return repeatOn;
 	}
 
+	public static void updateVolume(int volume) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().update("Settings").set("volume", volume).build());
+
+		db.close();
+	}
 	public static void updateShuffle(boolean shuffleOn) {
 		DatabaseConnection db = Database.connection();
 
