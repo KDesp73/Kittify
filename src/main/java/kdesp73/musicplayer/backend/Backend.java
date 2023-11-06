@@ -142,12 +142,7 @@ public class Backend {
 			setMode(mainFrame, Queries.selectMode());
 			setTheme(mainFrame, Queries.selectTheme());
 
-			mainFrame.shuffleOn = Queries.selectShuffle();
-			mainFrame.repeatOn = Queries.selectRepeat();
-
-			if (mainFrame.shuffleOn) {
-				shuffleList(frame);
-			}
+			
 
 			setupTagsPanel(mainFrame.getTagsContainer());
 
@@ -170,6 +165,18 @@ public class Backend {
 			mainFrame.player.setVolume(mainFrame.volume, mainFrame.getVolumeSlider().getMaximum());
 
 			loadIcons(frame);
+			
+			mainFrame.shuffleOn = Queries.selectShuffle();
+			mainFrame.repeatOn = Queries.selectRepeat();
+
+			if (mainFrame.shuffleOn) {
+				shuffleList(frame);
+				loadIcon(mainFrame.getShuffleLabel(), Images.shuffleBlue, new Dimension(20, 20));
+			}
+			
+			if(mainFrame.repeatOn){
+				loadIcon(mainFrame.getRepeatLabel(), Images.repeatBlue, new Dimension(20, 20));
+			}
 		}
 	}
 
