@@ -30,8 +30,6 @@ public class Test {
 	static String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 	
 	public static void main(String[] args) throws MalformedURLException, IOException{
-		Mp3File file = new Mp3File(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/data/The Velvet Underground - After Hours.mp3");
-		
-		file.setMetadata(FieldKey.TRACK, "");
+		Queries.clearDatabase();
 	}
 }

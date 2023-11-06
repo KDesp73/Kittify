@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,28 +18,30 @@ import java.util.stream.Stream;
  * @author konstantinos
  */
 public class FileOperations {
+        private static String os = System.getProperty("os.name").toLowerCase();
+        private static char slash = (os.contains("windows")) ? '\\' : '/'; 
     public static HashSet<String> acceptedExtensions = new HashSet<>();
 
     
     public static String getDirectoryFromPath(String path){
-        if (path.lastIndexOf('/') < 0) {
+            if (path.lastIndexOf(slash) < 0) {
             return null;
         }
-        return path.substring(0, path.lastIndexOf('/')) + "/";
+        return path.substring(0, path.lastIndexOf('/')) + slash;
     }
 
     public static String getFilenameFromPath(String path) {
-        if (path.lastIndexOf('/') < 0) {
+        if (path.lastIndexOf(slash) < 0) {
             return null;
         }
-        return path.substring(path.lastIndexOf('/') + 1, path.length());
+        return path.substring(path.lastIndexOf(slash) + 1, path.length());
     }
 
     public static String getJustFilenameFromPath(String path) {
-        if (path.lastIndexOf('/') < 0 || path.isEmpty() || path.isBlank() || path.lastIndexOf('.') < path.lastIndexOf('/')) {
+        if (path.lastIndexOf(slash) < 0 || path.isEmpty() || path.isBlank() || path.lastIndexOf('.') < path.lastIndexOf('/')) {
             return null;
         }
-        return path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
+        return path.substring(path.lastIndexOf(slash) + 1, path.lastIndexOf('.'));
     }
     
     public static String getExtensionFromPath(String path) {
@@ -83,7 +84,7 @@ public class FileOperations {
         List<String> p = new ArrayList<>();
         try (Stream<Path> paths = Files.walk(Path.of(directory), 10)) {
             List<String>pathlist = paths
-                    .map(path -> Files.isDirectory(path) ? path.toString() + '/' : path.toString())
+                    .map(path -> Files.isDirectory(path) ? path.toString() + slash : path.toString())
                     .collect(Collectors.toList());
 
             for (String path : pathlist) {

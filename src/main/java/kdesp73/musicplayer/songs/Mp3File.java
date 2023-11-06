@@ -32,6 +32,7 @@ import kdesp73.musicplayer.api.Album;
 import kdesp73.musicplayer.api.Artist;
 import kdesp73.musicplayer.api.LastFmMethods;
 import kdesp73.musicplayer.api.Pair;
+import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.gui.MainFrame;
 
@@ -96,6 +97,7 @@ public class Mp3File extends File {
 		this.extension = FileOperations.getExtensionFromPath(this.getAbsolutePath());
 		this.timeOfImport = this.calculateTimeOfImport();
 		this.track.setName(FileOperations.getJustFilenameFromPath(pathname));
+//		this.track.setName(Backend.cleanTextContent(FileOperations.getJustFilenameFromPath(pathname)));
 		this.coverPath = null;
 		this.metadata = getMetadata();
 
