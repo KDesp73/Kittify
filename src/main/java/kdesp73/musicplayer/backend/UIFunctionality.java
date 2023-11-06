@@ -21,7 +21,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import static kdesp73.musicplayer.backend.Backend.loadVolumeIcon;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.Images;
 import kdesp73.musicplayer.gui.EditDirectories;
@@ -386,7 +385,7 @@ public class UIFunctionality {
 			int value = mainFrame.getVolumeSlider().getValue();
 			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
 			mainFrame.volume = value;
-			loadVolumeIcon(frame, value);
+			Backend.loadVolumeIcon(frame, value);
 		}
 	}
 
@@ -396,7 +395,7 @@ public class UIFunctionality {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
 			mainFrame.volume = value;
-			loadVolumeIcon(frame, value);
+			Backend.loadVolumeIcon(frame, value);
 		}
 	}
 
@@ -413,10 +412,35 @@ public class UIFunctionality {
 				UIFunctionality.changeVolume(frame, ((MainFrame) frame).volume);
 				((MainFrame) frame).getVolumeSlider().setValue(((MainFrame) frame).volume);
 
-				loadVolumeIcon(frame, ((MainFrame) frame).volume);
+				Backend.loadVolumeIcon(frame, ((MainFrame) frame).volume);
 			}
 			
 			((MainFrame) frame).volumeOn = !((MainFrame) frame).volumeOn;
+		}
+	}
+	
+	public static void volumeToggleLabelMousePressed(JFrame frame){
+		if (frame instanceof MainFrame) {
+			String volumeRegion = Backend.getVolumeRegion(((MainFrame) frame).volume);
+			
+			if(!((MainFrame) frame).volumeOn){
+				Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), Images.volumeXMarkBlue, 28, "w");
+				return;
+			}
+			
+			switch (volumeRegion) {
+				case "high":
+					Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), Images.volumeHighBlue, 31, "w");
+					break;
+				case "low":
+					Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), Images.volumeLowBlue, 25, "w");
+					break;
+				case "off":
+					Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), Images.volumeOffBlue, 25, "w");
+					break;
+				default:
+					throw new AssertionError();
+			}
 		}
 	}
 }

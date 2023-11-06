@@ -53,7 +53,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public boolean shuffleOn = false;
 	public boolean repeatOn = false;
 	public boolean volumeOn = true;
-	
+
 	public int volume = 100;
 
 	public Mp3Player player;
@@ -207,6 +207,9 @@ public final class MainFrame extends javax.swing.JFrame {
         volumeToggleLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 volumeToggleLabelMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                volumeToggleLabelMousePressed(evt);
             }
         });
 
@@ -933,8 +936,12 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_volumeSliderMouseReleased
 
     private void volumeSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeSliderMouseDragged
-        UIFunctionality.changeVolume(this);
+		UIFunctionality.changeVolume(this);
     }//GEN-LAST:event_volumeSliderMouseDragged
+
+    private void volumeToggleLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeToggleLabelMousePressed
+		UIFunctionality.volumeToggleLabelMousePressed(this);
+    }//GEN-LAST:event_volumeToggleLabelMousePressed
 
 	// Getters
 	public String getProject_path() {
