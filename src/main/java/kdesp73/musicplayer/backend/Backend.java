@@ -641,8 +641,9 @@ public class Backend {
 			Queries.updateScraped(true, mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getAbsolutePath());
 			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-//			initList(mainFrame);
+			initList(mainFrame);
 			sort(mainFrame);
+			mainFrame.player.playlist = mainFrame.list.getPaths();
 			selectSong(mainFrame, mainFrame.list.searchSongName(title));
 			Backend.updateAdditionalSongInfo(frame, mainFrame.list.searchSongName(title));
 			Backend.updateSongInfo(frame, mainFrame.list.searchSongName(title));

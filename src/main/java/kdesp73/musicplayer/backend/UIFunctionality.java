@@ -122,6 +122,7 @@ public class UIFunctionality {
 	}
 
 	public static void nextAction(JFrame frame) {
+		if(mainFrame.list.getSongs().isEmpty()) return;
 		System.out.println("Next Song");
 		if (frame instanceof MainFrame) {
 			int index = mainFrame.getSongsList().getSelectedIndex();
@@ -153,7 +154,8 @@ public class UIFunctionality {
 			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
 
 			mainFrame.player.stop();
-			mainFrame.player.timer.stop();
+			if(mainFrame.player.timer != null)
+				mainFrame.player.timer.stop();
 
 			Backend.selectSong(mainFrame);
 
@@ -166,6 +168,7 @@ public class UIFunctionality {
 
 	public static void togglePlayPause(JFrame frame) {
 		if (frame instanceof MainFrame) {
+			if(mainFrame.list.getSongs().isEmpty()) return;
 			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
 			if (mainFrame.player.isPlaying()) {
 				mainFrame.player.pause();
@@ -179,6 +182,7 @@ public class UIFunctionality {
 
 	public static void prevAction(JFrame frame) {
 		if (frame instanceof MainFrame) {
+			if(mainFrame.list.getSongs().isEmpty()) return;
 			int index = mainFrame.getSongsList().getSelectedIndex();
 
 			if (index == 0) {
@@ -382,6 +386,8 @@ public class UIFunctionality {
 
 	public static void changeVolume(JFrame frame) {
 		if (frame instanceof MainFrame) {
+			if(!mainFrame.player.isPlaying()) return;
+			
 			int value = mainFrame.getVolumeSlider().getValue();
 			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
 			mainFrame.volume = value;
@@ -393,6 +399,8 @@ public class UIFunctionality {
 
 	public static void changeVolume(JFrame frame, int value) {
 		if (frame instanceof MainFrame) {
+			if(!mainFrame.player.isPlaying()) return;
+			
 			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
 			mainFrame.volume = value;
 			Backend.loadVolumeIcon(frame, value);

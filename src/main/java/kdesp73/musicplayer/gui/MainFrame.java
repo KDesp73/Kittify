@@ -794,10 +794,6 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editFilesMenuItemActionPerformed
 
     private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
-		if (evt.getButton() != MouseEvent.BUTTON1) {
-			return;
-		}
-
 		if (evt.getButton() == MouseEvent.BUTTON3 && songsList.getSelectedIndex() >= 0) {
 			showOptionsPopup(this, evt);
 		} else if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {

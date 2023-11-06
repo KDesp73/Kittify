@@ -34,10 +34,11 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 
 	public Mp3Player() {
 		super(0, null);
+		
 		this.player = new BasicPlayer();
 		this.volume = 1;
 		player.addBasicPlayerListener(this);
-		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
+//		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
 	}
 
 	public Mp3Player(int index, ArrayList<String> playlist) {
@@ -46,7 +47,7 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 		this.player = new BasicPlayer();
 		this.volume = 1;
 		player.addBasicPlayerListener(this);
-		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
+//		this.timer = new SongTimer(timerLabel, progressSlider, new Mp3File(this.playlist.get(playingIndex)));
 	}
 
 	public void setFrame(JFrame frame) {
@@ -114,7 +115,8 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 	public void stop() {
 		try {
 			player.stop();
-			timer.stop();
+			if(timer != null)
+				timer.stop();
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
 		}

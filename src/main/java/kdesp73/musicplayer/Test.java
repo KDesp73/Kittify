@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.regex.Pattern;
 import kdesp73.musicplayer.api.Artist;
+import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.musicplayer.gui.GUIMethods;
 import kdesp73.musicplayer.tray.Tray;
@@ -27,5 +28,6 @@ public class Test {
 	static String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 	
 	public static void main(String[] args) throws MalformedURLException, IOException{
+		Queries.clearDatabase();
 	}
 }
