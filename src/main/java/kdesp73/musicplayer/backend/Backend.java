@@ -173,6 +173,7 @@ public class Backend {
 
 			mainFrame.volume = Queries.selectVolume();
 			mainFrame.getVolumeSlider().setValue(mainFrame.volume);
+			mainFrame.player.setVolume(mainFrame.volume, mainFrame.getVolumeSlider().getMaximum());
 		}
 	}
 
