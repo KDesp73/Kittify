@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -72,7 +74,6 @@ public class Backend {
 	public static void setup(JFrame frame) {
 		if (frame instanceof MainFrame) {
 
-//			mainFrame.setResizable(false);
 			mainFrame.setLocationRelativeTo(null);
 			mainFrame.getRootPane().requestFocus();
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
@@ -143,6 +144,25 @@ public class Backend {
 			setupTagsPanel(mainFrame.getTagsContainer());
 
 			GUIMethods.setFontFamilyRecursively(mainFrame, "sans-serif", Font.PLAIN);
+			
+			mainFrame.getRootPane().addKeyListener(new KeyListener(){
+				@Override
+				public void keyTyped(KeyEvent e) {
+					if(e.getKeyChar() == ' '){
+						UIFunctionality.togglePlayPause(mainFrame);
+					}
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+//					throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+//					throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+				}
+			});
 		}
 	}
 
