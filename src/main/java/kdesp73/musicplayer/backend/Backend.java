@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -48,6 +49,7 @@ import kdesp73.musicplayer.api.SearchTrack;
 import kdesp73.musicplayer.api.Track;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
+import kdesp73.musicplayer.files.Images;
 import kdesp73.musicplayer.gui.EditSongInfo;
 import kdesp73.musicplayer.gui.GUIMethods;
 import kdesp73.musicplayer.gui.MainFrame;
@@ -139,7 +141,6 @@ public class Backend {
 
 			mainFrame.shuffleOn = Queries.selectShuffle();
 			mainFrame.repeatOn = Queries.selectRepeat();
-			loadIcons(frame);
 
 			if (mainFrame.shuffleOn) {
 				shuffleList(frame);
@@ -149,22 +150,12 @@ public class Backend {
 
 			GUIMethods.setFontFamilyRecursively(mainFrame, "sans-serif", Font.PLAIN);
 
-			mainFrame.getRootPane().addKeyListener(new KeyListener() {
+			mainFrame.getRootPane().addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyTyped(KeyEvent e) {
 					if (e.getKeyChar() == ' ') {
 						UIFunctionality.togglePlayPause(mainFrame);
 					}
-				}
-
-				@Override
-				public void keyPressed(KeyEvent e) {
-//					throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-				}
-
-				@Override
-				public void keyReleased(KeyEvent e) {
-//					throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 				}
 			});
 
@@ -174,6 +165,8 @@ public class Backend {
 			mainFrame.volume = Queries.selectVolume();
 			mainFrame.getVolumeSlider().setValue(mainFrame.volume);
 			mainFrame.player.setVolume(mainFrame.volume, mainFrame.getVolumeSlider().getMaximum());
+
+			loadIcons(frame);
 		}
 	}
 
@@ -355,7 +348,7 @@ public class Backend {
 				try {
 					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), GUIMethods.imageFromURL(artist.getImage()));
 				} catch (java.lang.NullPointerException e) {
-					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), mainFrame.getProject_path() + "/assets/artist-image-placeholder.png");
+					GUIMethods.loadImage(mainFrame.getArtistImageLabel(), Images.artistPlaceholder);
 				}
 			} else {
 				Backend.setDefaultArtistAdditionalInfo(frame);
@@ -377,7 +370,7 @@ public class Backend {
 				try {
 					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), GUIMethods.imageFromURL(Queries.selectAlbumCover(albumName, artistName)));
 				} catch (java.lang.NullPointerException e) {
-					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), Images.albumPlaceholder);
 				}
 			} else {
 				Backend.setDefaultAlbumAdditionalInfo(frame);
@@ -418,7 +411,7 @@ public class Backend {
 			mainFrame.getAlbumContentTextArea().setText("");
 //			mainFrame.getAlbumTracksList().removeAll();
 			mainFrame.getAlbumTracksList().setModel(new DefaultListModel<>());
-			GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
+			GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), Images.albumPlaceholder);
 
 		}
 	}
@@ -427,7 +420,7 @@ public class Backend {
 		if (frame instanceof MainFrame) {
 			mainFrame.getArtistNameLabel().setText("Artist");
 			mainFrame.getArtistContentTextArea().setText("");
-			GUIMethods.loadImage(mainFrame.getArtistImageLabel(), mainFrame.getProject_path() + "/assets/artist-image-placeholder.png");
+			GUIMethods.loadImage(mainFrame.getArtistImageLabel(), Images.artistPlaceholder);
 			mainFrame.getTagsContainer().removeAll();
 			mainFrame.getTagsContainer().repaint();
 		}
@@ -437,13 +430,11 @@ public class Backend {
 		if (frame instanceof MainFrame) {
 			mainFrame.getTrackLabel().setText("Title");
 			mainFrame.getArtistLabel().setText("Artist");
-//			mainFrame.getAlbumLabel().setText("Album");
 			mainFrame.getTimeLabel().setText("00:00");
 			mainFrame.getDurationLabel().setText("00:00");
 
-//			GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 			try {
-				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(mainFrame.getProject_path() + "/assets/album-image-placeholder.png")), 420, 420));
+				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(Images.albumPlaceholder)), 420, 420));
 			} catch (IOException ex) {
 				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 			}
@@ -497,7 +488,7 @@ public class Backend {
 			}
 
 			try {
-				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(mainFrame.getProject_path() + "/assets/album-image-placeholder.png")), 420, 420));
+				GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(Images.albumPlaceholder)), 420, 420));
 			} catch (IOException ex) {
 				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 			}
@@ -701,6 +692,37 @@ public class Backend {
 		ThemeCollection.applyTheme(frame, new Theme(new YamlFile(path)));
 	}
 
+	public static String getVolumeRegion(int volume) {
+		if (volume <= 100 && volume >= 60) {
+			return "high";
+		} else if (volume < 60 && volume >= 30) {
+			return "low";
+		} else if (volume < 30 && volume >= 1) {
+			return "off";
+		} else if (volume == 0) {
+			return "x";
+		}
+
+		return null;
+	}
+
+	public static String getVolumeRegion(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			int volume = ((MainFrame) frame).volume;
+
+			if (volume < 100 && volume >= 60) {
+				return "high";
+			} else if (volume < 59 && volume >= 30) {
+				return "low";
+			} else if (volume < 29 && volume >= 1) {
+				return "off";
+			} else if (volume == 0) {
+				return "x";
+			}
+		}
+		return "";
+	}
+
 	public static void loadIcon(JLabel label, String path, Dimension dimension) {
 		BufferedImage image = null;
 		try {
@@ -712,82 +734,62 @@ public class Backend {
 		GUIMethods.loadImage(label, GUIMethods.resizeImage(image, dimension.width, dimension.height));
 	}
 
+	public static void loadIcon(JLabel label, String path, int size, String dim) {
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File(path));
+		} catch (IOException ex) {
+			Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		if (dim.equals("w")) {
+			GUIMethods.loadImage(label, GUIMethods.resizeImageWidth(image, size));
+		} else if (dim.equals("h")) {
+			GUIMethods.loadImage(label, GUIMethods.resizeImageHeight(image, size));
+		} else {
+			System.err.println("dim parameter must be 'w' or 'h'");
+		}
+	}
+
+	public static void loadVolumeIcon(JFrame frame, int volume) {
+		if (frame instanceof MainFrame) {
+
+			String mode = Queries.selectTheme();
+			switch (Backend.getVolumeRegion(volume)) {
+				case "high" ->
+					Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), ((mode.equals("Dark") ? Images.volumeHighWhite : Images.volumeHigh)), 31, "w");
+				case "low" ->
+					Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), ((mode.equals("Dark") ? Images.volumeLowWhite : Images.volumeLow)), 25, "w");
+				case "off" ->
+					Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), ((mode.equals("Dark") ? Images.volumeOffWhite : Images.volumeOff)), 25, "w");
+				case "x" ->
+					Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), ((mode.equals("Dark") ? Images.volumeXMarkWhite : Images.volumeXMark)), 28, "w");
+				default ->
+					throw new AssertionError();
+			}
+		}
+	}
+
 	public static void loadIcons(JFrame frame) {
 		if (frame == null) {
 			return;
 		}
 
-		String assets = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/assets/";
-
-		String play = assets + "circle-play-solid.png";
-		String next = assets + "forward-step-solid.png";
-		String prev = assets + "backward-step-solid.png";
-		String shuffle = assets + "shuffle-solid.png";
-		String repeat = assets + "repeat-solid.png";
-
-		String playWhite = assets + "circle-play-solid-white.png";
-		String nextWhite = assets + "forward-step-solid-white.png";
-		String prevWhite = assets + "backward-step-solid-white.png";
-		String shuffleWhite = assets + "shuffle-solid-white.png";
-		String repeatWhite = assets + "repeat-solid-white.png";
-
-		String shuffleBlue = assets + "shuffle-solid-blue.png";
-		String repeatBlue = assets + "repeat-solid-blue.png";
-
 		if (frame instanceof MainFrame) {
-			BufferedImage playOriginal = null, nextOriginal, prevOriginal, shuffleOriginal, repeatOriginal;
-			BufferedImage playResized, prevResized, nextResized, shuffleResized, repeatResized;
-
 			if (Queries.selectTheme().equals("Dark")) {
-				try {
-					playOriginal = ImageIO.read(new File(playWhite));
-					nextOriginal = ImageIO.read(new File(nextWhite));
-					prevOriginal = ImageIO.read(new File(prevWhite));
-					shuffleOriginal = ImageIO.read(new File(shuffleWhite));
-					repeatOriginal = ImageIO.read(new File(repeatWhite));
-				} catch (IOException ex) {
-					return;
-				}
-			} else if (Queries.selectTheme().equals("Light")) {
-				try {
-					playOriginal = ImageIO.read(new File(play));
-					nextOriginal = ImageIO.read(new File(next));
-					prevOriginal = ImageIO.read(new File(prev));
-					shuffleOriginal = ImageIO.read(new File(shuffle));
-					repeatOriginal = ImageIO.read(new File(repeat));
-				} catch (IOException ex) {
-					return;
-				}
+				loadIcon(((MainFrame) frame).getPlayPauseLabel(), Images.playWhite, new Dimension(40, 40));
+				loadIcon(((MainFrame) frame).getNextLabel(), Images.nextWhite, new Dimension(30, 30));
+				loadIcon(((MainFrame) frame).getPrevLabel(), Images.prevWhite, new Dimension(30, 30));
+				loadIcon(((MainFrame) frame).getShuffleLabel(), Images.shuffleWhite, new Dimension(20, 20));
+				loadIcon(((MainFrame) frame).getRepeatLabel(), Images.repeatWhite, new Dimension(20, 20));
 			} else {
-				return;
+				loadIcon(((MainFrame) frame).getPlayPauseLabel(), Images.play, new Dimension(40, 40));
+				loadIcon(((MainFrame) frame).getNextLabel(), Images.next, new Dimension(30, 30));
+				loadIcon(((MainFrame) frame).getPrevLabel(), Images.prev, new Dimension(30, 30));
+				loadIcon(((MainFrame) frame).getShuffleLabel(), Images.shuffle, new Dimension(20, 20));
+				loadIcon(((MainFrame) frame).getRepeatLabel(), Images.repeat, new Dimension(20, 20));
 			}
-
-			if (((MainFrame) frame).repeatOn) {
-				try {
-					repeatOriginal = ImageIO.read(new File(repeatBlue));
-				} catch (IOException ex) {
-					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
-			if (((MainFrame) frame).shuffleOn) {
-				try {
-					shuffleOriginal = ImageIO.read(new File(shuffleBlue));
-				} catch (IOException ex) {
-					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
-
-			playResized = GUIMethods.resizeImage(playOriginal, 40, 40);
-			nextResized = GUIMethods.resizeImage(nextOriginal, 30, 30);
-			prevResized = GUIMethods.resizeImage(prevOriginal, 30, 30);
-			shuffleResized = GUIMethods.resizeImage(shuffleOriginal, 20, 20);
-			repeatResized = GUIMethods.resizeImage(repeatOriginal, 20, 20);
-
-			GUIMethods.loadImage(((MainFrame) frame).getPlayPauseLabel(), playResized);
-			GUIMethods.loadImage(((MainFrame) frame).getNextLabel(), nextResized);
-			GUIMethods.loadImage(((MainFrame) frame).getPrevLabel(), prevResized);
-			GUIMethods.loadImage(((MainFrame) frame).getShuffleLabel(), shuffleResized);
-			GUIMethods.loadImage(((MainFrame) frame).getRepeatLabel(), repeatResized);
+			loadVolumeIcon(frame, Queries.selectVolume());
 		}
 	}
 

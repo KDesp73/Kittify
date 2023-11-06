@@ -21,7 +21,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import static kdesp73.musicplayer.backend.Backend.loadVolumeIcon;
 import kdesp73.musicplayer.db.Queries;
+import kdesp73.musicplayer.files.Images;
 import kdesp73.musicplayer.gui.EditDirectories;
 import kdesp73.musicplayer.gui.EditFiles;
 import kdesp73.musicplayer.gui.GUIMethods;
@@ -358,9 +360,9 @@ public class UIFunctionality {
 			}
 		}
 	}
-	
-	public static void nextLabelMousePressed(JFrame frame){
-		if(frame instanceof MainFrame){
+
+	public static void nextLabelMousePressed(JFrame frame) {
+		if (frame instanceof MainFrame) {
 			try {
 				GUIMethods.loadImage(mainFrame.getNextLabel(), GUIMethods.resizeImage(ImageIO.read(new File(assets + "forward-step-solid-blue.png")), 30, 30));
 			} catch (IOException ex) {
@@ -368,9 +370,9 @@ public class UIFunctionality {
 			}
 		}
 	}
-	
-	public static void nextLabelMouseReleased(JFrame frame){
-		if(frame instanceof MainFrame){
+
+	public static void nextLabelMouseReleased(JFrame frame) {
+		if (frame instanceof MainFrame) {
 			try {
 				GUIMethods.loadImage(mainFrame.getNextLabel(), GUIMethods.resizeImage(ImageIO.read(new File(assets + ((Queries.selectTheme().equals("Light")) ? "forward-step-solid.png" : "forward-step-solid-white.png"))), 30, 30));
 			} catch (IOException ex) {
@@ -378,19 +380,43 @@ public class UIFunctionality {
 			}
 		}
 	}
-	
-	public static void changeVolume(JFrame frame){
-		if(frame instanceof MainFrame){
+
+	public static void changeVolume(JFrame frame) {
+		if (frame instanceof MainFrame) {
 			int value = mainFrame.getVolumeSlider().getValue();
 			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
 			mainFrame.volume = value;
+			loadVolumeIcon(frame, value);
 		}
 	}
-	
-	public static void changeVolume(JFrame frame, int value){
-		if(frame instanceof MainFrame){
+
+
+
+	public static void changeVolume(JFrame frame, int value) {
+		if (frame instanceof MainFrame) {
 			mainFrame.player.setVolume(value, mainFrame.getVolumeSlider().getMaximum());
 			mainFrame.volume = value;
+			loadVolumeIcon(frame, value);
+		}
+	}
+
+	public static void volumeToggle(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			String mode = Queries.selectTheme();
+
+			if (((MainFrame) frame).volumeOn) {
+				((MainFrame) frame).player.setVolume(0, 100);
+				((MainFrame) frame).getVolumeSlider().setValue(0);
+
+				Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), ((mode.equals("Dark") ? Images.volumeXMarkWhite : Images.volumeXMark)), 28, "w");
+			} else {
+				UIFunctionality.changeVolume(frame, ((MainFrame) frame).volume);
+				((MainFrame) frame).getVolumeSlider().setValue(((MainFrame) frame).volume);
+
+				loadVolumeIcon(frame, ((MainFrame) frame).volume);
+			}
+			
+			((MainFrame) frame).volumeOn = !((MainFrame) frame).volumeOn;
 		}
 	}
 }

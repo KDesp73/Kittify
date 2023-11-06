@@ -147,6 +147,8 @@ public final class MainFrame extends javax.swing.JFrame {
         controlsParentPanel.setBackground(new java.awt.Color(51, 51, 51));
         controlsParentPanel.setName("bg"); // NOI18N
 
+        centralPanel.setName("bg"); // NOI18N
+
         controlsPanel.setName("extra_0"); // NOI18N
 
         playPauseLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -223,8 +225,8 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addComponent(nextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(repeatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
-                .addComponent(volumeToggleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(volumeToggleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
         controlsPanelLayout.setVerticalGroup(
@@ -924,15 +926,7 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_nextLabelMouseReleased
 
     private void volumeToggleLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeToggleLabelMouseClicked
-		if(volumeOn){
-			this.player.setVolume(0, 100);
-			this.volumeSlider.setValue(0);
-			// swap icon
-		} else {
-			UIFunctionality.changeVolume(this, volume);
-			volumeSlider.setValue(volume);
-		}
-
+		UIFunctionality.volumeToggle(this);
     }//GEN-LAST:event_volumeToggleLabelMouseClicked
 
     private void volumeSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeSliderMouseReleased
