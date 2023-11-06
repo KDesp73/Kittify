@@ -15,6 +15,7 @@
  */
 package kdesp73.musicplayer.tray;
 
+import com.sun.jna.platform.unix.X11.Display;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
@@ -29,8 +30,82 @@ import dorkbox.systemTray.SystemTray;
 import dorkbox.util.CacheUtil;
 import dorkbox.desktop.Desktop;
 
+import dorkbox.systemTray.SystemTray;
+import javax.swing.JSeparator;
+import kdesp73.musicplayer.backend.UIFunctionality;
+import kdesp73.musicplayer.gui.MainFrame;
+
 public class Tray {
-	private SystemTray tray = SystemTray.get();
-	
-	
+
+	private MainFrame frame;
+	private SystemTray systemTray;
+	private ActionListener actionListener;
+
+	public Tray(MainFrame frame) {
+		this.frame = frame;
+
+		SystemTray.DEBUG = true;
+
+		CacheUtil.clear("MusicPlayerTray");
+
+		systemTray = SystemTray.get("MusicPlayerTray");
+		if (systemTray == null) {
+			throw new RuntimeException("Unable to load SystemTray!");
+		}
+
+		systemTray.setTooltip("Music Player");
+//		systemTray.setImage();
+		systemTray.setStatus("Stopped");
+
+		actionListener = e -> {
+			final MenuItem entry = (MenuItem) e.getSource();
+
+			entry.setCallback(null);
+			systemTray.getMenu().remove(entry);
+			entry.remove();
+			System.err.println("POW");
+		};
+
+		Menu menu = systemTray.getMenu();
+
+		menu.add(new MenuItem("Play", e -> {
+			final MenuItem item = (MenuItem) e.getSource();
+			if (!frame.player.isPlaying()) {
+				item.setText("Pause");
+				systemTray.setStatus("Playing");
+			} else {
+				item.setText("Play");
+				systemTray.setStatus("Paused");
+			}
+			UIFunctionality.togglePlayPause(frame);
+
+		}));
+
+		menu.add(new MenuItem("Next", e -> {
+			systemTray.setStatus("Playing");
+			UIFunctionality.nextAction(frame);
+		}));
+
+		menu.add(new MenuItem("Previous", e -> {
+			systemTray.setStatus("Playing");
+			UIFunctionality.prevAction(frame);
+		}));
+		
+
+		menu.add(new JSeparator());
+		menu.add(new MenuItem("About", e -> {
+			try {
+				Desktop.browseURL("https://git.dorkbox.com/dorkbox/SystemTray");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}));
+
+		menu.add(new MenuItem("Quit", e -> {
+			systemTray.shutdown();
+			frame.dispose();
+		})).setShortcut('q'); // case does not matter
+
+	}
+
 }

@@ -6,6 +6,7 @@ package kdesp73.musicplayer;
 
 import javax.swing.UIManager;
 import kdesp73.musicplayer.gui.MainFrame;
+import kdesp73.musicplayer.tray.Tray;
 
 /**
  *
@@ -24,7 +25,10 @@ public class Main {
 		
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				MainFrame.create().setVisible(true);
+				MainFrame frame = MainFrame.create();
+				
+				frame.setVisible(true);
+				new Tray(frame);
 			}
 		});
 	}
