@@ -23,8 +23,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.Images;
-import kdesp73.musicplayer.gui.EditDirectories;
-import kdesp73.musicplayer.gui.EditFiles;
+import kdesp73.musicplayer.gui.EditDirectoriesFrame;
+import kdesp73.musicplayer.gui.EditFilesFrame;
 import kdesp73.musicplayer.gui.GUIMethods;
 import kdesp73.musicplayer.gui.MainFrame;
 
@@ -114,14 +114,21 @@ public class UIFunctionality {
 	public static void editDirectories(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
-			new EditDirectories(mainFrame).setVisible(true);
+			
+			if(!MainFrame.editDirectoriesFrame.isActive()){
+				MainFrame.editDirectoriesFrame = new EditDirectoriesFrame(mainFrame);
+				MainFrame.editDirectoriesFrame.setVisible(true);
+			}
 		}
 	}
 
 	public static void editFiles(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
-			new EditFiles(mainFrame).setVisible(true);
+			if(!MainFrame.editFilesFrame.isActive()){
+				MainFrame.editFilesFrame = new EditFilesFrame(mainFrame);
+				MainFrame.editFilesFrame.setVisible(true);
+			}
 		}
 	}
 

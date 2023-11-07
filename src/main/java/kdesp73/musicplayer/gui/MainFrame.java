@@ -4,9 +4,6 @@
  */
 package kdesp73.musicplayer.gui;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
@@ -30,9 +27,7 @@ import kdesp73.musicplayer.backend.UIFunctionality;
 import static kdesp73.musicplayer.backend.UIFunctionality.playSong;
 import static kdesp73.musicplayer.backend.UIFunctionality.showOptionsPopup;
 import kdesp73.musicplayer.player.Mp3Player;
-import javax.swing.SwingConstants;
 import javax.swing.JSplitPane;
-import kdesp73.musicplayer.db.Queries;
 
 /**
  *
@@ -57,13 +52,26 @@ public final class MainFrame extends javax.swing.JFrame {
 	public int volume = 100;
 
 	public Mp3Player player;
-	private static ThemesFrame tf;
+
+	public static ThemesFrame themesFrame;
+	public static AboutFrame aboutFrame;
+	public static EditDirectoriesFrame editDirectoriesFrame;
+	public static EditSongInfoFrame editSongFrame;
+	public static EditFilesFrame editFilesFrame;
+	public static HelpFrame helpFrame;
 
 	public static MainFrame create() {
 		MainFrame frame = new MainFrame();
-		tf = new ThemesFrame(frame);
 		Backend.setMainFrame(frame);
 		Backend.setup(frame);
+
+		themesFrame = new ThemesFrame(frame);
+		aboutFrame = new AboutFrame();
+		editDirectoriesFrame = new EditDirectoriesFrame(frame);
+		editSongFrame = new EditSongInfoFrame(frame);
+		editFilesFrame = new EditFilesFrame(frame);
+		helpFrame = new HelpFrame();
+
 		return frame;
 	}
 
@@ -233,7 +241,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addComponent(nextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(repeatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
+                .addGap(18, 18, 18)
                 .addComponent(volumeToggleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
@@ -402,11 +410,11 @@ public final class MainFrame extends javax.swing.JFrame {
         controlsParentPanelLayout.setHorizontalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlsParentPanelLayout.createSequentialGroup()
-                .addContainerGap(256, Short.MAX_VALUE)
+                .addContainerGap(255, Short.MAX_VALUE)
                 .addComponent(centralPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(volumePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(211, Short.MAX_VALUE))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
         controlsParentPanelLayout.setVerticalGroup(
             controlsParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -754,9 +762,24 @@ public final class MainFrame extends javax.swing.JFrame {
         helpMenu.setText("Help");
 
         helpMenuItem.setText("Help");
+        helpMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(helpMenuItem);
 
         aboutMenuItem.setText("About");
+        aboutMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                aboutMenuItemMouseClicked(evt);
+            }
+        });
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(aboutMenuItem);
 
         menuBar.add(helpMenu);
@@ -843,9 +866,6 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_sliderMouseReleased
 
     private void sliderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMousePressed
-		if (evt.getButton() != MouseEvent.BUTTON1) {
-			return;
-		}
 		if (evt.getButton() == MouseEvent.BUTTON1) {
 //			player.pause();
 		}
@@ -891,11 +911,11 @@ public final class MainFrame extends javax.swing.JFrame {
 			return;
 		}
 
-		if (tf.isActive()) {
+		if (themesFrame.isActive()) {
 			return;
 		}
 
-		tf.setVisible(true);
+		themesFrame.setVisible(true);
     }//GEN-LAST:event_themesMenuMousePressed
 
     private void prevLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevLabelMousePressed
@@ -917,8 +937,8 @@ public final class MainFrame extends javax.swing.JFrame {
 		if (evt.getButton() != MouseEvent.BUTTON1) {
 			return;
 		}
-		UIFunctionality.nextLabelMousePressed(this);
 
+		UIFunctionality.nextLabelMousePressed(this);
     }//GEN-LAST:event_nextLabelMousePressed
 
     private void nextLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextLabelMouseReleased
@@ -942,6 +962,30 @@ public final class MainFrame extends javax.swing.JFrame {
     private void volumeToggleLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeToggleLabelMousePressed
 		UIFunctionality.volumeToggleLabelMousePressed(this);
     }//GEN-LAST:event_volumeToggleLabelMousePressed
+
+    private void aboutMenuItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutMenuItemMouseClicked
+		if (evt.getButton() != MouseEvent.BUTTON1 || aboutFrame.isActive()) {
+			return;
+		}
+
+		aboutFrame.setVisible(true);
+    }//GEN-LAST:event_aboutMenuItemMouseClicked
+
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
+		if (aboutFrame.isActive()) {
+			return;
+		}
+		MainFrame.aboutFrame = new AboutFrame();
+		aboutFrame.setVisible(true);
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
+
+    private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
+		if (helpFrame.isActive()) {
+			return;
+		}
+		MainFrame.helpFrame = new HelpFrame();
+		helpFrame.setVisible(true);
+    }//GEN-LAST:event_helpMenuItemActionPerformed
 
 	// Getters
 	public String getProject_path() {

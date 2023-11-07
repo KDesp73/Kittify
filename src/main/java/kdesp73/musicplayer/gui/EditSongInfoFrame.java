@@ -4,6 +4,7 @@
  */
 package kdesp73.musicplayer.gui;
 
+import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -23,13 +24,13 @@ import kdesp73.themeLib.YamlFile;
  *
  * @author konstantinos
  */
-public class EditSongInfo extends javax.swing.JFrame {
+public class EditSongInfoFrame extends javax.swing.JFrame {
 
 	Mp3File song;
 	MainFrame frame;
 	String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 
-	public EditSongInfo(MainFrame frame) {
+	public EditSongInfoFrame(MainFrame frame) {
 		initComponents();
 
 		this.setResizable(false);
@@ -64,6 +65,8 @@ public class EditSongInfo extends javax.swing.JFrame {
 			}
 
 		});
+		
+		GUIMethods.setFontFamilyRecursively(this, "sans-serif", Font.PLAIN);
 		
 		ThemeCollection.applyTheme(this, new Theme(new YamlFile(themes_path + ((Queries.selectTheme().equals("Dark") ? "dark.yml" : "light.yml")))));
 	}

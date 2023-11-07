@@ -5,6 +5,7 @@
 package kdesp73.musicplayer.gui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
@@ -26,7 +27,7 @@ import kdesp73.themeLib.YamlFile;
  *
  * @author konstantinos
  */
-public class EditDirectories extends javax.swing.JFrame {
+public class EditDirectoriesFrame extends javax.swing.JFrame {
 
 	MainFrame frame;
 	List<String> paths;
@@ -35,7 +36,7 @@ public class EditDirectories extends javax.swing.JFrame {
 	/**
 	 * Creates new form EditDirectories
 	 */
-	public EditDirectories(MainFrame f) {
+	public EditDirectoriesFrame(MainFrame f) {
 		initComponents();
 		this.setTitle("Edit Directories");
 		this.setResizable(false);
@@ -57,7 +58,7 @@ public class EditDirectories extends javax.swing.JFrame {
 			}
 
 		});
-		
+		GUIMethods.setFontFamilyRecursively(this, "sans-serif", Font.PLAIN);
 		ThemeCollection.applyTheme(this, new Theme(new YamlFile(themes_path + ((Queries.selectTheme().equals("Dark") ? "dark.yml" : "light.yml")))));
 
 	}

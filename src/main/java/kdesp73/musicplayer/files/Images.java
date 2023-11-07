@@ -54,6 +54,13 @@ public class Images {
 	public static String volumeXMarkBlue = assets + "volume-xmark-solid-blue.png";
 	public static String volumeXMarkWhite = assets + "volume-xmark-solid-white.png";
 	
+	public static String developer = assets + "code-solid.png";
+	public static String developerWhite = assets + "code-solid-white.png";
 	
+	public static String mail = assets + "envelope-solid.png";
+	public static String mailWhite = assets + "envelope-solid-white.png";
+	
+	public static String github = assets + "github.png";
+	public static String githubWhite = assets + "github-white.png";
 	
 }

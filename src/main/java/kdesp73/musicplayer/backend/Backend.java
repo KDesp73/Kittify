@@ -4,18 +4,14 @@
  */
 package kdesp73.musicplayer.backend;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -50,9 +46,10 @@ import kdesp73.musicplayer.api.Track;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.musicplayer.files.Images;
-import kdesp73.musicplayer.gui.EditSongInfo;
+import kdesp73.musicplayer.gui.EditSongInfoFrame;
 import kdesp73.musicplayer.gui.GUIMethods;
 import kdesp73.musicplayer.gui.MainFrame;
+import static kdesp73.musicplayer.gui.MainFrame.editSongFrame;
 import kdesp73.musicplayer.gui.Tag;
 import kdesp73.musicplayer.gui.ThemesFrame;
 import kdesp73.musicplayer.gui.WrapLayout;
@@ -71,29 +68,28 @@ public class Backend {
 
 	private static MainFrame mainFrame;
 
-                public static String cleanTextContent(String text)
-    {
-        // strips off all non-ASCII characters
-        text = text.replaceAll("[^\\x00-\\x7F]", "");
+	public static String cleanTextContent(String text) {
+		// strips off all non-ASCII characters
+		text = text.replaceAll("[^\\x00-\\x7F]", "");
 
-        // erases all the ASCII control characters
-        text = text.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+		// erases all the ASCII control characters
+		text = text.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
 
-        // removes non-printable characters from Unicode
-        text = text.replaceAll("\\p{C}", "");
+		// removes non-printable characters from Unicode
+		text = text.replaceAll("\\p{C}", "");
 
-        text = text.replaceAll("[^ -~]","");
+		text = text.replaceAll("[^ -~]", "");
 
-        text = text.replaceAll("[^\\p{ASCII}]", "");
+		text = text.replaceAll("[^\\p{ASCII}]", "");
 
-        text = text.replaceAll("\\\\x\\p{XDigit}{2}", "");
+		text = text.replaceAll("\\\\x\\p{XDigit}{2}", "");
 
-        text = text.replaceAll("\\n","");
+		text = text.replaceAll("\\n", "");
 
-        text = text.replaceAll("[^\\x20-\\x7e]", "");
-        return text.trim();
-    }
-        
+		text = text.replaceAll("[^\\x20-\\x7e]", "");
+		return text.trim();
+	}
+
 	public static void setMainFrame(MainFrame mainFrame) {
 		Backend.mainFrame = mainFrame;
 		UIFunctionality.setMainFrame(mainFrame);
@@ -165,8 +161,6 @@ public class Backend {
 			setMode(mainFrame, Queries.selectMode());
 			setTheme(mainFrame, Queries.selectTheme());
 
-			
-
 			setupTagsPanel(mainFrame.getTagsContainer());
 
 			GUIMethods.setFontFamilyRecursively(mainFrame, "sans-serif", Font.PLAIN);
@@ -188,7 +182,7 @@ public class Backend {
 			mainFrame.player.setVolume(mainFrame.volume, mainFrame.getVolumeSlider().getMaximum());
 
 			loadIcons(frame);
-			
+
 			mainFrame.shuffleOn = Queries.selectShuffle();
 			mainFrame.repeatOn = Queries.selectRepeat();
 
@@ -196,8 +190,8 @@ public class Backend {
 				shuffleList(frame);
 				loadIcon(mainFrame.getShuffleLabel(), Images.shuffleBlue, new Dimension(20, 20));
 			}
-			
-			if(mainFrame.repeatOn){
+
+			if (mainFrame.repeatOn) {
 				loadIcon(mainFrame.getRepeatLabel(), Images.repeatBlue, new Dimension(20, 20));
 			}
 		}
@@ -571,7 +565,10 @@ public class Backend {
 
 	public static void editAction(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			new EditSongInfo(mainFrame).setVisible(true);
+			if(!MainFrame.editSongFrame.isActive()){
+				MainFrame.editSongFrame = new EditSongInfoFrame(mainFrame);
+				MainFrame.editSongFrame.setVisible(true);
+			}
 		}
 	}
 

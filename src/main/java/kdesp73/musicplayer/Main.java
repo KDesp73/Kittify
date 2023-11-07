@@ -27,8 +27,8 @@ public class Main {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				MainFrame frame = MainFrame.create();
-				
 				frame.setVisible(true);
+
 				new Tray(frame);
 			}
 		});

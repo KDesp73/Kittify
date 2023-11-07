@@ -4,11 +4,15 @@
  */
 package kdesp73.musicplayer.gui;
 
+import java.awt.Font;
 import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.db.Queries;
+import kdesp73.themeLib.Theme;
+import kdesp73.themeLib.ThemeCollection;
+import kdesp73.themeLib.YamlFile;
 
 /**
  *
@@ -28,7 +32,7 @@ public class ThemesFrame extends javax.swing.JFrame {
 		initComponents();
 
 		this.frame = frame;
-		
+
 		this.setLocationRelativeTo(null);
 		this.setTitle("Themes");
 		this.setResizable(false);
@@ -38,13 +42,16 @@ public class ThemesFrame extends javax.swing.JFrame {
 		this.modeComboBox.setSelectedItem(mode);
 
 		Backend.setMode(this, mode);
+
+		GUIMethods.setFontFamilyRecursively(this, "sans-serif", Font.PLAIN);
+		ThemeCollection.applyTheme(this, new Theme(new YamlFile(themes_path + ((Queries.selectTheme().equals("Dark") ? "dark.yml" : "light.yml")))));
+
 	}
-	
-	public void setFrame(JFrame frame){
+
+	public void setFrame(JFrame frame) {
 		this.frame = frame;
 	}
 
-	
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -113,8 +120,6 @@ public class ThemesFrame extends javax.swing.JFrame {
 		return modeComboBox;
 	}
 
-	
-	
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel background;
