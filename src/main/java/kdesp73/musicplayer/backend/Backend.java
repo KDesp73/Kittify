@@ -368,8 +368,8 @@ public class Backend {
 
 				mainFrame.getArtistNameLabel().setText(artistName);
 				mainFrame.getArtistContentTextArea().setText(artist.getContent());
-				mainFrame.getArtistContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getArtistContentScrollPane().getVerticalScrollBar().getMinimum());
-
+				mainFrame.getArtistContentTextArea().setCaretPosition(0);
+				
 				addTags(artist);
 
 				try {
@@ -392,7 +392,7 @@ public class Backend {
 
 				mainFrame.getAlbumTracksList().setModel(listModel);
 				mainFrame.getAlbumContentTextArea().setText(album.getContent());
-				mainFrame.getAlbumContentScrollPane().getVerticalScrollBar().setValue(mainFrame.getAlbumContentScrollPane().getVerticalScrollBar().getMinimum());
+				mainFrame.getAlbumContentTextArea().setCaretPosition(0);
 
 				try {
 					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), GUIMethods.imageFromURL(Queries.selectAlbumCover(albumName, artistName)));

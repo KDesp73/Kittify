@@ -42,7 +42,9 @@ public class AboutFrame extends javax.swing.JFrame {
 		ThemeCollection.applyTheme(this, new Theme(new YamlFile(themes_path + ((mode.equals("Dark") ? "dark.yml" : "light.yml")))));
 
 		descriptionTextArea.setText("An Mp3 Player with information scraping capabilities and a slick UI");
+		descriptionTextArea.setCaretPosition(0);
 		licenseTextArea.setText(FileOperations.readFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/LICENSE"));
+		licenseTextArea.setCaretPosition(0);
 
 		nameLabel.setText("Konstantinos Despoinidis");
 		emailLabel.setText("despoinidisk@gmail.com");

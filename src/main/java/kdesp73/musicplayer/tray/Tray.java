@@ -15,20 +15,10 @@
  */
 package kdesp73.musicplayer.tray;
 
-import com.sun.jna.platform.unix.X11.Display;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Random;
-
-import dorkbox.os.OS;
-import dorkbox.systemTray.Checkbox;
 import dorkbox.systemTray.Menu;
 import dorkbox.systemTray.MenuItem;
-import dorkbox.systemTray.Separator;
-import dorkbox.systemTray.SystemTray;
 import dorkbox.util.CacheUtil;
-import dorkbox.desktop.Desktop;
 
 import dorkbox.systemTray.SystemTray;
 import javax.swing.JSeparator;

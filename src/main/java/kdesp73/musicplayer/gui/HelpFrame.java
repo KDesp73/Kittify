@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.ThemeCollection;
@@ -45,6 +48,9 @@ public class HelpFrame extends javax.swing.JFrame {
 		String mode = Queries.selectTheme();
 		ThemeCollection.applyTheme(this, new Theme(new YamlFile(themes_path + ((mode.equals("Dark") ? "dark.yml" : "light.yml")))));
 
+//		shortcutsTable.setCellSelectionEnabled(false);
+		shortcutsTable.setRowHeight(35);
+		loadShortcuts();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -76,18 +82,27 @@ public class HelpFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         gettingStarted = new javax.swing.JPanel();
         gsTitle = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
         userManual = new javax.swing.JPanel();
         umTitle = new javax.swing.JLabel();
+        jSeparator4 = new javax.swing.JSeparator();
         faqs = new javax.swing.JPanel();
         faqsTitle = new javax.swing.JLabel();
+        jSeparator5 = new javax.swing.JSeparator();
         shortcuts = new javax.swing.JPanel();
         scTitle = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        shortcutsTable = new javax.swing.JTable();
+        jSeparator6 = new javax.swing.JSeparator();
         functionality = new javax.swing.JPanel();
         funcTitle = new javax.swing.JLabel();
+        jSeparator7 = new javax.swing.JSeparator();
         troubleshooting = new javax.swing.JPanel();
         tsLabel = new javax.swing.JLabel();
+        jSeparator8 = new javax.swing.JSeparator();
         issues = new javax.swing.JPanel();
         issuesTitle = new javax.swing.JLabel();
+        jSeparator9 = new javax.swing.JSeparator();
         counterLabel = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         returnButton = new javax.swing.JButton();
@@ -337,15 +352,19 @@ public class HelpFrame extends javax.swing.JFrame {
             gettingStartedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gettingStartedLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(gsTitle)
-                .addContainerGap(311, Short.MAX_VALUE))
+                .addGroup(gettingStartedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(gsTitle)
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         gettingStartedLayout.setVerticalGroup(
             gettingStartedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gettingStartedLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(gsTitle)
-                .addContainerGap(653, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(631, Short.MAX_VALUE))
         );
 
         pagesContainer.add(gettingStarted, "card3");
@@ -362,15 +381,19 @@ public class HelpFrame extends javax.swing.JFrame {
             userManualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userManualLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(umTitle)
-                .addContainerGap(346, Short.MAX_VALUE))
+                .addGroup(userManualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(umTitle)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
         userManualLayout.setVerticalGroup(
             userManualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userManualLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(umTitle)
-                .addContainerGap(653, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(631, Short.MAX_VALUE))
         );
 
         pagesContainer.add(userManual, "card4");
@@ -387,15 +410,19 @@ public class HelpFrame extends javax.swing.JFrame {
             faqsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(faqsLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(faqsTitle)
-                .addContainerGap(432, Short.MAX_VALUE))
+                .addGroup(faqsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(faqsTitle)
+                    .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
         faqsLayout.setVerticalGroup(
             faqsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(faqsLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(faqsTitle)
-                .addContainerGap(653, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(631, Short.MAX_VALUE))
         );
 
         pagesContainer.add(faqs, "card5");
@@ -406,21 +433,40 @@ public class HelpFrame extends javax.swing.JFrame {
         scTitle.setText("Shortcuts");
         scTitle.setName("fg"); // NOI18N
 
+        shortcutsTable.setAutoCreateRowSorter(true);
+        shortcutsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        shortcutsTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(shortcutsTable);
+
         javax.swing.GroupLayout shortcutsLayout = new javax.swing.GroupLayout(shortcuts);
         shortcuts.setLayout(shortcutsLayout);
         shortcutsLayout.setHorizontalGroup(
             shortcutsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(shortcutsLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(scTitle)
-                .addContainerGap(381, Short.MAX_VALUE))
+                .addGroup(shortcutsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(scTitle)
+                    .addComponent(jSeparator6)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         shortcutsLayout.setVerticalGroup(
             shortcutsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(shortcutsLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(scTitle)
-                .addContainerGap(653, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(208, Short.MAX_VALUE))
         );
 
         pagesContainer.add(shortcuts, "card6");
@@ -437,15 +483,19 @@ public class HelpFrame extends javax.swing.JFrame {
             functionalityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(functionalityLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(funcTitle)
-                .addContainerGap(340, Short.MAX_VALUE))
+                .addGroup(functionalityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(funcTitle)
+                    .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         functionalityLayout.setVerticalGroup(
             functionalityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(functionalityLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(funcTitle)
-                .addContainerGap(653, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(631, Short.MAX_VALUE))
         );
 
         pagesContainer.add(functionality, "card7");
@@ -462,15 +512,19 @@ public class HelpFrame extends javax.swing.JFrame {
             troubleshootingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(troubleshootingLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(tsLabel)
-                .addContainerGap(303, Short.MAX_VALUE))
+                .addGroup(troubleshootingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tsLabel)
+                    .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
         troubleshootingLayout.setVerticalGroup(
             troubleshootingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(troubleshootingLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(tsLabel)
-                .addContainerGap(653, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(631, Short.MAX_VALUE))
         );
 
         pagesContainer.add(troubleshooting, "card8");
@@ -487,15 +541,19 @@ public class HelpFrame extends javax.swing.JFrame {
             issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(issuesLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(issuesTitle)
-                .addContainerGap(421, Short.MAX_VALUE))
+                .addGroup(issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(issuesTitle)
+                    .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         issuesLayout.setVerticalGroup(
             issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(issuesLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(issuesTitle)
-                .addContainerGap(653, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(631, Short.MAX_VALUE))
         );
 
         pagesContainer.add(issues, "card9");
@@ -564,6 +622,30 @@ public class HelpFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_nextButtonActionPerformed
 
+	private void loadShortcuts(){
+		Object[][] data = {
+			{"Add File", "<Ctrl> + f"},
+			{"Add Directory", "<Ctrl> + d"},
+			{"Edit Added Files", "<Shift> + f"},
+			{"Edit Added Directories", "<Shift> + d"},
+			{"Play/Pause", "<Space>"}
+		};
+		
+		Object[] columnNames = {"Function", "Shortcut"};
+		
+		DefaultTableModel dataModel = new DefaultTableModel(data, columnNames) {
+			@Override
+			public boolean isCellEditable(int row, int column){
+				return false;
+			}
+		};
+		
+		shortcutsTable.setModel(dataModel);
+		
+	
+		
+	}
+	
 	private void next() {
 		if (index == size - 1) {
 			index = 0;
@@ -720,8 +802,16 @@ public class HelpFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JSeparator jSeparator7;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
     private javax.swing.JButton nextButton;
     private javax.swing.JPanel pagesContainer;
     private javax.swing.JButton prevButton;
@@ -729,6 +819,7 @@ public class HelpFrame extends javax.swing.JFrame {
     private javax.swing.JLabel scTitle;
     private javax.swing.JPanel shortcuts;
     private javax.swing.JLabel shortcutsLabel;
+    private javax.swing.JTable shortcutsTable;
     private javax.swing.JPanel tableOfContents;
     private javax.swing.JLabel tableOfContentsLabel;
     private javax.swing.JLabel tocTitle;
