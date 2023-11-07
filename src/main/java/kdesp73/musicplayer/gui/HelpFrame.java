@@ -10,7 +10,9 @@ import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -50,6 +52,7 @@ public class HelpFrame extends javax.swing.JFrame {
 
 //		shortcutsTable.setCellSelectionEnabled(false);
 		shortcutsTable.setRowHeight(35);
+		shortcutsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		loadShortcuts();
 	}
 
@@ -442,6 +445,8 @@ public class HelpFrame extends javax.swing.JFrame {
 
             }
         ));
+        shortcutsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        shortcutsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         shortcutsTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(shortcutsTable);
 
