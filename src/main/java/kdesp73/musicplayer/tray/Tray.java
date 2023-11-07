@@ -106,13 +106,13 @@ public class Tray {
 		}));
 
 		menu.add(new JSeparator());
-		menu.add(new MenuItem("About", e -> {
-			try {
-				Desktop.browseURL("https://git.dorkbox.com/dorkbox/SystemTray");
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}));
+//		menu.add(new MenuItem("About", e -> {
+//			try {
+//				Desktop.browseURL("https://git.dorkbox.com/dorkbox/SystemTray");
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			}
+//		}));
 
 		menu.add(new MenuItem("Quit", e -> {
 			systemTray.shutdown();
