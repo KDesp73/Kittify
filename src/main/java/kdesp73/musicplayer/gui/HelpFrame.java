@@ -4,9 +4,13 @@
  */
 package kdesp73.musicplayer.gui;
 
+import dorkbox.desktop.Desktop;
 import java.awt.CardLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,7 +34,7 @@ public class HelpFrame extends javax.swing.JFrame {
 	String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 
 	private int index = 0;
-	private int size = 8;
+	private int size = 7;
 
 	CardLayout layout;
 
@@ -71,7 +75,6 @@ public class HelpFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         tableOfContentsLabel = new javax.swing.JLabel();
@@ -79,7 +82,6 @@ public class HelpFrame extends javax.swing.JFrame {
         userManualLabel = new javax.swing.JLabel();
         faqsLabel = new javax.swing.JLabel();
         shortcutsLabel = new javax.swing.JLabel();
-        functionalityLabel = new javax.swing.JLabel();
         troubleshootingLabel = new javax.swing.JLabel();
         issuesLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -91,6 +93,29 @@ public class HelpFrame extends javax.swing.JFrame {
         userManual = new javax.swing.JPanel();
         umTitle = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel2 = new javax.swing.JPanel();
+        editingPanel = new javax.swing.JPanel();
+        jLabel38 = new javax.swing.JLabel();
+        jLabel39 = new javax.swing.JLabel();
+        jLabel40 = new javax.swing.JLabel();
+        jLabel41 = new javax.swing.JLabel();
+        jLabel42 = new javax.swing.JLabel();
+        scrapingPanel = new javax.swing.JPanel();
+        jLabel43 = new javax.swing.JLabel();
+        jLabel44 = new javax.swing.JLabel();
+        jLabel45 = new javax.swing.JLabel();
+        jLabel46 = new javax.swing.JLabel();
+        jLabel47 = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        jLabel49 = new javax.swing.JLabel();
+        jLabel50 = new javax.swing.JLabel();
+        jLabel51 = new javax.swing.JLabel();
+        jLabel52 = new javax.swing.JLabel();
+        jLabel53 = new javax.swing.JLabel();
+        jLabel54 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
         faqs = new javax.swing.JPanel();
         faqsTitle = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
@@ -99,15 +124,23 @@ public class HelpFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         shortcutsTable = new javax.swing.JTable();
         jSeparator6 = new javax.swing.JSeparator();
-        functionality = new javax.swing.JPanel();
-        funcTitle = new javax.swing.JLabel();
-        jSeparator7 = new javax.swing.JSeparator();
         troubleshooting = new javax.swing.JPanel();
         tsLabel = new javax.swing.JLabel();
         jSeparator8 = new javax.swing.JSeparator();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
         issues = new javax.swing.JPanel();
         issuesTitle = new javax.swing.JLabel();
         jSeparator9 = new javax.swing.JSeparator();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
         counterLabel = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         returnButton = new javax.swing.JButton();
@@ -166,16 +199,12 @@ public class HelpFrame extends javax.swing.JFrame {
         jLabel5.setText("4.");
         jLabel5.setName("fg"); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel6.setText("5.");
-        jLabel6.setName("fg"); // NOI18N
-
         jLabel7.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel7.setText("6.");
+        jLabel7.setText("5.");
         jLabel7.setName("fg"); // NOI18N
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel8.setText("7.");
+        jLabel8.setText("6.");
         jLabel8.setName("fg"); // NOI18N
 
         tableOfContentsLabel.setFont(new java.awt.Font("Dialog", 2, 15)); // NOI18N
@@ -228,16 +257,6 @@ public class HelpFrame extends javax.swing.JFrame {
             }
         });
 
-        functionalityLabel.setFont(new java.awt.Font("Dialog", 2, 15)); // NOI18N
-        functionalityLabel.setForeground(new java.awt.Color(41, 121, 255));
-        functionalityLabel.setText("Functionality");
-        functionalityLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        functionalityLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                functionalityLabelMouseClicked(evt);
-            }
-        });
-
         troubleshootingLabel.setFont(new java.awt.Font("Dialog", 2, 15)); // NOI18N
         troubleshootingLabel.setForeground(new java.awt.Color(41, 121, 255));
         troubleshootingLabel.setText("Troubleshooting");
@@ -266,22 +285,6 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(tableOfContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(tableOfContentsLayout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(issuesLabel))
-                    .addGroup(tableOfContentsLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(troubleshootingLabel))
-                    .addGroup(tableOfContentsLayout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(functionalityLabel))
-                    .addGroup(tableOfContentsLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(shortcutsLabel))
-                    .addGroup(tableOfContentsLayout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(faqsLabel))
@@ -298,7 +301,17 @@ public class HelpFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tableOfContentsLabel))
                     .addComponent(tocTitle)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(tableOfContentsLayout.createSequentialGroup()
+                        .addGroup(tableOfContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(tableOfContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(troubleshootingLabel)
+                            .addComponent(shortcutsLabel)
+                            .addComponent(issuesLabel))))
                 .addGap(23, 23, 23))
         );
         tableOfContentsLayout.setVerticalGroup(
@@ -330,17 +343,13 @@ public class HelpFrame extends javax.swing.JFrame {
                     .addComponent(shortcutsLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(tableOfContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(functionalityLabel))
+                    .addComponent(troubleshootingLabel)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(tableOfContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(troubleshootingLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(tableOfContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(issuesLabel))
-                .addContainerGap(382, Short.MAX_VALUE))
+                    .addComponent(issuesLabel)
+                    .addComponent(jLabel8))
+                .addContainerGap(440, Short.MAX_VALUE))
         );
 
         pagesContainer.add(tableOfContents, "card2");
@@ -383,7 +392,7 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(jLabel9)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel10)
-                .addContainerGap(559, Short.MAX_VALUE))
+                .addContainerGap(587, Short.MAX_VALUE))
         );
 
         pagesContainer.add(gettingStarted, "card3");
@@ -394,6 +403,201 @@ public class HelpFrame extends javax.swing.JFrame {
         umTitle.setText("User Manual");
         umTitle.setName("fg"); // NOI18N
 
+        jPanel2.setName("bg_2"); // NOI18N
+
+        editingPanel.setName("bg_2"); // NOI18N
+
+        jLabel38.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel38.setText("slightly change after scraping)");
+        jLabel38.setName("fg"); // NOI18N
+
+        jLabel39.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel39.setText("information accodingly (keep in mind that the information might");
+        jLabel39.setName("fg"); // NOI18N
+
+        jLabel40.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel40.setText("you want to edit from the list and press edit. Change the");
+        jLabel40.setName("fg"); // NOI18N
+
+        jLabel41.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel41.setText("If you want to edit the song's info, select and right click the song");
+        jLabel41.setName("fg"); // NOI18N
+
+        jLabel42.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel42.setText("Editing");
+        jLabel42.setName("fg"); // NOI18N
+
+        javax.swing.GroupLayout editingPanelLayout = new javax.swing.GroupLayout(editingPanel);
+        editingPanel.setLayout(editingPanelLayout);
+        editingPanelLayout.setHorizontalGroup(
+            editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel38)
+                    .addComponent(jLabel39)
+                    .addComponent(jLabel40)
+                    .addComponent(jLabel41)
+                    .addComponent(jLabel42))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        editingPanelLayout.setVerticalGroup(
+            editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editingPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel42)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel41)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel40)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel38)
+                .addContainerGap())
+        );
+
+        scrapingPanel.setName("bg_2"); // NOI18N
+
+        jLabel43.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel43.setText("Api > Scrape At Startup");
+        jLabel43.setName("fg"); // NOI18N
+
+        jLabel44.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel44.setText("If you want to mass scrape at startup you can toggle it at");
+        jLabel44.setName("fg"); // NOI18N
+
+        jLabel45.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel45.setText("when it's over");
+        jLabel45.setName("fg"); // NOI18N
+
+        jLabel46.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel46.setText("The process will start in the background and you will be informed ");
+        jLabel46.setName("fg"); // NOI18N
+
+        jLabel47.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel47.setText("For mass scraping go to Api > Scrape All.");
+        jLabel47.setName("fg"); // NOI18N
+
+        jLabel48.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel48.setText("an artist. After that, the scraping will continue as usual");
+        jLabel48.setName("fg"); // NOI18N
+
+        jLabel49.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel49.setText("If only the artist is set, a dialog will appear prompting you to select");
+        jLabel49.setName("fg"); // NOI18N
+
+        jLabel50.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel50.setText("the scraping will, most probably, finish successfully.");
+        jLabel50.setName("fg"); // NOI18N
+
+        jLabel51.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel51.setText("already set, from metadata or from editing the song manually, ");
+        jLabel51.setName("fg"); // NOI18N
+
+        jLabel52.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel52.setText("to scrape from the list and press scrape. If title and artist are");
+        jLabel52.setName("fg"); // NOI18N
+
+        jLabel53.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel53.setText("For individual scraping, select and right click the song you want");
+        jLabel53.setName("fg"); // NOI18N
+
+        jLabel54.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel54.setText("Scraping");
+        jLabel54.setName("fg"); // NOI18N
+
+        jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel6.setText("Downloading the album cover locally will load it even if there");
+        jLabel6.setName("fg"); // NOI18N
+
+        jLabel22.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel22.setText("is no internet connection");
+        jLabel22.setName("fg"); // NOI18N
+
+        javax.swing.GroupLayout scrapingPanelLayout = new javax.swing.GroupLayout(scrapingPanel);
+        scrapingPanel.setLayout(scrapingPanelLayout);
+        scrapingPanelLayout.setHorizontalGroup(
+            scrapingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(scrapingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(scrapingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(scrapingPanelLayout.createSequentialGroup()
+                        .addGroup(scrapingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel43)
+                            .addComponent(jLabel44)
+                            .addComponent(jLabel45)
+                            .addComponent(jLabel47)
+                            .addComponent(jLabel48)
+                            .addComponent(jLabel49)
+                            .addComponent(jLabel50)
+                            .addComponent(jLabel51)
+                            .addComponent(jLabel52)
+                            .addComponent(jLabel53)
+                            .addComponent(jLabel54)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel22))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        scrapingPanelLayout.setVerticalGroup(
+            scrapingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scrapingPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jLabel54)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel53)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel52)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel51)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel50)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel49)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel48)
+                .addGap(32, 32, 32)
+                .addComponent(jLabel47)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel46)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel45)
+                .addGap(32, 32, 32)
+                .addComponent(jLabel44)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel43)
+                .addGap(32, 32, 32)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel22)
+                .addContainerGap(7, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(editingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrapingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(10, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(editingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(scrapingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(79, Short.MAX_VALUE))
+        );
+
+        jScrollPane2.setViewportView(jPanel2);
+
         javax.swing.GroupLayout userManualLayout = new javax.swing.GroupLayout(userManual);
         userManual.setLayout(userManualLayout);
         userManualLayout.setHorizontalGroup(
@@ -402,8 +606,9 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(userManualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(umTitle)
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         userManualLayout.setVerticalGroup(
             userManualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -412,7 +617,9 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(umTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(631, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2)
+                .addContainerGap())
         );
 
         pagesContainer.add(userManual, "card4");
@@ -441,7 +648,7 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(faqsTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(631, Short.MAX_VALUE))
+                .addContainerGap(659, Short.MAX_VALUE))
         );
 
         pagesContainer.add(faqs, "card5");
@@ -487,45 +694,28 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addContainerGap(236, Short.MAX_VALUE))
         );
 
         pagesContainer.add(shortcuts, "card6");
-
-        functionality.setName("bg"); // NOI18N
-
-        funcTitle.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        funcTitle.setText("Functionality");
-        funcTitle.setName("fg"); // NOI18N
-
-        javax.swing.GroupLayout functionalityLayout = new javax.swing.GroupLayout(functionality);
-        functionality.setLayout(functionalityLayout);
-        functionalityLayout.setHorizontalGroup(
-            functionalityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(functionalityLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(functionalityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(funcTitle)
-                    .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
-        );
-        functionalityLayout.setVerticalGroup(
-            functionalityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(functionalityLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(funcTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(631, Short.MAX_VALUE))
-        );
-
-        pagesContainer.add(functionality, "card7");
 
         troubleshooting.setName("bg"); // NOI18N
 
         tsLabel.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         tsLabel.setText("Troubleshooting");
         tsLabel.setName("fg"); // NOI18N
+
+        jLabel16.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel16.setText("If for any reason the program doesn't work as expected");
+
+        jLabel17.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel17.setText("try closing and opening it again");
+
+        jLabel18.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel18.setText("In case the problems continue try contacting me or create a");
+
+        jLabel19.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel19.setText("Github issue so I can look into it");
 
         javax.swing.GroupLayout troubleshootingLayout = new javax.swing.GroupLayout(troubleshooting);
         troubleshooting.setLayout(troubleshootingLayout);
@@ -534,9 +724,13 @@ public class HelpFrame extends javax.swing.JFrame {
             .addGroup(troubleshootingLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(troubleshootingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel19)
+                    .addComponent(jLabel18)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel16)
                     .addComponent(tsLabel)
                     .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                .addContainerGap())
         );
         troubleshootingLayout.setVerticalGroup(
             troubleshootingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -545,7 +739,15 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(tsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(631, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel17)
+                .addGap(36, 36, 36)
+                .addComponent(jLabel18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel19)
+                .addContainerGap(521, Short.MAX_VALUE))
         );
 
         pagesContainer.add(troubleshooting, "card8");
@@ -556,6 +758,34 @@ public class HelpFrame extends javax.swing.JFrame {
         issuesTitle.setText("Issues");
         issuesTitle.setName("fg"); // NOI18N
 
+        jLabel11.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel11.setText("In case of any bugs, errors or problems in general feel free to");
+
+        jLabel12.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel12.setText("create a Github issue at the project's");
+
+        jLabel13.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(41, 121, 255));
+        jLabel13.setText("repository");
+        jLabel13.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel13.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel13MouseClicked(evt);
+            }
+        });
+
+        jLabel14.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel14.setText("In case you don't have a Github account you can");
+
+        jLabel15.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel15.setText("contact me via email (See \"About\")");
+
+        jLabel20.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel20.setText("Please try to be as descriptive as possible");
+
+        jLabel21.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel21.setText("so I can recreate the problem (maybe include a screenshot)");
+
         javax.swing.GroupLayout issuesLayout = new javax.swing.GroupLayout(issues);
         issues.setLayout(issuesLayout);
         issuesLayout.setHorizontalGroup(
@@ -563,6 +793,15 @@ public class HelpFrame extends javax.swing.JFrame {
             .addGroup(issuesLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel21)
+                    .addComponent(jLabel20)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel14)
+                    .addGroup(issuesLayout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel13))
+                    .addComponent(jLabel11)
                     .addComponent(issuesTitle)
                     .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -574,13 +813,27 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(issuesTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(631, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13))
+                .addGap(32, 32, 32)
+                .addComponent(jLabel20)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel21)
+                .addGap(32, 32, 32)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel15)
+                .addContainerGap(463, Short.MAX_VALUE))
         );
 
         pagesContainer.add(issues, "card9");
 
         counterLabel.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        counterLabel.setText("0/7");
+        counterLabel.setText("0/6");
 
         returnButton.setText("Return");
         returnButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -724,7 +977,7 @@ public class HelpFrame extends javax.swing.JFrame {
 		}
 
 		layout.last(pagesContainer);
-		index = 7;
+		index = size - 1;
 		counterLabel.setText(index + "/" + (size - 1));
     }//GEN-LAST:event_issuesLabelMouseClicked
 
@@ -768,22 +1021,12 @@ public class HelpFrame extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_shortcutsLabelMouseClicked
 
-    private void functionalityLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_functionalityLabelMouseClicked
-		if (evt.getButton() != MouseEvent.BUTTON1) {
-			return;
-		}
-
-		while (index != 5) {
-			prev();
-		}
-    }//GEN-LAST:event_functionalityLabelMouseClicked
-
     private void troubleshootingLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_troubleshootingLabelMouseClicked
 		if (evt.getButton() != MouseEvent.BUTTON1) {
 			return;
 		}
 
-		while (index != 6) {
+		while (index != 5) {
 			prev();
 		}
     }//GEN-LAST:event_troubleshootingLabelMouseClicked
@@ -799,16 +1042,22 @@ public class HelpFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_returnButtonMouseClicked
 
+    private void jLabel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseClicked
+		try {
+			Desktop.browseURL("https://github.com/KDesp73/Music-Player/issues");
+		} catch (IOException ex) {
+			Logger.getLogger(HelpFrame.class.getName()).log(Level.SEVERE, null, ex);
+		}
+    }//GEN-LAST:event_jLabel13MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel background;
     private javax.swing.JLabel counterLabel;
+    private javax.swing.JPanel editingPanel;
     private javax.swing.JPanel faqs;
     private javax.swing.JLabel faqsLabel;
     private javax.swing.JLabel faqsTitle;
-    private javax.swing.JLabel funcTitle;
-    private javax.swing.JPanel functionality;
-    private javax.swing.JLabel functionalityLabel;
     private javax.swing.JPanel gettingStarted;
     private javax.swing.JLabel gettingStartedLabel;
     private javax.swing.JLabel gsTitle;
@@ -817,22 +1066,52 @@ public class HelpFrame extends javax.swing.JFrame {
     private javax.swing.JLabel issuesTitle;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel43;
+    private javax.swing.JLabel jLabel44;
+    private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
+    private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel50;
+    private javax.swing.JLabel jLabel51;
+    private javax.swing.JLabel jLabel52;
+    private javax.swing.JLabel jLabel53;
+    private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JButton nextButton;
@@ -840,6 +1119,7 @@ public class HelpFrame extends javax.swing.JFrame {
     private javax.swing.JButton prevButton;
     private javax.swing.JButton returnButton;
     private javax.swing.JLabel scTitle;
+    private javax.swing.JPanel scrapingPanel;
     private javax.swing.JPanel shortcuts;
     private javax.swing.JLabel shortcutsLabel;
     private javax.swing.JTable shortcutsTable;
