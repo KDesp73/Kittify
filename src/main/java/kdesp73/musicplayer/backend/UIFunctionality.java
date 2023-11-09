@@ -149,6 +149,13 @@ public class UIFunctionality {
 				mainFrame.player.play();
 				return;
 			}
+			
+			if(mainFrame.shuffleOn){
+				mainFrame.currentIndex = Backend.randomInt(frame);
+				Backend.resetSlider(mainFrame);
+				playSong(mainFrame, mainFrame.currentIndex);
+				return;
+			}
 
 			if (index == mainFrame.list.getSongs().size() - 1 || mainFrame.currentIndex == mainFrame.list.getSongs().size() - 1) {
 				mainFrame.currentIndex = -1;
@@ -186,6 +193,25 @@ public class UIFunctionality {
 
 		}
 	}
+	
+	public static void playSong(JFrame frame, int index) {
+		if (frame instanceof MainFrame) {
+//			mainFrame.currentIndex = mainFrame.getSongsList().getSelectedIndex();
+//			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
+
+			mainFrame.player.stop();
+			if (mainFrame.player.timer != null) {
+				mainFrame.player.timer.stop();
+			}
+
+			Backend.selectSong(mainFrame, index);
+
+			mainFrame.player.play(index);
+//			mainFrame.getPlayButton().setText("Pause");
+			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(40, 40));
+
+		}
+	}
 
 	public static void togglePlayPause(JFrame frame) {
 		if (frame instanceof MainFrame) {
@@ -216,6 +242,7 @@ public class UIFunctionality {
 				Backend.resetSlider(frame);
 				return;
 			}
+			
 
 			if (index == 0 || mainFrame.currentIndex == 0) {
 				mainFrame.currentIndex = mainFrame.list.getSongs().size();
@@ -349,10 +376,10 @@ public class UIFunctionality {
 		if (frame instanceof MainFrame) {
 
 			if (mainFrame.shuffleOn) {
-				Backend.sort(frame);
+//				Backend.sort(frame);
 				Backend.loadIcon(mainFrame.getShuffleLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "shuffle-solid.png" : "shuffle-solid-white.png"), new Dimension(20, 20));
 			} else {
-				Backend.shuffleList(frame);
+//				Backend.shuffleList(frame);
 				Backend.loadIcon(mainFrame.getShuffleLabel(), assets + "shuffle-solid-blue.png", new Dimension(20, 20));
 			}
 

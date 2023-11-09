@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -187,11 +188,12 @@ public class Backend {
 			mainFrame.repeatOn = Queries.selectRepeat();
 
 			if (mainFrame.shuffleOn) {
-				shuffleList(frame);
+				System.out.println("SHUFFLE ON");
 				loadIcon(mainFrame.getShuffleLabel(), Images.shuffleBlue, new Dimension(20, 20));
 			}
 
 			if (mainFrame.repeatOn) {
+				System.out.println("REPEAT ON");
 				loadIcon(mainFrame.getRepeatLabel(), Images.repeatBlue, new Dimension(20, 20));
 			}
 		}
@@ -210,12 +212,15 @@ public class Backend {
 		sort(frame);
 		refreshList(frame);
 	}
-
-	public static void shuffleList(JFrame frame) {
+	
+	public static int randomInt(JFrame frame){
 		if (frame instanceof MainFrame) {
-			Collections.shuffle(mainFrame.list.getSongs(), new Random());
-			mainFrame.player.playlist = mainFrame.list.getPaths();
+			if(mainFrame.list.getSongs().isEmpty()) return -1;
+			
+			return ThreadLocalRandom.current().nextInt(0, mainFrame.list.getSongs().size());
 		}
+		
+		return -1;
 	}
 
 	public static String sort(JFrame frame) {
