@@ -86,6 +86,8 @@ public class HelpFrame extends javax.swing.JFrame {
         gettingStarted = new javax.swing.JPanel();
         gsTitle = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         userManual = new javax.swing.JPanel();
         umTitle = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
@@ -349,6 +351,14 @@ public class HelpFrame extends javax.swing.JFrame {
         gsTitle.setText("Getting Started");
         gsTitle.setName("fg"); // NOI18N
 
+        jLabel9.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel9.setText("1. Add individual files or whole directories");
+        jLabel9.setName("fg"); // NOI18N
+
+        jLabel10.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        jLabel10.setText("2. Enjoy your music!");
+        jLabel10.setName("fg"); // NOI18N
+
         javax.swing.GroupLayout gettingStartedLayout = new javax.swing.GroupLayout(gettingStarted);
         gettingStarted.setLayout(gettingStartedLayout);
         gettingStartedLayout.setHorizontalGroup(
@@ -356,6 +366,8 @@ public class HelpFrame extends javax.swing.JFrame {
             .addGroup(gettingStartedLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(gettingStartedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel9)
                     .addComponent(gsTitle)
                     .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(20, Short.MAX_VALUE))
@@ -367,7 +379,11 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(gsTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(631, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel10)
+                .addContainerGap(559, Short.MAX_VALUE))
         );
 
         pagesContainer.add(gettingStarted, "card3");
@@ -800,6 +816,7 @@ public class HelpFrame extends javax.swing.JFrame {
     private javax.swing.JLabel issuesLabel;
     private javax.swing.JLabel issuesTitle;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -807,6 +824,7 @@ public class HelpFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;

@@ -972,7 +972,7 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutMenuItemMouseClicked
 
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
-		if (aboutFrame.isActive()) {
+		if (aboutFrame.isShowing()) {
 			return;
 		}
 		MainFrame.aboutFrame = new AboutFrame();
@@ -980,7 +980,7 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
-		if (helpFrame.isActive()) {
+		if (helpFrame.isShowing()) {
 			return;
 		}
 		MainFrame.helpFrame = new HelpFrame();

@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-<!-- 	 <build>
-               <plugins>
-                        <plugin>
-                                Build an executable JAR
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-jar-plugin</artifactId>
-                                <version>3.3.0</version>
-                                <configuration>
-                                        <archive>
-                                                <manifest>
-                                                        <addClasspath>true</addClasspath>
-                                                        <mainClass>musicplayer.Main</mainClass>
-                                                </manifest>
-                                        </archive>
-                                </configuration>
-                        </plugin>
-                            <plugin>
-                                <groupId>io.github.fvarrui</groupId>
-                                <artifactId>javapackager</artifactId>
-                                <version>1.7.5</version>
-                                <executions>
-                                    <execution>
-                                        <phase>package</phase>
-                                        <goals>
-                                            <goal>package</goal>
-                                        </goals>
-                                        <configuration>
-                                                 <executable>javapackager</executable> 
-                                             mandatory 
-                                            <mainClass>musicplayer.Main</mainClass>
-                                             optional 
-                                            <bundleJre>true</bundleJre>
-                                            <generateInstaller>true</generateInstaller>
-                                            <administratorRequired>false</administratorRequired>
-                                            <platform>auto</platform>
-                                             <additionalResources>
-                                                <additionalResource>file path</additionalResource>
-                                                <additionalResource>folder path</additionalResource>
-                                                <additionalResource>...</additionalResource>
-                                            </additionalResources>
-                                            <linuxConfig>...</linuxConfig>
-                                            <macConfig>...</macConfig>
-                                            <winConfig>...</winConfig>
-                                            [...] 
-                                        </configuration>
-                                    </execution>
-                                </executions>
-                            </plugin>
-                </plugins>
-                
-        </build>-->
+	<!-- 	 <build>
+		   <plugins>
+					<plugin>
+							Build an executable JAR
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jar-plugin</artifactId>
+							<version>3.3.0</version>
+							<configuration>
+									<archive>
+											<manifest>
+													<addClasspath>true</addClasspath>
+													<mainClass>musicplayer.Main</mainClass>
+											</manifest>
+									</archive>
+							</configuration>
+					</plugin>
+						<plugin>
+							<groupId>io.github.fvarrui</groupId>
+							<artifactId>javapackager</artifactId>
+							<version>1.7.5</version>
+							<executions>
+								<execution>
+									<phase>package</phase>
+									<goals>
+										<goal>package</goal>
+									</goals>
+									<configuration>
+											 <executable>javapackager</executable> 
+										 mandatory 
+										<mainClass>musicplayer.Main</mainClass>
+										 optional 
+										<bundleJre>true</bundleJre>
+										<generateInstaller>true</generateInstaller>
+										<administratorRequired>false</administratorRequired>
+										<platform>auto</platform>
+										 <additionalResources>
+											<additionalResource>file path</additionalResource>
+											<additionalResource>folder path</additionalResource>
+											<additionalResource>...</additionalResource>
+										</additionalResources>
+										<linuxConfig>...</linuxConfig>
+										<macConfig>...</macConfig>
+										<winConfig>...</winConfig>
+										[...] 
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+			</plugins>
+			
+	</build>-->
 	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>kdesp73</groupId>
@@ -61,7 +61,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-		<exec.mainClass>kdesp73.musicplayer.MusicPlayer</exec.mainClass>
+		<exec.mainClass>kdesp73.musicplayer.Main</exec.mainClass>
 	</properties>
     
 	<dependencies>
@@ -82,11 +82,13 @@
 			<version>3.2.5</version>
 		</dependency>
 		
-		<!--Database-->
+		<!--Database-->	
 		<dependency>
 			<groupId>kdesp73</groupId>
 			<artifactId>DataBridge</artifactId>
 			<version>2.0.7</version>
+<!--			<scope>system</scope>
+			<systemPath>/home/konstantinos/.m2/repository/kdesp73/DataBridge/2.0.7/DataBridge-2.0.7.jar</systemPath>-->
 		</dependency>
 		
 		<!--JSON-->
@@ -177,11 +179,11 @@
 			<artifactId>jave-core</artifactId>
 			<version>3.3.1</version>
 		</dependency>
-	 <dependency>
-	  <groupId>org.netbeans.external</groupId>
-	  <artifactId>AbsoluteLayout</artifactId>
-	  <version>RELEASE160</version>
-	 </dependency>
+		<dependency>
+			<groupId>org.netbeans.external</groupId>
+			<artifactId>AbsoluteLayout</artifactId>
+			<version>RELEASE160</version>
+		</dependency>
 	</dependencies>
 	
 

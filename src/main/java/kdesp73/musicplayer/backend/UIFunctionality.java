@@ -115,7 +115,7 @@ public class UIFunctionality {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
 			
-			if(!MainFrame.editDirectoriesFrame.isActive()){
+			if(!MainFrame.editDirectoriesFrame.isShowing()){
 				MainFrame.editDirectoriesFrame = new EditDirectoriesFrame(mainFrame);
 				MainFrame.editDirectoriesFrame.setVisible(true);
 			}
@@ -125,7 +125,7 @@ public class UIFunctionality {
 	public static void editFiles(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
-			if(!MainFrame.editFilesFrame.isActive()){
+			if(!MainFrame.editFilesFrame.isShowing()){
 				MainFrame.editFilesFrame = new EditFilesFrame(mainFrame);
 				MainFrame.editFilesFrame.setVisible(true);
 			}

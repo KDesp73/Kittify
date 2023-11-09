@@ -565,7 +565,7 @@ public class Backend {
 
 	public static void editAction(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			if(!MainFrame.editSongFrame.isActive()){
+			if(!MainFrame.editSongFrame.isShowing()){
 				MainFrame.editSongFrame = new EditSongInfoFrame(mainFrame);
 				MainFrame.editSongFrame.setVisible(true);
 			}
