@@ -214,14 +214,16 @@ public class Backend {
 		sort(frame);
 		refreshList(frame);
 	}
-	
-	public static int randomInt(JFrame frame){
+
+	public static int randomInt(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			if(mainFrame.list.getSongs().isEmpty()) return -1;
-			
+			if (mainFrame.list.getSongs().isEmpty()) {
+				return -1;
+			}
+
 			return ThreadLocalRandom.current().nextInt(0, mainFrame.list.getSongs().size());
 		}
-		
+
 		return -1;
 	}
 
@@ -374,7 +376,7 @@ public class Backend {
 				mainFrame.getArtistNameLabel().setText(artistName);
 				mainFrame.getArtistContentTextArea().setText(artist.getContent());
 				mainFrame.getArtistContentTextArea().setCaretPosition(0);
-				
+
 				addTags(artist);
 
 				try {
@@ -564,7 +566,7 @@ public class Backend {
 
 	public static void editAction(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			if(!MainFrame.editSongFrame.isShowing()){
+			if (!MainFrame.editSongFrame.isShowing()) {
 				MainFrame.editSongFrame = new EditSongInfoFrame(mainFrame);
 				MainFrame.editSongFrame.setVisible(true);
 			}
@@ -606,13 +608,14 @@ public class Backend {
 				mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack().setArtist(artist);
 			}
 
-			// Make an API call using title and artist (LastFmMethods.Track.getInfo)
 			try {
+				// Make an API call using title and artist (LastFmMethods.Track.getInfo)
 				response = api.GET(LastFmMethods.Track.getInfo, LastFmMethods.Track.tags(artist, title));
 			} catch (IOException | InterruptedException ex) {
-				Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
 				return;
 			}
+			
+			if(response == null) return;
 
 			if (response.second != 200) {
 				JOptionPane.showMessageDialog(mainFrame, "API Reponse Code: " + response.second, "API Error", JOptionPane.ERROR_MESSAGE);
@@ -631,7 +634,6 @@ public class Backend {
 			if (mainFrame.currentSong.getTrack().getAlbum() != null && !mainFrame.currentSong.getTrack().getAlbum().isBlank()) {
 
 				Album album = Queries.selectAlbum(mainFrame.currentSong.getTrack().getAlbum(), artist);
-
 
 				if (album == null) {
 					try {
@@ -666,8 +668,7 @@ public class Backend {
 			initList(mainFrame);
 			sort(mainFrame);
 			mainFrame.player.playlist = mainFrame.list.getPaths();
-			
-			
+
 			int index = mainFrame.list.searchSongName(title);
 			selectSong(mainFrame, index);
 			Backend.updateAdditionalSongInfo(frame, index);
@@ -703,7 +704,7 @@ public class Backend {
 		SwingUtilities.updateComponentTreeUI(frame);
 		Queries.updateTheme(mode);
 		loadIcons(frame);
-		
+
 		if (frame instanceof MainFrame && ((MainFrame) frame).currentSong != null) {
 			addTags(Queries.selectArtist(((MainFrame) frame).currentSong.getTrack().getArtist()));
 

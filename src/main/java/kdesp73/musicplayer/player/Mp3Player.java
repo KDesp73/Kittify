@@ -228,7 +228,6 @@ AudioSample sample = audioFile.getSampleAt(sampleToRead);
 
 	@Override
 	public void opened(Object o, Map map) {
-		System.out.println("Song opened for playback.");
 	}
 
 	@Override

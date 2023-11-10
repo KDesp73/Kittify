@@ -288,6 +288,7 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		sort(mainFrame);
 
 		int index = mainFrame.list.searchSongName(song.getTrack().getName());
+		this.mainFrame.currentIndex = index;
 
 		mainFrame.player.playlist = mainFrame.list.getPaths();
 

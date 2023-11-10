@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 
 public class API {
 
@@ -23,15 +24,17 @@ public class API {
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
+			StringBuffer response;
+			try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+				String inputLine;
+				response = new StringBuffer();
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+			} catch(IOException ex) {
+				JOptionPane.showMessageDialog(null, "It seems you are not connected to the internet. Scraping aborted", "No Internet Connection", JOptionPane.WARNING_MESSAGE);
+				return null;
 			}
-
-			in.close();
 
 			String jsonResponse = response.toString();
 
