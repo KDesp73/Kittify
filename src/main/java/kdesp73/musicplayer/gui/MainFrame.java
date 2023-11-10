@@ -5,6 +5,7 @@
 package kdesp73.musicplayer.gui;
 
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -48,7 +49,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public boolean shuffleOn = false;
 	public boolean repeatOn = false;
 	public boolean volumeOn = true;
-
+	
 	public int volume = 100;
 
 	public Mp3Player player;

@@ -158,8 +158,8 @@ public class Backend {
 					timer.start();
 				}
 			});
-
-			setMode(mainFrame, Queries.selectMode());
+			String mode = Queries.selectMode();
+			setMode(mainFrame, mode);
 			setTheme(mainFrame, Queries.selectTheme());
 
 			setupTagsPanel(mainFrame.getTagsContainer());
@@ -190,11 +190,17 @@ public class Backend {
 			if (mainFrame.shuffleOn) {
 				System.out.println("SHUFFLE ON");
 				loadIcon(mainFrame.getShuffleLabel(), Images.shuffleBlue, new Dimension(20, 20));
+			} else {
+				System.out.println("SHUFFLE OFF");
+				loadIcon(mainFrame.getShuffleLabel(), (mode.equals("Dark") ? Images.shuffleWhite : Images.shuffle), new Dimension(20, 20));
 			}
 
 			if (mainFrame.repeatOn) {
 				System.out.println("REPEAT ON");
 				loadIcon(mainFrame.getRepeatLabel(), Images.repeatBlue, new Dimension(20, 20));
+			} else {
+				System.out.println("REPEAT OFF");
+				loadIcon(mainFrame.getRepeatLabel(), (mode.equals("Dark") ? Images.repeatWhite : Images.repeat), new Dimension(20, 20));
 			}
 		}
 	}
@@ -816,14 +822,14 @@ public class Backend {
 				loadIcon(((MainFrame) frame).getPlayPauseLabel(), Images.playWhite, new Dimension(40, 40));
 				loadIcon(((MainFrame) frame).getNextLabel(), Images.nextWhite, new Dimension(30, 30));
 				loadIcon(((MainFrame) frame).getPrevLabel(), Images.prevWhite, new Dimension(30, 30));
-				loadIcon(((MainFrame) frame).getShuffleLabel(), Images.shuffleWhite, new Dimension(20, 20));
-				loadIcon(((MainFrame) frame).getRepeatLabel(), Images.repeatWhite, new Dimension(20, 20));
+//				loadIcon(((MainFrame) frame).getShuffleLabel(), Images.shuffleWhite, new Dimension(20, 20));
+//				loadIcon(((MainFrame) frame).getRepeatLabel(), Images.repeatWhite, new Dimension(20, 20));
 			} else {
 				loadIcon(((MainFrame) frame).getPlayPauseLabel(), Images.play, new Dimension(40, 40));
 				loadIcon(((MainFrame) frame).getNextLabel(), Images.next, new Dimension(30, 30));
 				loadIcon(((MainFrame) frame).getPrevLabel(), Images.prev, new Dimension(30, 30));
-				loadIcon(((MainFrame) frame).getShuffleLabel(), Images.shuffle, new Dimension(20, 20));
-				loadIcon(((MainFrame) frame).getRepeatLabel(), Images.repeat, new Dimension(20, 20));
+//				loadIcon(((MainFrame) frame).getShuffleLabel(), Images.shuffle, new Dimension(20, 20));
+//				loadIcon(((MainFrame) frame).getRepeatLabel(), Images.repeat, new Dimension(20, 20));
 			}
 			loadVolumeIcon(frame, Queries.selectVolume());
 		}

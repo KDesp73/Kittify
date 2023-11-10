@@ -243,6 +243,12 @@ public class UIFunctionality {
 				return;
 			}
 			
+			if(mainFrame.shuffleOn){
+				mainFrame.currentIndex = Backend.randomInt(frame);
+				Backend.resetSlider(mainFrame);
+				playSong(mainFrame, mainFrame.currentIndex);
+				return;
+			}
 
 			if (index == 0 || mainFrame.currentIndex == 0) {
 				mainFrame.currentIndex = mainFrame.list.getSongs().size();
@@ -358,7 +364,7 @@ public class UIFunctionality {
 				JOptionPane.showMessageDialog(mainFrame, "No songs loaded", "Scrape Aborted", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
-
+			
 			mainFrame.list.scrapeSongs();
 		}
 	}
