@@ -284,6 +284,14 @@ public class Queries {
 
 		return paths;
 	}
+	
+	public static void clearLocalCovers(){
+		DatabaseConnection db = Database.connection();
+		
+		db.executeUpdate(new QueryBuilder().update("Albums").set("local_cover_path", "").build());
+		
+		db.close();
+	}
 
 	public static void clearDatabase() {
 		DatabaseConnection db = Database.connection();
@@ -294,6 +302,8 @@ public class Queries {
 		db.executeUpdate(builder.deleteFrom("Songs").build());
 
 		db.close();
+		
+		clearLocalCovers();
 
 		System.out.println("Database cleared");
 	}

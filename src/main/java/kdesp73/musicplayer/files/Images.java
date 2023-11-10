@@ -63,4 +63,6 @@ public class Images {
 	public static String github = assets + "github.png";
 	public static String githubWhite = assets + "github-white.png";
 	
+	public static String note = assets + "itunes-note.png";
+	public static String noteWhite = assets + "itunes-note-white.png";
 }

@@ -8,6 +8,7 @@ import dorkbox.desktop.Desktop;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -29,6 +30,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -103,6 +105,18 @@ public class Backend {
 
 			mainFrame.setLocationRelativeTo(null);
 			mainFrame.getRootPane().requestFocus();
+
+//			BufferedImage bi = null;
+//			try {
+//				bi = GUIMethods.resizeImage(ImageIO.read(new File(Images.noteWhite)), 6, 6);
+//			} catch (IOException ex) {
+//				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+//			}
+//			
+//			if (bi != null) {
+//				mainFrame.setIconImage(bi);
+//			}
+
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
 			mainFrame.getSongsList().setFixedCellHeight(35);
 			mainFrame.getAlbumTracksList().setFixedCellHeight(35);
@@ -378,23 +392,27 @@ public class Backend {
 				mainFrame.getArtistNameLabel().setText(artistName);
 
 				String content = artist.getContent();
-				String link = content.substring(content.indexOf("<a href=\"") + "<a href=\"".length(), content.indexOf("\"", content.indexOf("<a href=\"") + "<a href=\"".length()));
 
-				mainFrame.getArtistNameLabel().addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						try {
-							Desktop.browseURL(link);
-						} catch (IOException ex) {
-							Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+				if (content != null && !content.isBlank()) {
+
+					String link = content.substring(content.indexOf("<a href=\"") + "<a href=\"".length(), content.indexOf("\"", content.indexOf("<a href=\"") + "<a href=\"".length()));
+
+					mainFrame.getArtistNameLabel().addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							try {
+								Desktop.browseURL(link);
+							} catch (IOException ex) {
+								Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+							}
 						}
-					}
-				});
-				
-				mainFrame.getArtistNameLabel().setCursor(new Cursor(Cursor.HAND_CURSOR));
+					});
 
-				content = content.substring(0, content.indexOf("<a href"));
-				content = content.trim();
+					mainFrame.getArtistNameLabel().setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+					content = content.substring(0, content.indexOf("<a href"));
+					content = content.trim();
+				}
 
 				mainFrame.getArtistContentTextArea().setText(content);
 				mainFrame.getArtistContentTextArea().setCaretPosition(0);
@@ -422,22 +440,25 @@ public class Backend {
 				mainFrame.getAlbumTracksList().setModel(listModel);
 
 				String content = album.getContent();
-				String link = content.substring(content.indexOf("<a href=\"") + "<a href=\"".length(), content.indexOf("\"", content.indexOf("<a href=\"") + "<a href=\"".length()));
 
-				mainFrame.getAlbumNameLabel().addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						try {
-							Desktop.browseURL(link);
-						} catch (IOException ex) {
-							Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+				if (content != null && !content.isBlank()) {
+					String link = content.substring(content.indexOf("<a href=\"") + "<a href=\"".length(), content.indexOf("\"", content.indexOf("<a href=\"") + "<a href=\"".length()));
+
+					mainFrame.getAlbumNameLabel().addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							try {
+								Desktop.browseURL(link);
+							} catch (IOException ex) {
+								Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+							}
 						}
-					}
-				});
-				mainFrame.getAlbumNameLabel().setCursor(new Cursor(Cursor.HAND_CURSOR));
-					
-				content = content.substring(0, content.indexOf("<a href"));
-				content = content.trim();
+					});
+					mainFrame.getAlbumNameLabel().setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+					content = content.substring(0, content.indexOf("<a href"));
+					content = content.trim();
+				}
 
 				mainFrame.getAlbumContentTextArea().setText(content);
 				mainFrame.getAlbumContentTextArea().setCaretPosition(0);
