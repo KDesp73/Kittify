@@ -227,6 +227,8 @@ public class UIFunctionality {
 				mainFrame.player.play();
 				Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(40, 40));
 			}
+			
+			MainFrame.tray.setPlayPause();
 		}
 	}
 

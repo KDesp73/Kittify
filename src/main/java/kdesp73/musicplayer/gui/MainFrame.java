@@ -29,6 +29,7 @@ import static kdesp73.musicplayer.backend.UIFunctionality.playSong;
 import static kdesp73.musicplayer.backend.UIFunctionality.showOptionsPopup;
 import kdesp73.musicplayer.player.Mp3Player;
 import javax.swing.JSplitPane;
+import kdesp73.musicplayer.tray.Tray;
 
 /**
  *
@@ -60,6 +61,8 @@ public final class MainFrame extends javax.swing.JFrame {
 	public static EditSongInfoFrame editSongFrame;
 	public static EditFilesFrame editFilesFrame;
 	public static HelpFrame helpFrame;
+	
+	public static Tray tray;
 
 	public static MainFrame create() {
 		MainFrame frame = new MainFrame();
@@ -72,6 +75,7 @@ public final class MainFrame extends javax.swing.JFrame {
 		editSongFrame = new EditSongInfoFrame(frame);
 		editFilesFrame = new EditFilesFrame(frame);
 		helpFrame = new HelpFrame();
+		tray = new Tray(frame);
 
 		return frame;
 	}
@@ -567,9 +571,9 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(albumContentScrollPane)
                     .addGroup(albumInfoPanelLayout.createSequentialGroup()
-                        .addGap(0, 69, Short.MAX_VALUE)
+                        .addGap(0, 120, Short.MAX_VALUE)
                         .addComponent(albumCoverInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(48, 48, 48)
                         .addComponent(albumNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -588,7 +592,7 @@ public final class MainFrame extends javax.swing.JFrame {
         infoBackgroundLayout.setVerticalGroup(
             infoBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoBackgroundLayout.createSequentialGroup()
-                .addComponent(infoTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
+                .addComponent(infoTabbedPane)
                 .addContainerGap())
         );
 

@@ -28,8 +28,6 @@ public class Main {
 			public void run() {
 				MainFrame frame = MainFrame.create();
 				frame.setVisible(true);
-
-				new Tray(frame);
 			}
 		});
 	}

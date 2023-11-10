@@ -17,9 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +48,6 @@ import kdesp73.musicplayer.files.Images;
 import kdesp73.musicplayer.gui.EditSongInfoFrame;
 import kdesp73.musicplayer.gui.GUIMethods;
 import kdesp73.musicplayer.gui.MainFrame;
-import static kdesp73.musicplayer.gui.MainFrame.editSongFrame;
 import kdesp73.musicplayer.gui.Tag;
 import kdesp73.musicplayer.gui.ThemesFrame;
 import kdesp73.musicplayer.gui.WrapLayout;
@@ -401,10 +398,32 @@ public class Backend {
 				mainFrame.getAlbumContentTextArea().setText(album.getContent());
 				mainFrame.getAlbumContentTextArea().setCaretPosition(0);
 
+//				try {
+//					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), GUIMethods.imageFromURL(Queries.selectAlbumCover(albumName, artistName)));
+//				} catch (java.lang.NullPointerException e) {
+//					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), Images.albumPlaceholder);
+//				}
+				if (!album.getName().isBlank() && !album.getName().equals("Unknown Album")) {
+
+					String coverURL = Queries.selectAlbumCover(album.getName(), album.getArtist());
+					String coverPath = Queries.selectLocalCoverPath(album.getName(), album.getArtist());
+
+					if (coverPath != null && !coverPath.isBlank()) {
+						GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), coverPath);
+						return;
+					} else if (coverURL != null && !coverURL.isBlank()) {
+						BufferedImage image = GUIMethods.imageFromURL(coverURL);
+						if (image != null) {
+							GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), image);
+							return;
+						}
+					}
+				}
+
 				try {
-					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), GUIMethods.imageFromURL(Queries.selectAlbumCover(albumName, artistName)));
-				} catch (java.lang.NullPointerException e) {
-					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), Images.albumPlaceholder);
+					GUIMethods.loadImage(mainFrame.getAlbumCoverInfoLabel(), GUIMethods.resizeImage(ImageIO.read(new File(Images.albumPlaceholder)), 300, 300));
+				} catch (IOException ex) {
+					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			} else {
 				Backend.setDefaultAlbumAdditionalInfo(frame);
@@ -614,8 +633,10 @@ public class Backend {
 			} catch (IOException | InterruptedException ex) {
 				return;
 			}
-			
-			if(response == null) return;
+
+			if (response == null) {
+				return;
+			}
 
 			if (response.second != 200) {
 				JOptionPane.showMessageDialog(mainFrame, "API Reponse Code: " + response.second, "API Error", JOptionPane.ERROR_MESSAGE);
