@@ -464,6 +464,7 @@ public final class MainFrame extends javax.swing.JFrame {
         artistNameLabel.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
         artistNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         artistNameLabel.setText("Artist Name");
+        artistNameLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         artistNameLabel.setName("fg"); // NOI18N
 
         artistContentScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -528,6 +529,7 @@ public final class MainFrame extends javax.swing.JFrame {
         albumNameLabel.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
         albumNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         albumNameLabel.setText("Album Name");
+        albumNameLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         albumNameLabel.setName("fg"); // NOI18N
 
         albumContentTextArea.setEditable(false);
@@ -571,9 +573,9 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addGroup(albumInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(albumContentScrollPane)
                     .addGroup(albumInfoPanelLayout.createSequentialGroup()
-                        .addGap(0, 120, Short.MAX_VALUE)
+                        .addGap(0, 117, Short.MAX_VALUE)
                         .addComponent(albumCoverInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                         .addComponent(albumNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -687,7 +689,7 @@ public final class MainFrame extends javax.swing.JFrame {
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE)
+                    .addComponent(tabbedPane)
                     .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 

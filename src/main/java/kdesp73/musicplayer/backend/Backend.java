@@ -4,12 +4,16 @@
  */
 package kdesp73.musicplayer.backend;
 
+import dorkbox.desktop.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -371,7 +375,25 @@ public class Backend {
 			if (artist != null) {
 
 				mainFrame.getArtistNameLabel().setText(artistName);
-				mainFrame.getArtistContentTextArea().setText(artist.getContent());
+
+				String content = artist.getContent();
+				String link = content.substring(content.indexOf("<a href=\"") + "<a href=\"".length(), content.indexOf("\"", content.indexOf("<a href=\"") + "<a href=\"".length()));
+
+				mainFrame.getArtistNameLabel().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						try {
+							Desktop.browseURL(link);
+						} catch (IOException ex) {
+							Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+						}
+					}
+				});
+
+				content = content.substring(0, content.indexOf("<a href"));
+				content = content.trim();
+
+				mainFrame.getArtistContentTextArea().setText(content);
 				mainFrame.getArtistContentTextArea().setCaretPosition(0);
 
 				addTags(artist);
@@ -395,7 +417,25 @@ public class Backend {
 				}
 
 				mainFrame.getAlbumTracksList().setModel(listModel);
-				mainFrame.getAlbumContentTextArea().setText(album.getContent());
+
+				String content = album.getContent();
+				String link = content.substring(content.indexOf("<a href=\"") + "<a href=\"".length(), content.indexOf("\"", content.indexOf("<a href=\"") + "<a href=\"".length()));
+
+				mainFrame.getAlbumNameLabel().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						try {
+							Desktop.browseURL(link);
+						} catch (IOException ex) {
+							Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+						}
+					}
+				});
+					
+				content = content.substring(0, content.indexOf("<a href"));
+				content = content.trim();
+
+				mainFrame.getAlbumContentTextArea().setText(content);
 				mainFrame.getAlbumContentTextArea().setCaretPosition(0);
 
 //				try {
