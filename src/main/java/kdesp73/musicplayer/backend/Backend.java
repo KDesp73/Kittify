@@ -188,18 +188,14 @@ public class Backend {
 			mainFrame.repeatOn = Queries.selectRepeat();
 
 			if (mainFrame.shuffleOn) {
-				System.out.println("SHUFFLE ON");
 				loadIcon(mainFrame.getShuffleLabel(), Images.shuffleBlue, new Dimension(20, 20));
 			} else {
-				System.out.println("SHUFFLE OFF");
 				loadIcon(mainFrame.getShuffleLabel(), (mode.equals("Dark") ? Images.shuffleWhite : Images.shuffle), new Dimension(20, 20));
 			}
 
 			if (mainFrame.repeatOn) {
-				System.out.println("REPEAT ON");
 				loadIcon(mainFrame.getRepeatLabel(), Images.repeatBlue, new Dimension(20, 20));
 			} else {
-				System.out.println("REPEAT OFF");
 				loadIcon(mainFrame.getRepeatLabel(), (mode.equals("Dark") ? Images.repeatWhite : Images.repeat), new Dimension(20, 20));
 			}
 		}
@@ -486,17 +482,12 @@ public class Backend {
 			String album = mainFrame.list.getSongs().get(index).getTrack().getAlbum();
 			String cover = mainFrame.list.getSongs().get(index).getCoverPath();
 
-			System.out.println("album: " + album);
-			System.out.println("cover: " + cover);
-
 			mainFrame.getTrackLabel().setText(title);
 			mainFrame.getArtistLabel().setText((artist == null) ? "Unknown Artist" : artist);
-//			mainFrame.getAlbumLabel().setText((album == null) ? "Unknown Album" : album);
 			mainFrame.getDurationLabel().setText(Backend.secondsToMinutes((int) mainFrame.list.getSongs().get(index).getDurationInSeconds()));
 
 			Queries.updateSong(mainFrame.list.getSongs().get(index));
 
-//			GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), mainFrame.getProject_path() + "/assets/album-image-placeholder.png");
 			if (cover != null && cover.isBlank()) {
 				Queries.updateLocalCoverPath(album, artist, cover);
 			}
@@ -538,7 +529,6 @@ public class Backend {
 	}
 
 	public static void downloadAlbumCoverAction(JFrame frame) {
-		System.out.println("HERE");
 		if (frame instanceof MainFrame) {
 			Mp3File selectedSong = ((MainFrame) frame).list.getSongs().get(((MainFrame) frame).getSongsList().getSelectedIndex());
 
@@ -604,9 +594,6 @@ public class Backend {
 					return;
 				}
 
-				System.out.println(response.first);
-				System.out.println(response.second);
-
 				Search search = new Search(response.first);
 
 				HashSet<Object> propableArtists = new HashSet<>();
@@ -632,8 +619,6 @@ public class Backend {
 				return;
 			}
 
-			System.out.println(response.first);
-
 			if ("{\"error\":6,\"message\":\"Track not found\",\"links\":[]}".equals(response.first)) {
 				JOptionPane.showMessageDialog(mainFrame, "Track not found", "API Error", JOptionPane.ERROR_MESSAGE);
 				return;
@@ -647,7 +632,6 @@ public class Backend {
 
 				Album album = Queries.selectAlbum(mainFrame.currentSong.getTrack().getAlbum(), artist);
 
-				System.out.println("album after scrape: " + album);
 
 				if (album == null) {
 					try {
@@ -656,7 +640,6 @@ public class Backend {
 						System.err.println("Album scrape fail");
 					}
 
-					System.out.println("album json:" + response.first);
 					album = new Album(response.first);
 					Queries.insertAlbum(album);
 				}

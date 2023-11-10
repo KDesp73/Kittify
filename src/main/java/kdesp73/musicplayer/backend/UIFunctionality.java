@@ -136,7 +136,7 @@ public class UIFunctionality {
 		if (mainFrame.list.getSongs().isEmpty()) {
 			return;
 		}
-		System.out.println("Next Song");
+
 		if (frame instanceof MainFrame) {
 			int index = mainFrame.getSongsList().getSelectedIndex();
 			Backend.resetSlider(frame);
@@ -286,10 +286,7 @@ public class UIFunctionality {
 		if (frame instanceof MainFrame) {
 			int skip = mainFrame.getSlider().getValue();
 
-			System.out.println("Skip: " + skip);
-
 			mainFrame.player.seek(skip);
-//			mainFrame.player.resume();
 		}
 	}
 
