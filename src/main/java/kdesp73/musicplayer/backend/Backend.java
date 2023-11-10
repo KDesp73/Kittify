@@ -5,6 +5,7 @@
 package kdesp73.musicplayer.backend;
 
 import dorkbox.desktop.Desktop;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -389,6 +390,8 @@ public class Backend {
 						}
 					}
 				});
+				
+				mainFrame.getArtistNameLabel().setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 				content = content.substring(0, content.indexOf("<a href"));
 				content = content.trim();
@@ -431,6 +434,7 @@ public class Backend {
 						}
 					}
 				});
+				mainFrame.getAlbumNameLabel().setCursor(new Cursor(Cursor.HAND_CURSOR));
 					
 				content = content.substring(0, content.indexOf("<a href"));
 				content = content.trim();

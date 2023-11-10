@@ -464,7 +464,7 @@ public final class MainFrame extends javax.swing.JFrame {
         artistNameLabel.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
         artistNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         artistNameLabel.setText("Artist Name");
-        artistNameLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        artistNameLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         artistNameLabel.setName("fg"); // NOI18N
 
         artistContentScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -529,7 +529,7 @@ public final class MainFrame extends javax.swing.JFrame {
         albumNameLabel.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
         albumNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         albumNameLabel.setText("Album Name");
-        albumNameLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        albumNameLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         albumNameLabel.setName("fg"); // NOI18N
 
         albumContentTextArea.setEditable(false);
