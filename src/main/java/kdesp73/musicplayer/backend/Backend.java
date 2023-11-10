@@ -160,7 +160,7 @@ public class Backend {
 			});
 			String mode = Queries.selectMode();
 			setMode(mainFrame, mode);
-			setTheme(mainFrame, Queries.selectTheme());
+//			setTheme(mainFrame, Queries.selectTheme());
 
 			setupTagsPanel(mainFrame.getTagsContainer());
 
@@ -720,7 +720,7 @@ public class Backend {
 		SwingUtilities.updateComponentTreeUI(frame);
 		Queries.updateTheme(mode);
 		loadIcons(frame);
-
+		
 		if (frame instanceof MainFrame && ((MainFrame) frame).currentSong != null) {
 			addTags(Queries.selectArtist(((MainFrame) frame).currentSong.getTrack().getArtist()));
 

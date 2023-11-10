@@ -4,12 +4,15 @@
  */
 package kdesp73.musicplayer.gui;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import kdesp73.musicplayer.backend.Backend;
+import static kdesp73.musicplayer.backend.Backend.loadIcon;
 import kdesp73.musicplayer.db.Queries;
+import kdesp73.musicplayer.files.Images;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.ThemeCollection;
 import kdesp73.themeLib.YamlFile;
@@ -22,6 +25,7 @@ public class ThemesFrame extends javax.swing.JFrame {
 
 	private String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 	private JFrame frame;
+	boolean onInit = true;
 
 	/**
 	 * Creates new form themesFrame
@@ -109,11 +113,19 @@ public class ThemesFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void modeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modeComboBoxActionPerformed
+		if (onInit) {
+			onInit = false;
+			return;
+		}
+		
 		String mode = (String) modeComboBox.getSelectedItem();
 
 		Queries.updateMode(mode);
 		Backend.setMode(this, mode);
 		Backend.setMode(frame, mode);
+		
+		loadIcon(((MainFrame) frame).getRepeatLabel(), (mode.equals("Dark") ? Images.repeatWhite : Images.repeat), new Dimension(20, 20));
+		loadIcon(((MainFrame) frame).getShuffleLabel(), (mode.equals("Dark") ? Images.shuffleWhite : Images.shuffle), new Dimension(20, 20));
     }//GEN-LAST:event_modeComboBoxActionPerformed
 
 	public JComboBox<String> getModeComboBox() {

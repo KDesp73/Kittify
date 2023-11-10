@@ -478,6 +478,7 @@ public class UIFunctionality {
 
 			if (!((MainFrame) frame).volumeOn) {
 				Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), Images.volumeXMarkBlue, 28, "w");
+				Queries.updateVolume(0);
 				return;
 			}
 

@@ -290,10 +290,9 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		int index = mainFrame.list.searchSongName(song.getTrack().getName());
 
 		mainFrame.player.playlist = mainFrame.list.getPaths();
-		Backend.selectSong(mainFrame, index);
-//		Backend.updateSongInfo(mainFrame, index);
 
 		if (mainFrame.currentIndex == mainFrame.getSongsList().getSelectedIndex()) {
+			Backend.selectSong(mainFrame, index);
 			Backend.updateSongInfo(mainFrame, mainFrame.currentIndex);
 			Backend.updateAdditionalSongInfo(mainFrame, mainFrame.list.searchSongName(song.getTrack().getName()));
 		}
