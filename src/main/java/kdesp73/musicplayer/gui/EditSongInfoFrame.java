@@ -14,6 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.musicplayer.backend.Backend;
+import static kdesp73.musicplayer.backend.Backend.initList;
+import static kdesp73.musicplayer.backend.Backend.selectSong;
+import static kdesp73.musicplayer.backend.Backend.sort;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.themeLib.Theme;
@@ -27,7 +30,7 @@ import kdesp73.themeLib.YamlFile;
 public class EditSongInfoFrame extends javax.swing.JFrame {
 
 	Mp3File song;
-	MainFrame frame;
+	MainFrame mainFrame;
 	String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 
 	public EditSongInfoFrame(MainFrame frame) {
@@ -40,34 +43,31 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		this.song = frame.list.getSongs().get(frame.getSongsList().getSelectedIndex());
-		this.frame = frame;
+		this.mainFrame = frame;
 
 		titleTextField.setText(song.getTrack().getName());
 		artistTextField.setText(song.getTrack().getArtist());
 		albumTextField.setText(song.getTrack().getAlbum());
-		
+
 		String albumCover = Queries.selectLocalCoverPath(song.getTrack().getAlbum(), song.getTrack().getArtist());
 		albumCoverTextField.setText((albumCover == null) ? "" : albumCover);
-		
-		if(albumCover == null || albumCover.isBlank()){
+
+		if (albumCover == null || albumCover.isBlank()) {
 			this.removeAlbumCoverButton.setEnabled(false);
 			this.removeAlbumCoverButton.setToolTipText("No local album cover is set");
-		} 
-		
+		}
+
 		this.addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				Backend.sort(frame);
-//				Backend.selectSong(frame, frame.list.searchSongName(frame.currentSong.getTrack().getName()));
-				
-				
+
 			}
 
 		});
-		
+
 		GUIMethods.setFontFamilyRecursively(this, "sans-serif", Font.PLAIN);
-		
+
 		ThemeCollection.applyTheme(this, new Theme(new YamlFile(themes_path + ((Queries.selectTheme().equals("Dark") ? "dark.yml" : "light.yml")))));
 	}
 
@@ -236,7 +236,6 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png");
 
 		// TODO Scale if too big or small
-		
 		fc.setFileFilter(filter);
 
 		int choice = fc.showOpenDialog(this);
@@ -262,31 +261,44 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		String artist = artistTextField.getText();
 		String album = albumTextField.getText();
 		String cover = albumCoverTextField.getText();
-		
-		
-		if(title.isBlank() || title.isEmpty()){
+
+		if (title.isBlank() || title.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Title can't be empty!", "Empty Title", JOptionPane.WARNING_MESSAGE, null);
 			return;
 		}
-		
-		if(artist.isBlank() || artist.isEmpty()){
+
+		if (artist.isBlank() || artist.isEmpty()) {
 			artist = "Unknown Artist";
 		}
-		
-		if(album.isBlank() || album.isEmpty()){
+
+		if (album.isBlank() || album.isEmpty()) {
 			album = "Unknown Album";
 		}
-		
+
 		song.getTrack().setName(title);
 		song.getTrack().setArtist(artist);
 		song.getTrack().setAlbum(album);
 		song.setCoverPath(cover);
 
-		this.frame.list.getSongs().set(frame.currentIndex, song);
-		this.frame.currentSong = song;
+		this.mainFrame.list.getSongs().set(mainFrame.currentIndex, song);
+		this.mainFrame.currentSong = song;
 
-//		Backend.updateSongInfo(frame, this.frame.currentIndex);
-		Backend.refreshList(frame);
+		Queries.updateSong(song);
+		initList(mainFrame);
+		sort(mainFrame);
+
+		int index = mainFrame.list.searchSongName(song.getTrack().getName());
+
+		mainFrame.player.playlist = mainFrame.list.getPaths();
+		Backend.selectSong(mainFrame, index);
+//		Backend.updateSongInfo(mainFrame, index);
+
+		if (mainFrame.currentIndex == mainFrame.getSongsList().getSelectedIndex()) {
+			Backend.updateSongInfo(mainFrame, mainFrame.currentIndex);
+			Backend.updateAdditionalSongInfo(mainFrame, mainFrame.list.searchSongName(song.getTrack().getName()));
+		}
+
+		Backend.refreshList(mainFrame);
 
 		this.dispose();
     }//GEN-LAST:event_applyButtonActionPerformed

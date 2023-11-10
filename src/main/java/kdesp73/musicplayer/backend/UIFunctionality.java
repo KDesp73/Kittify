@@ -92,7 +92,7 @@ public class UIFunctionality {
 			Backend.initList(frame);
 			Backend.sort(frame);
 			Backend.refreshList(frame);
-			
+
 			mainFrame.player.playlist = mainFrame.list.getPaths();
 		}
 	}
@@ -114,8 +114,8 @@ public class UIFunctionality {
 	public static void editDirectories(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
-			
-			if(!MainFrame.editDirectoriesFrame.isShowing()){
+
+			if (!MainFrame.editDirectoriesFrame.isShowing()) {
 				MainFrame.editDirectoriesFrame = new EditDirectoriesFrame(mainFrame);
 				MainFrame.editDirectoriesFrame.setVisible(true);
 			}
@@ -125,7 +125,7 @@ public class UIFunctionality {
 	public static void editFiles(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
-			if(!MainFrame.editFilesFrame.isShowing()){
+			if (!MainFrame.editFilesFrame.isShowing()) {
 				MainFrame.editFilesFrame = new EditFilesFrame(mainFrame);
 				MainFrame.editFilesFrame.setVisible(true);
 			}
@@ -139,20 +139,19 @@ public class UIFunctionality {
 		System.out.println("Next Song");
 		if (frame instanceof MainFrame) {
 			int index = mainFrame.getSongsList().getSelectedIndex();
+			Backend.resetSlider(frame);
 
 			if (mainFrame.repeatOn) {
 				if (mainFrame.player.timer != null) {
 					mainFrame.player.timer.stop();
 				}
 				mainFrame.player.stop();
-				Backend.resetSlider(frame);
 				mainFrame.player.play();
 				return;
 			}
-			
-			if(mainFrame.shuffleOn){
+
+			if (mainFrame.shuffleOn) {
 				mainFrame.currentIndex = Backend.randomInt(frame);
-				Backend.resetSlider(mainFrame);
 				playSong(mainFrame, mainFrame.currentIndex);
 				return;
 			}
@@ -179,6 +178,7 @@ public class UIFunctionality {
 		if (frame instanceof MainFrame) {
 			mainFrame.currentIndex = mainFrame.getSongsList().getSelectedIndex();
 			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
+			Backend.resetSlider(mainFrame);
 
 			mainFrame.player.stop();
 			if (mainFrame.player.timer != null) {
@@ -193,11 +193,12 @@ public class UIFunctionality {
 
 		}
 	}
-	
+
 	public static void playSong(JFrame frame, int index) {
 		if (frame instanceof MainFrame) {
 //			mainFrame.currentIndex = mainFrame.getSongsList().getSelectedIndex();
 //			mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
+			Backend.resetSlider(mainFrame);
 
 			mainFrame.player.stop();
 			if (mainFrame.player.timer != null) {
@@ -235,17 +236,16 @@ public class UIFunctionality {
 				return;
 			}
 			int index = mainFrame.getSongsList().getSelectedIndex();
+			Backend.resetSlider(frame);
 
 			if (mainFrame.repeatOn) {
 				mainFrame.player.stop();
 				mainFrame.player.play();
-				Backend.resetSlider(frame);
 				return;
 			}
-			
-			if(mainFrame.shuffleOn){
+
+			if (mainFrame.shuffleOn) {
 				mainFrame.currentIndex = Backend.randomInt(frame);
-				Backend.resetSlider(mainFrame);
 				playSong(mainFrame, mainFrame.currentIndex);
 				return;
 			}
@@ -364,7 +364,7 @@ public class UIFunctionality {
 				JOptionPane.showMessageDialog(mainFrame, "No songs loaded", "Scrape Aborted", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
-			
+			JOptionPane.showMessageDialog(mainFrame, "The scraping precess has started in the background", "Scraping Started", JOptionPane.INFORMATION_MESSAGE);
 			mainFrame.list.scrapeSongs();
 		}
 	}

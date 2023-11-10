@@ -354,8 +354,6 @@ public class Backend {
 			mainFrame.getSongsList().ensureIndexIsVisible(index);
 
 			mainFrame.getSlider().setMaximum((int) (mainFrame.currentSong.getDurationInSeconds()));
-			mainFrame.getSlider().setValue(0);
-			mainFrame.getTimeLabel().setText("00:00");
 		}
 
 	}
@@ -685,9 +683,12 @@ public class Backend {
 			initList(mainFrame);
 			sort(mainFrame);
 			mainFrame.player.playlist = mainFrame.list.getPaths();
-			selectSong(mainFrame, mainFrame.list.searchSongName(title));
-			Backend.updateAdditionalSongInfo(frame, mainFrame.list.searchSongName(title));
-			Backend.updateSongInfo(frame, mainFrame.list.searchSongName(title));
+			
+			
+			int index = mainFrame.list.searchSongName(title);
+			selectSong(mainFrame, index);
+			Backend.updateAdditionalSongInfo(frame, index);
+			Backend.updateSongInfo(frame, index);
 //			sort(mainFrame);
 		}
 	}
