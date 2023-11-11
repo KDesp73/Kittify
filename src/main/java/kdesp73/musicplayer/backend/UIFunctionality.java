@@ -143,7 +143,12 @@ public class UIFunctionality {
 
 			if (mainFrame.repeatOn) {
 				if (mainFrame.player.timer != null) {
-					mainFrame.player.timer.stop();
+					try {
+						mainFrame.player.timer.stop();
+					} catch (UnsupportedOperationException e) {
+						mainFrame.player.timer.interrupt();
+						System.err.println("Cant stop TimerThread");
+					}
 				}
 				mainFrame.player.stop();
 				mainFrame.player.play();
@@ -162,7 +167,12 @@ public class UIFunctionality {
 			}
 
 			if (mainFrame.player.timer != null) {
-				mainFrame.player.timer.stop();
+				try {
+					mainFrame.player.timer.stop();
+				} catch (UnsupportedOperationException e) {
+					mainFrame.player.timer.interrupt();
+					System.err.println("Cant stop TimerThread");
+				}
 			}
 			mainFrame.player.stop();
 			mainFrame.player.next();
@@ -182,7 +192,12 @@ public class UIFunctionality {
 
 			mainFrame.player.stop();
 			if (mainFrame.player.timer != null) {
-				mainFrame.player.timer.stop();
+				try {
+					mainFrame.player.timer.stop();
+				} catch (UnsupportedOperationException e) {
+					mainFrame.player.timer.interrupt();
+					System.err.println("Cant stop TimerThread");
+				}
 			}
 
 			Backend.selectSong(mainFrame);
@@ -202,7 +217,12 @@ public class UIFunctionality {
 
 			mainFrame.player.stop();
 			if (mainFrame.player.timer != null) {
-				mainFrame.player.timer.stop();
+				try {
+					mainFrame.player.timer.stop();
+				} catch (UnsupportedOperationException e) {
+					mainFrame.player.timer.interrupt();
+					System.err.println("Cant stop TimerThread");
+				}
 			}
 
 			Backend.selectSong(mainFrame, index);
@@ -227,7 +247,7 @@ public class UIFunctionality {
 				mainFrame.player.play();
 				Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(40, 40));
 			}
-			
+
 			MainFrame.tray.setPlayPause();
 		}
 	}
@@ -258,7 +278,12 @@ public class UIFunctionality {
 			}
 
 			if (mainFrame.player.timer != null) {
-				mainFrame.player.timer.stop();
+				try {
+					mainFrame.player.timer.stop();
+				} catch (UnsupportedOperationException e) {
+					mainFrame.player.timer.interrupt();
+					System.err.println("Cant stop TimerThread");
+				}
 			}
 			mainFrame.player.prev();
 			Backend.selectSong(mainFrame, index - 1);
@@ -492,7 +517,8 @@ public class UIFunctionality {
 					Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), Images.volumeOffBlue, 25, "w");
 					break;
 				default:
-					throw new AssertionError();
+
+					break;
 			}
 		}
 	}

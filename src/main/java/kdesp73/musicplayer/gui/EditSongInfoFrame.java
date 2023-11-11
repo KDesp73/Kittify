@@ -42,6 +42,8 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		this.setTitle("Edit Song Information");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        if(frame.list.getSongs().isEmpty()) return;
+        
 		this.song = frame.list.getSongs().get(frame.getSongsList().getSelectedIndex());
 		this.mainFrame = frame;
 
@@ -267,11 +269,11 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 			return;
 		}
 
-		if (artist.isBlank() || artist.isEmpty()) {
+		if (artist == null || artist.isBlank() || artist.isEmpty()) {
 			artist = "Unknown Artist";
 		}
 
-		if (album.isBlank() || album.isEmpty()) {
+		if (album == null || album.isBlank() || album.isEmpty()) {
 			album = "Unknown Album";
 		}
 

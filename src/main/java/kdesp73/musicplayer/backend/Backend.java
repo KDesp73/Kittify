@@ -190,6 +190,18 @@ public class Backend {
 					}
 				}
 			});
+			
+			mainFrame.getSongsList().addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyTyped(KeyEvent e) {
+					if (e.getKeyChar() == ' ') {
+						mainFrame.getSongsList().ensureIndexIsVisible(mainFrame.currentIndex);
+						mainFrame.getSongsList().setSelectedIndex(mainFrame.currentIndex);
+						mainFrame.getRootPane().requestFocus();
+						UIFunctionality.togglePlayPause(mainFrame);
+					}
+				}
+			});
 
 			mainFrame.getBackgroundSplitPane().setPreferredSize(new Dimension(mainFrame.getPreferredSize().width, mainFrame.getPreferredSize().height - 24));
 			mainFrame.getCentralPanel().setBackground(mainFrame.getCentralPanel().getParent().getBackground());
@@ -816,7 +828,7 @@ public class Backend {
 			return "x";
 		}
 
-		return null;
+		return "low";
 	}
 
 	public static String getVolumeRegion(JFrame frame) {
@@ -833,7 +845,7 @@ public class Backend {
 				return "x";
 			}
 		}
-		return "";
+		return "low";
 	}
 
 	public static void loadIcon(JLabel label, String path, Dimension dimension) {

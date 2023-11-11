@@ -43,7 +43,15 @@ public class AboutFrame extends javax.swing.JFrame {
 
 		descriptionTextArea.setText("An Mp3 Player with information scraping capabilities and a slick UI");
 		descriptionTextArea.setCaretPosition(0);
+
 		licenseTextArea.setText(FileOperations.readFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/LICENSE"));
+//		String os = System.getProperty("os.name").toLowerCase();
+//		if (os.contains("linux")) {
+//			licenseTextArea.setText(FileOperations.readFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/LICENSE"));
+//		} else if (os.contains("windows")) {
+//			licenseTextArea.setText(FileOperations.readFile(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/LICENSE.txt"));
+//		}
+
 		licenseTextArea.setCaretPosition(0);
 
 		nameLabel.setText("Konstantinos Despoinidis");

@@ -471,7 +471,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
         artistContentTextArea.setEditable(false);
         artistContentTextArea.setColumns(20);
-        artistContentTextArea.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        artistContentTextArea.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
         artistContentTextArea.setLineWrap(true);
         artistContentTextArea.setRows(5);
         artistContentTextArea.setWrapStyleWord(true);
@@ -534,7 +534,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
         albumContentTextArea.setEditable(false);
         albumContentTextArea.setColumns(20);
-        albumContentTextArea.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        albumContentTextArea.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
         albumContentTextArea.setLineWrap(true);
         albumContentTextArea.setRows(5);
         albumContentTextArea.setWrapStyleWord(true);
@@ -623,6 +623,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
+        songsList.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         songsList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }

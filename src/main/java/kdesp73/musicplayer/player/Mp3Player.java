@@ -116,7 +116,12 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 		try {
 			player.stop();
 			if (timer != null) {
-				timer.stop();
+				try{
+					timer.stop();
+				} catch(UnsupportedOperationException e){
+					timer.interrupt();
+					System.err.println("Cant stop TimerThread");
+				}
 			}
 		} catch (BasicPlayerException bpEx) {
 			Logger.getLogger(Mp3Player.class.getName()).log(Level.SEVERE, null, bpEx);
