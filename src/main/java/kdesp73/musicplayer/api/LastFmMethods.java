@@ -13,6 +13,8 @@ public final class LastFmMethods {
 	public class Album {
 
 		public static String tags(String artist, String album) {
+			if(artist == null || album == null) return "";
+			
 			artist = artist.replaceAll("&", "%26");
 			album = album.replaceAll("&", "%26");
 
@@ -30,6 +32,8 @@ public final class LastFmMethods {
 	public class Artist {
 
 		public static String tags(String artist) {
+			if(artist == null) return "";
+			
 			artist = artist.replaceAll("&", "%26");
 			return "&artist=" + artist;
 		}
@@ -56,6 +60,8 @@ public final class LastFmMethods {
 	public class Geo {
 
 		public static String tags(String country) {
+			if(country == null) return "";
+			
 			country = country.replaceAll("&", "%26");
 			
 			return "&country=" + country;
@@ -68,6 +74,8 @@ public final class LastFmMethods {
 	public class Library {
 
 		public static String tags(String user) {
+			if(user == null) return "";
+			
 			return "&user=" + user;
 		}
 
@@ -77,11 +85,15 @@ public final class LastFmMethods {
 	public class Tag {
 
 		public static String tags(String tag) {
+			if(tag == null) return "";
+			
 			tag = tag.replaceAll("&", "%26");
 			return "&tag=" + tag;
 		}
 
 		public static String tags(String artist, String user) {
+			if(artist == null || user == null) return "";
+			
 			artist = artist.replaceAll("&", "%26");
 			user = user.replaceAll("&", "%26");
 			return "&artist=" + artist + "&user=" + user;
@@ -99,6 +111,8 @@ public final class LastFmMethods {
 	public class Track {
 
 		public static String tags(String artist, String track) {
+			if(artist == null || track == null) return "";
+			
 			artist = artist.replaceAll("&", "%26");
 			track = track.replaceAll("&", "%26");
 			
@@ -106,6 +120,8 @@ public final class LastFmMethods {
 		}
 
 		public static String tags(String track) {
+			if(track == null) return "";
+			
 			track = track.replaceAll("&", "%26");
 			return "&track=" + track;
 		}
@@ -127,6 +143,8 @@ public final class LastFmMethods {
 	public class User {
 
 		public static String tags(String user) {
+			if(user == null) return "";
+			
 			user = user.replaceAll("&", "%26");
 			return "&user=" + user;
 		}

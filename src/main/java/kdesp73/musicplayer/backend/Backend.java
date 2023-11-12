@@ -116,7 +116,6 @@ public class Backend {
 //			if (bi != null) {
 //				mainFrame.setIconImage(bi);
 //			}
-
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
 			mainFrame.getSongsList().setFixedCellHeight(35);
 			mainFrame.getAlbumTracksList().setFixedCellHeight(35);
@@ -190,7 +189,7 @@ public class Backend {
 					}
 				}
 			});
-			
+
 			mainFrame.getSongsList().addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyTyped(KeyEvent e) {
@@ -728,6 +727,8 @@ public class Backend {
 			// Update the Song
 			mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).setTrack(new Track(response.first));
 
+			boolean artistScraped = false, albumScraped = false;
+			
 			// Scrape for the Album if not scraped already
 			if (mainFrame.currentSong.getTrack().getAlbum() != null && !mainFrame.currentSong.getTrack().getAlbum().isBlank()) {
 
@@ -740,8 +741,12 @@ public class Backend {
 						System.err.println("Album scrape fail");
 					}
 
-					album = new Album(response.first);
-					Queries.insertAlbum(album);
+					if (response != null) {
+						album = new Album(response.first);
+						Queries.insertAlbum(album);
+						albumScraped = true;
+					}
+
 				}
 			}
 
@@ -755,10 +760,18 @@ public class Backend {
 					System.err.println("Artist scrape fail");
 				}
 
-				artistO = new Artist(response.first);
-				Queries.insertArtist(artistO);
+				if (response != null) {
+					artistO = new Artist(response.first);
+					Queries.insertArtist(artistO);
+					artistScraped = true;
+				}
 			}
 
+			if(artistScraped && albumScraped) {
+				JOptionPane.showMessageDialog(mainFrame, "Scrape Failed. No information Found", "Fail", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			
 			Queries.updateSong(mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()));
 			Queries.updateScraped(true, mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getAbsolutePath());
 			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
