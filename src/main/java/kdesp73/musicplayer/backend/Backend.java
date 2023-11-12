@@ -728,7 +728,7 @@ public class Backend {
 			mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).setTrack(new Track(response.first));
 
 			boolean artistScraped = false, albumScraped = false;
-			
+
 			// Scrape for the Album if not scraped already
 			if (mainFrame.currentSong.getTrack().getAlbum() != null && !mainFrame.currentSong.getTrack().getAlbum().isBlank()) {
 
@@ -767,11 +767,11 @@ public class Backend {
 				}
 			}
 
-			if(artistScraped && albumScraped) {
+			if (artistScraped && albumScraped) {
 				JOptionPane.showMessageDialog(mainFrame, "Scrape Failed. No information Found", "Fail", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			
+
 			Queries.updateSong(mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()));
 			Queries.updateScraped(true, mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getAbsolutePath());
 			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -781,9 +781,12 @@ public class Backend {
 			mainFrame.player.playlist = mainFrame.list.getPaths();
 
 			int index = mainFrame.list.searchSongName(title);
-			selectSong(mainFrame, index);
-			Backend.updateAdditionalSongInfo(frame, index);
-			Backend.updateSongInfo(frame, index);
+
+			if (mainFrame.currentIndex == mainFrame.getSongsList().getSelectedIndex()) {
+				selectSong(mainFrame, index);
+				Backend.updateAdditionalSongInfo(frame, index);
+				Backend.updateSongInfo(frame, index);
+			}
 //			sort(mainFrame);
 		}
 	}
