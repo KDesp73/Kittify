@@ -237,8 +237,14 @@ public class Backend {
 			if (mainFrame.list.getSongs().isEmpty()) {
 				return -1;
 			}
+			
+			int num;
+			
+			do{
+				num = ThreadLocalRandom.current().nextInt(0, mainFrame.list.getSongs().size());
+			}while(((MainFrame) frame).currentIndex == num);
 
-			return ThreadLocalRandom.current().nextInt(0, mainFrame.list.getSongs().size());
+			return num;
 		}
 
 		return -1;

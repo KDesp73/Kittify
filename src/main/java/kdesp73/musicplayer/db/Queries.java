@@ -300,6 +300,9 @@ public class Queries {
 		db.executeUpdate(builder.deleteFrom("Directories").build());
 		db.executeUpdate(builder.deleteFrom("Files").build());
 		db.executeUpdate(builder.deleteFrom("Songs").build());
+		db.executeUpdate(builder.deleteFrom("Artists").build());
+		db.executeUpdate(builder.deleteFrom("Albums").build());
+		db.executeUpdate(builder.update("Settings").set("last_played", "").build());
 
 		db.close();
 		

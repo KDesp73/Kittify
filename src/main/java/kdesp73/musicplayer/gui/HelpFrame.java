@@ -60,6 +60,7 @@ public class HelpFrame extends javax.swing.JFrame {
 		shortcutsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		loadShortcuts();
 		
+		faqsEditorPane.setCaretPosition(0);
 		GUIMethods.renderMarkdown(this.gettingStartedEditorPane, project_path + "help/getting_started.md");
 		GUIMethods.renderMarkdown(this.userManualEditorPane, project_path + "help/user_manual.md");
 		GUIMethods.renderMarkdown(this.faqsEditorPane, project_path + "help/faqs.md");
