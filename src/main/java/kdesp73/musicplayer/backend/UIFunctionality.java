@@ -555,4 +555,13 @@ public class UIFunctionality {
 			JOptionPane.showMessageDialog(frame, "Database Cleared", "Success", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
+	
+	public static void refreshDirectories(JFrame frame){
+		if (frame instanceof MainFrame) {
+			Backend.checkDirectoriesForChanges();
+			Backend.updateSongs(frame);	
+			mainFrame.player.playlist = mainFrame.list.getPaths();
+			
+		}
+	}
 }

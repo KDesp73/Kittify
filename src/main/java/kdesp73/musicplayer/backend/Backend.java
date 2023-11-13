@@ -22,7 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -237,12 +240,12 @@ public class Backend {
 			if (mainFrame.list.getSongs().isEmpty()) {
 				return -1;
 			}
-			
+
 			int num;
-			
-			do{
+
+			do {
 				num = ThreadLocalRandom.current().nextInt(0, mainFrame.list.getSongs().size());
-			}while(((MainFrame) frame).currentIndex == num);
+			} while (((MainFrame) frame).currentIndex == num);
 
 			return num;
 		}
@@ -387,13 +390,13 @@ public class Backend {
 
 	public static void updateAdditionalSongInfo(JFrame frame, int index) {
 		if (frame instanceof MainFrame) {
-			if(mainFrame.getArtistNameLabel().getMouseListeners().length > 0){
+			if (mainFrame.getArtistNameLabel().getMouseListeners().length > 0) {
 				mainFrame.getArtistNameLabel().removeMouseListener(mainFrame.getArtistNameLabel().getMouseListeners()[0]);
 			}
-			if(mainFrame.getAlbumNameLabel().getMouseListeners().length > 0){
+			if (mainFrame.getAlbumNameLabel().getMouseListeners().length > 0) {
 				mainFrame.getAlbumNameLabel().removeMouseListener(mainFrame.getAlbumNameLabel().getMouseListeners()[0]);
 			}
-			
+
 			String artistName = mainFrame.list.getSongs().get(index).getTrack().getArtist();
 			String albumName = mainFrame.list.getSongs().get(index).getTrack().getAlbum();
 
@@ -471,7 +474,7 @@ public class Backend {
 							}
 						}
 					};
-					
+
 					mainFrame.getAlbumNameLabel().addMouseListener(albumLabelMouseListener);
 					mainFrame.getAlbumNameLabel().setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -986,6 +989,63 @@ public class Backend {
 	public static void setupTagsPanel(JPanel panel) {
 		panel.setLayout(new WrapLayout(WrapLayout.LEFT));
 		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+	}
+
+	private static List<String> findMissingFiles(List<String> list1, List<String> list2) {
+		List<String> missingFiles = new ArrayList<>();
+		for (String path : list1) {
+			if (!list2.contains(path)) {
+				missingFiles.add(path);
+			}
+		}
+		return missingFiles;
+	}
+
+	public static void checkDirectoriesForChanges() {
+		ArrayList<String> directories = Queries.selectDirectories();
+		ArrayList<String> databasePaths = Queries.selectPaths();
+		ArrayList<String> localPaths = new ArrayList<>();
+		
+		System.out.println("dire");
+
+		for (String dir : directories) {
+			ArrayList<String> dirFIles = null;
+			try {
+				dirFIles = (ArrayList<String>) FileOperations.findFiles(dir);
+			} catch (IOException ex) {
+				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+			}
+
+			if (dirFIles != null) {
+				localPaths.addAll(dirFIles);
+			}
+		}
+
+		if (databasePaths.size() == localPaths.size()) {
+			System.out.println("No changes");
+			return;
+		}
+
+//		Collections.sort(databasePaths);
+//		Collections.sort(localPaths);
+
+		List<String> extraPathsInDatabase = findMissingFiles(databasePaths, localPaths);
+
+		if (!extraPathsInDatabase.isEmpty()) {
+			for (String extraPath : extraPathsInDatabase) {
+				System.out.println("Deleted \"" + extraPath + "\" from Database");
+				Queries.deleteSong(extraPath);
+			}
+		}
+//		
+//		List<String> extraLocalPaths = findMissingFiles(databasePaths, localPaths);
+//		
+//		if(extraLocalPaths.size() > 0){
+//			for(String extraPath : extraLocalPaths){
+//				Queries.insertFile(extraPath);
+//			}
+//		}
+
 	}
 
 }

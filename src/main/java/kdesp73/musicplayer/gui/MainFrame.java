@@ -140,6 +140,7 @@ public final class MainFrame extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         addFileMenuItem = new javax.swing.JMenuItem();
         addDirectoryMenuItem = new javax.swing.JMenuItem();
+        refreshListMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         editFilesMenuItem = new javax.swing.JMenuItem();
         editDirectoriesMenuItem = new javax.swing.JMenuItem();
@@ -719,6 +720,15 @@ public final class MainFrame extends javax.swing.JFrame {
         });
         fileMenu.add(addDirectoryMenuItem);
 
+        refreshListMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        refreshListMenuItem.setText("Refresh Directories");
+        refreshListMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshListMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(refreshListMenuItem);
+
         menuBar.add(fileMenu);
 
         editMenu.setText("Edit");
@@ -1028,6 +1038,10 @@ public final class MainFrame extends javax.swing.JFrame {
 		UIFunctionality.resetDatabase(this);
     }//GEN-LAST:event_resetDBMenuItemActionPerformed
 
+    private void refreshListMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshListMenuItemActionPerformed
+        UIFunctionality.refreshDirectories(this);
+    }//GEN-LAST:event_refreshListMenuItemActionPerformed
+
 	// Getters
 	public String getProject_path() {
 		return project_path;
@@ -1292,6 +1306,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel playPauseLabel;
     private javax.swing.JPanel playerBackground;
     private javax.swing.JLabel prevLabel;
+    private javax.swing.JMenuItem refreshListMenuItem;
     private javax.swing.JLabel repeatLabel;
     private javax.swing.JMenuItem resetDBMenuItem;
     private javax.swing.JMenuItem scrapeAllMenuItem;

@@ -25,7 +25,31 @@ import kdesp73.musicplayer.gui.MainFrame;
  */
 public class Queries {
 	
-	
+	public static void deleteSong(String path){
+		DatabaseConnection db = Database.connection();
+		
+		db.executeUpdate(new QueryBuilder().deleteFrom("Songs").where("path = \'" + Utils.replaceQuotes(path) + "\'").build());
+		
+		db.close();
+	}
+
+	public static ArrayList<String> selectPaths() {
+		DatabaseConnection db = Database.connection();
+		ArrayList<String> paths = new ArrayList<>();
+		ResultSet rs = db.executeQuery(new QueryBuilder().select("path").from("Songs").build());
+		try {
+
+			while (rs.next()) {
+				paths.add(rs.getString(1));
+			}
+
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		db.close();
+		
+		return paths;
+	}
 
 	public static int selectVolume() {
 		DatabaseConnection db = Database.connection();
@@ -44,6 +68,7 @@ public class Queries {
 
 		return volume;
 	}
+
 	public static boolean selectShuffle() {
 		DatabaseConnection db = Database.connection();
 
@@ -87,6 +112,7 @@ public class Queries {
 
 		db.close();
 	}
+
 	public static void updateShuffle(boolean shuffleOn) {
 		DatabaseConnection db = Database.connection();
 
@@ -245,12 +271,12 @@ public class Queries {
 		db.close();
 	}
 
-	public static List<String> selectDirectories() {
+	public static ArrayList<String> selectDirectories() {
 		DatabaseConnection db = Database.connection();
 		QueryBuilder builder = new QueryBuilder();
 
 		ResultSet rs = db.executeQuery(builder.select("directory").from("Directories").build());
-		List<String> paths = new ArrayList<>();
+		ArrayList<String> paths = new ArrayList<>();
 
 		try {
 			while (rs.next()) {
@@ -284,12 +310,12 @@ public class Queries {
 
 		return paths;
 	}
-	
-	public static void clearLocalCovers(){
+
+	public static void clearLocalCovers() {
 		DatabaseConnection db = Database.connection();
-		
+
 		db.executeUpdate(new QueryBuilder().update("Albums").set("local_cover_path", "").build());
-		
+
 		db.close();
 	}
 
@@ -305,7 +331,7 @@ public class Queries {
 		db.executeUpdate(builder.update("Settings").set("last_played", "").build());
 
 		db.close();
-		
+
 		clearLocalCovers();
 
 		System.out.println("Database cleared");
@@ -386,7 +412,6 @@ public class Queries {
 		} catch (SQLException ex) {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
 
 		String query = "INSERT INTO Albums "
 				+ "(artist, mbid, cover_url, name, url, content, tracks) "
@@ -433,9 +458,13 @@ public class Queries {
 	}
 
 	public static Album selectAlbum(String name, String artist) {
-		if(name == null) return null;
-		if(artist == null) return null;
-		
+		if (name == null) {
+			return null;
+		}
+		if (artist == null) {
+			return null;
+		}
+
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + Utils.replaceQuotes(name) + "\' AND artist = \'" + Utils.replaceQuotes(artist) + "\'").build());
 
