@@ -8,7 +8,6 @@ import dorkbox.desktop.Desktop;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -48,7 +47,6 @@ import kdesp73.musicplayer.api.LastFmMethods;
 import kdesp73.musicplayer.api.Pair;
 import kdesp73.musicplayer.api.Search;
 import kdesp73.musicplayer.api.SearchTrack;
-import kdesp73.musicplayer.api.Track;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.musicplayer.files.Images;
@@ -106,16 +104,7 @@ public class Backend {
 			mainFrame.setLocationRelativeTo(null);
 			mainFrame.getRootPane().requestFocus();
 
-//			BufferedImage bi = null;
-//			try {
-//				bi = GUIMethods.resizeImage(ImageIO.read(new File(Images.noteWhite)), 6, 6);
-//			} catch (IOException ex) {
-//				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
-//			}
-//			
-//			if (bi != null) {
-//				mainFrame.setIconImage(bi);
-//			}
+			mainFrame.setIconImage(new ImageIcon(Images.icon16png).getImage());
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
 			mainFrame.getSongsList().setFixedCellHeight(35);
 			mainFrame.getAlbumTracksList().setFixedCellHeight(35);

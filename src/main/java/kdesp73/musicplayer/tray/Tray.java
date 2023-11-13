@@ -6,8 +6,10 @@ import dorkbox.systemTray.MenuItem;
 import dorkbox.util.CacheUtil;
 
 import dorkbox.systemTray.SystemTray;
+import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
 import kdesp73.musicplayer.backend.UIFunctionality;
+import kdesp73.musicplayer.files.Images;
 import kdesp73.musicplayer.gui.MainFrame;
 
 public class Tray {
@@ -29,7 +31,7 @@ public class Tray {
 		}
 
 		systemTray.setTooltip("Music Player");
-//		systemTray.setImage();
+		systemTray.setImage(Images.icon32png);
 		systemTray.setStatus("Stopped");
 
 		actionListener = e -> {
