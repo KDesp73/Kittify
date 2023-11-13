@@ -22,8 +22,17 @@ import kdesp73.themeLib.*;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-
+import javax.swing.JEditorPane;
+import kdesp73.musicplayer.files.FileOperations;
+import com.github.rjeschke.txtmark.Processor;
+		
 public class GUIMethods {
+
+	public static void renderMarkdown(JEditorPane editor, String path) {
+		String html = Processor.process(FileOperations.readFile(path));
+		editor.setContentType("text/html");
+		editor.setText(html);
+	}
 
 	public static BufferedImage imageFromURL(String imageUrl) {
 		try {
@@ -98,29 +107,29 @@ public class GUIMethods {
 	}
 
 	public static void setFontRecursively(Component component, Font newFont) {
-        if (component instanceof Container) {
-            Container container = (Container) component;
-            Component[] children = container.getComponents();
-            for (Component child : children) {
-                setFontRecursively(child, newFont);
-            }
-        }
-        component.setFont(newFont);
-    }
-	
-	public static void setFontFamilyRecursively(Component component, String fontFamily, int fontStyle) {
-        Font currentFont = component.getFont();
-        Font newFont = new Font(fontFamily, fontStyle, currentFont.getSize());
+		if (component instanceof Container) {
+			Container container = (Container) component;
+			Component[] children = container.getComponents();
+			for (Component child : children) {
+				setFontRecursively(child, newFont);
+			}
+		}
+		component.setFont(newFont);
+	}
 
-        if (component instanceof Container) {
-            Container container = (Container) component;
-            Component[] children = container.getComponents();
-            for (Component child : children) {
-                setFontFamilyRecursively(child, fontFamily, fontStyle);
-            }
-        }
-        component.setFont(newFont);
-    }
+	public static void setFontFamilyRecursively(Component component, String fontFamily, int fontStyle) {
+		Font currentFont = component.getFont();
+		Font newFont = new Font(fontFamily, fontStyle, currentFont.getSize());
+
+		if (component instanceof Container) {
+			Container container = (Container) component;
+			Component[] children = container.getComponents();
+			for (Component child : children) {
+				setFontFamilyRecursively(child, fontFamily, fontStyle);
+			}
+		}
+		component.setFont(newFont);
+	}
 
 	public static String rgbToHex(int R, int G, int B) {
 		return String.format("#%02x%02x%02x", R, G, B);

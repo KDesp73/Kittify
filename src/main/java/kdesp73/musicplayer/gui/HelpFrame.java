@@ -31,6 +31,7 @@ import kdesp73.themeLib.YamlFile;
  */
 public class HelpFrame extends javax.swing.JFrame {
 
+	String project_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/";
 	String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 
 	private int index = 0;
@@ -58,6 +59,12 @@ public class HelpFrame extends javax.swing.JFrame {
 		shortcutsTable.setRowHeight(35);
 		shortcutsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		loadShortcuts();
+		
+		GUIMethods.renderMarkdown(this.gettingStartedEditorPane, project_path + "help/getting_started.md");
+		GUIMethods.renderMarkdown(this.userManualEditorPane, project_path + "help/user_manual.md");
+		GUIMethods.renderMarkdown(this.faqsEditorPane, project_path + "help/faqs.md");
+		GUIMethods.renderMarkdown(this.troubleshootiongEditorPane, project_path + "help/troubleshooting.md");
+		GUIMethods.renderMarkdown(this.issuesEditorPane, project_path + "help/issues.md");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -88,37 +95,18 @@ public class HelpFrame extends javax.swing.JFrame {
         gettingStarted = new javax.swing.JPanel();
         gsTitle = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        gettingStartedEditorPane = new javax.swing.JEditorPane();
         userManual = new javax.swing.JPanel();
         umTitle = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
-        editingPanel = new javax.swing.JPanel();
-        jLabel38 = new javax.swing.JLabel();
-        jLabel39 = new javax.swing.JLabel();
-        jLabel40 = new javax.swing.JLabel();
-        jLabel41 = new javax.swing.JLabel();
-        jLabel42 = new javax.swing.JLabel();
-        scrapingPanel = new javax.swing.JPanel();
-        jLabel43 = new javax.swing.JLabel();
-        jLabel44 = new javax.swing.JLabel();
-        jLabel45 = new javax.swing.JLabel();
-        jLabel46 = new javax.swing.JLabel();
-        jLabel47 = new javax.swing.JLabel();
-        jLabel48 = new javax.swing.JLabel();
-        jLabel49 = new javax.swing.JLabel();
-        jLabel50 = new javax.swing.JLabel();
-        jLabel51 = new javax.swing.JLabel();
-        jLabel52 = new javax.swing.JLabel();
-        jLabel53 = new javax.swing.JLabel();
-        jLabel54 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
+        userManualEditorPane = new javax.swing.JEditorPane();
         faqs = new javax.swing.JPanel();
         faqsTitle = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        faqsEditorPane = new javax.swing.JEditorPane();
         shortcuts = new javax.swing.JPanel();
         scTitle = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -127,20 +115,13 @@ public class HelpFrame extends javax.swing.JFrame {
         troubleshooting = new javax.swing.JPanel();
         tsLabel = new javax.swing.JLabel();
         jSeparator8 = new javax.swing.JSeparator();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        troubleshootiongEditorPane = new javax.swing.JEditorPane();
         issues = new javax.swing.JPanel();
         issuesTitle = new javax.swing.JLabel();
         jSeparator9 = new javax.swing.JSeparator();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        issuesEditorPane = new javax.swing.JEditorPane();
         counterLabel = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         returnButton = new javax.swing.JButton();
@@ -349,7 +330,7 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addGroup(tableOfContentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(issuesLabel)
                     .addComponent(jLabel8))
-                .addContainerGap(440, Short.MAX_VALUE))
+                .addContainerGap(467, Short.MAX_VALUE))
         );
 
         pagesContainer.add(tableOfContents, "card2");
@@ -360,13 +341,10 @@ public class HelpFrame extends javax.swing.JFrame {
         gsTitle.setText("Getting Started");
         gsTitle.setName("fg"); // NOI18N
 
-        jLabel9.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel9.setText("1. Add individual files or whole directories");
-        jLabel9.setName("fg"); // NOI18N
-
-        jLabel10.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel10.setText("2. Enjoy your music!");
-        jLabel10.setName("fg"); // NOI18N
+        gettingStartedEditorPane.setEditable(false);
+        gettingStartedEditorPane.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        gettingStartedEditorPane.setName("textbox"); // NOI18N
+        jScrollPane3.setViewportView(gettingStartedEditorPane);
 
         javax.swing.GroupLayout gettingStartedLayout = new javax.swing.GroupLayout(gettingStarted);
         gettingStarted.setLayout(gettingStartedLayout);
@@ -374,12 +352,11 @@ public class HelpFrame extends javax.swing.JFrame {
             gettingStartedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gettingStartedLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(gettingStartedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel9)
+                .addGroup(gettingStartedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3)
                     .addComponent(gsTitle)
-                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
         gettingStartedLayout.setVerticalGroup(
             gettingStartedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -388,12 +365,12 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(gsTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel9)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel10)
-                .addContainerGap(587, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 660, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
+
+        jSeparator3.getAccessibleContext().setAccessibleName("");
 
         pagesContainer.add(gettingStarted, "card3");
 
@@ -403,200 +380,10 @@ public class HelpFrame extends javax.swing.JFrame {
         umTitle.setText("User Manual");
         umTitle.setName("fg"); // NOI18N
 
-        jPanel2.setName("bg_2"); // NOI18N
-
-        editingPanel.setName("bg_2"); // NOI18N
-
-        jLabel38.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel38.setText("slightly change after scraping)");
-        jLabel38.setName("fg"); // NOI18N
-
-        jLabel39.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel39.setText("information accodingly (keep in mind that the information might");
-        jLabel39.setName("fg"); // NOI18N
-
-        jLabel40.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel40.setText("you want to edit from the list and press edit. Change the");
-        jLabel40.setName("fg"); // NOI18N
-
-        jLabel41.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel41.setText("If you want to edit the song's info, select and right click the song");
-        jLabel41.setName("fg"); // NOI18N
-
-        jLabel42.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel42.setText("Editing");
-        jLabel42.setName("fg"); // NOI18N
-
-        javax.swing.GroupLayout editingPanelLayout = new javax.swing.GroupLayout(editingPanel);
-        editingPanel.setLayout(editingPanelLayout);
-        editingPanelLayout.setHorizontalGroup(
-            editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel38)
-                    .addComponent(jLabel39)
-                    .addComponent(jLabel40)
-                    .addComponent(jLabel41)
-                    .addComponent(jLabel42))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        editingPanelLayout.setVerticalGroup(
-            editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editingPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel42)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel41)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel40)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel39)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel38)
-                .addContainerGap())
-        );
-
-        scrapingPanel.setName("bg_2"); // NOI18N
-
-        jLabel43.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel43.setText("Api > Scrape At Startup");
-        jLabel43.setName("fg"); // NOI18N
-
-        jLabel44.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel44.setText("If you want to mass scrape at startup you can toggle it at");
-        jLabel44.setName("fg"); // NOI18N
-
-        jLabel45.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel45.setText("when it's over");
-        jLabel45.setName("fg"); // NOI18N
-
-        jLabel46.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel46.setText("The process will start in the background and you will be informed ");
-        jLabel46.setName("fg"); // NOI18N
-
-        jLabel47.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel47.setText("For mass scraping go to Api > Scrape All.");
-        jLabel47.setName("fg"); // NOI18N
-
-        jLabel48.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel48.setText("an artist. After that, the scraping will continue as usual");
-        jLabel48.setName("fg"); // NOI18N
-
-        jLabel49.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel49.setText("If only the artist is set, a dialog will appear prompting you to select");
-        jLabel49.setName("fg"); // NOI18N
-
-        jLabel50.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel50.setText("the scraping will, most probably, finish successfully.");
-        jLabel50.setName("fg"); // NOI18N
-
-        jLabel51.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel51.setText("already set, from metadata or from editing the song manually, ");
-        jLabel51.setName("fg"); // NOI18N
-
-        jLabel52.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel52.setText("to scrape from the list and press scrape. If title and artist are");
-        jLabel52.setName("fg"); // NOI18N
-
-        jLabel53.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel53.setText("For individual scraping, select and right click the song you want");
-        jLabel53.setName("fg"); // NOI18N
-
-        jLabel54.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel54.setText("Scraping");
-        jLabel54.setName("fg"); // NOI18N
-
-        jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel6.setText("Downloading the album cover locally will load it even if there");
-        jLabel6.setName("fg"); // NOI18N
-
-        jLabel22.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel22.setText("is no internet connection");
-        jLabel22.setName("fg"); // NOI18N
-
-        javax.swing.GroupLayout scrapingPanelLayout = new javax.swing.GroupLayout(scrapingPanel);
-        scrapingPanel.setLayout(scrapingPanelLayout);
-        scrapingPanelLayout.setHorizontalGroup(
-            scrapingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(scrapingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(scrapingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(scrapingPanelLayout.createSequentialGroup()
-                        .addGroup(scrapingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel43)
-                            .addComponent(jLabel44)
-                            .addComponent(jLabel45)
-                            .addComponent(jLabel47)
-                            .addComponent(jLabel48)
-                            .addComponent(jLabel49)
-                            .addComponent(jLabel50)
-                            .addComponent(jLabel51)
-                            .addComponent(jLabel52)
-                            .addComponent(jLabel53)
-                            .addComponent(jLabel54)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel22))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        scrapingPanelLayout.setVerticalGroup(
-            scrapingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scrapingPanelLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jLabel54)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel53)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel52)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel51)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel50)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel49)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel48)
-                .addGap(32, 32, 32)
-                .addComponent(jLabel47)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel46)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel45)
-                .addGap(32, 32, 32)
-                .addComponent(jLabel44)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel43)
-                .addGap(32, 32, 32)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel22)
-                .addContainerGap(7, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(editingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scrapingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(10, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(editingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(scrapingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
-        );
-
-        jScrollPane2.setViewportView(jPanel2);
+        userManualEditorPane.setEditable(false);
+        userManualEditorPane.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        userManualEditorPane.setName("textbox"); // NOI18N
+        jScrollPane2.setViewportView(userManualEditorPane);
 
         javax.swing.GroupLayout userManualLayout = new javax.swing.GroupLayout(userManual);
         userManual.setLayout(userManualLayout);
@@ -606,9 +393,9 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(userManualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(umTitle)
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
         userManualLayout.setVerticalGroup(
             userManualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -618,8 +405,8 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         pagesContainer.add(userManual, "card4");
@@ -630,15 +417,23 @@ public class HelpFrame extends javax.swing.JFrame {
         faqsTitle.setText("FAQs");
         faqsTitle.setName("fg"); // NOI18N
 
+        jSeparator5.setToolTipText("");
+
+        faqsEditorPane.setEditable(false);
+        faqsEditorPane.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        faqsEditorPane.setName("textbox"); // NOI18N
+        jScrollPane4.setViewportView(faqsEditorPane);
+
         javax.swing.GroupLayout faqsLayout = new javax.swing.GroupLayout(faqs);
         faqs.setLayout(faqsLayout);
         faqsLayout.setHorizontalGroup(
             faqsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(faqsLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(faqsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(faqsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                     .addComponent(faqsTitle)
-                    .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator5))
                 .addGap(20, 20, 20))
         );
         faqsLayout.setVerticalGroup(
@@ -648,7 +443,9 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(faqsTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(659, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 660, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         pagesContainer.add(faqs, "card5");
@@ -681,9 +478,9 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(shortcutsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(scTitle)
-                    .addComponent(jSeparator6)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addComponent(jSeparator6, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
         shortcutsLayout.setVerticalGroup(
             shortcutsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -692,9 +489,9 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(scTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(236, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 637, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         pagesContainer.add(shortcuts, "card6");
@@ -705,17 +502,10 @@ public class HelpFrame extends javax.swing.JFrame {
         tsLabel.setText("Troubleshooting");
         tsLabel.setName("fg"); // NOI18N
 
-        jLabel16.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel16.setText("If for any reason the program doesn't work as expected");
-
-        jLabel17.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel17.setText("try closing and opening it again");
-
-        jLabel18.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel18.setText("In case the problems continue try contacting me or create a");
-
-        jLabel19.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel19.setText("Github issue so I can look into it");
+        troubleshootiongEditorPane.setEditable(false);
+        troubleshootiongEditorPane.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        troubleshootiongEditorPane.setName("textbox"); // NOI18N
+        jScrollPane5.setViewportView(troubleshootiongEditorPane);
 
         javax.swing.GroupLayout troubleshootingLayout = new javax.swing.GroupLayout(troubleshooting);
         troubleshooting.setLayout(troubleshootingLayout);
@@ -723,14 +513,11 @@ public class HelpFrame extends javax.swing.JFrame {
             troubleshootingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(troubleshootingLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(troubleshootingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel19)
-                    .addComponent(jLabel18)
-                    .addComponent(jLabel17)
-                    .addComponent(jLabel16)
+                .addGroup(troubleshootingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(tsLabel)
-                    .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                    .addComponent(jSeparator8))
+                .addGap(20, 20, 20))
         );
         troubleshootingLayout.setVerticalGroup(
             troubleshootingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -739,15 +526,9 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addComponent(tsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel17)
-                .addGap(36, 36, 36)
-                .addComponent(jLabel18)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel19)
-                .addContainerGap(521, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         pagesContainer.add(troubleshooting, "card8");
@@ -758,33 +539,10 @@ public class HelpFrame extends javax.swing.JFrame {
         issuesTitle.setText("Issues");
         issuesTitle.setName("fg"); // NOI18N
 
-        jLabel11.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel11.setText("In case of any bugs, errors or problems in general feel free to");
-
-        jLabel12.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel12.setText("create a Github issue at the project's");
-
-        jLabel13.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(41, 121, 255));
-        jLabel13.setText("repository");
-        jLabel13.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel13.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel13MouseClicked(evt);
-            }
-        });
-
-        jLabel14.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel14.setText("In case you don't have a Github account you can");
-
-        jLabel15.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel15.setText("contact me via email (See \"About\")");
-
-        jLabel20.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel20.setText("Please try to be as descriptive as possible");
-
-        jLabel21.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
-        jLabel21.setText("so I can recreate the problem (maybe include a screenshot)");
+        issuesEditorPane.setEditable(false);
+        issuesEditorPane.setFont(new java.awt.Font("Dialog", 0, 15)); // NOI18N
+        issuesEditorPane.setName("textbox"); // NOI18N
+        jScrollPane6.setViewportView(issuesEditorPane);
 
         javax.swing.GroupLayout issuesLayout = new javax.swing.GroupLayout(issues);
         issues.setLayout(issuesLayout);
@@ -792,19 +550,11 @@ public class HelpFrame extends javax.swing.JFrame {
             issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(issuesLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel21)
-                    .addComponent(jLabel20)
-                    .addComponent(jLabel15)
-                    .addComponent(jLabel14)
-                    .addGroup(issuesLayout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel13))
-                    .addComponent(jLabel11)
+                .addGroup(issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                     .addComponent(issuesTitle)
-                    .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(jSeparator9))
+                .addGap(20, 20, 20))
         );
         issuesLayout.setVerticalGroup(
             issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -814,20 +564,8 @@ public class HelpFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(issuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel13))
-                .addGap(32, 32, 32)
-                .addComponent(jLabel20)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel21)
-                .addGap(32, 32, 32)
-                .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel15)
-                .addContainerGap(463, Short.MAX_VALUE))
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 660, Short.MAX_VALUE)
+                .addGap(20, 20, 20))
         );
 
         pagesContainer.add(issues, "card9");
@@ -847,21 +585,20 @@ public class HelpFrame extends javax.swing.JFrame {
         background.setLayout(backgroundLayout);
         backgroundLayout.setHorizontalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pagesContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(backgroundLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator2)
+            .addComponent(pagesContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout.createSequentialGroup()
+                .addContainerGap(21, Short.MAX_VALUE)
+                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(backgroundLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addComponent(counterLabel)
-                        .addGap(18, 18, 18)
+                        .addGap(25, 25, 25)
                         .addComponent(returnButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(prevButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(nextButton)))
-                .addContainerGap())
+                        .addComponent(nextButton))
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
         backgroundLayout.setVerticalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1042,70 +779,35 @@ public class HelpFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_returnButtonMouseClicked
 
-    private void jLabel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseClicked
-		try {
-			Desktop.browseURL("https://github.com/KDesp73/Music-Player/issues");
-		} catch (IOException ex) {
-			Logger.getLogger(HelpFrame.class.getName()).log(Level.SEVERE, null, ex);
-		}
-    }//GEN-LAST:event_jLabel13MouseClicked
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel background;
     private javax.swing.JLabel counterLabel;
-    private javax.swing.JPanel editingPanel;
     private javax.swing.JPanel faqs;
+    private javax.swing.JEditorPane faqsEditorPane;
     private javax.swing.JLabel faqsLabel;
     private javax.swing.JLabel faqsTitle;
     private javax.swing.JPanel gettingStarted;
+    private javax.swing.JEditorPane gettingStartedEditorPane;
     private javax.swing.JLabel gettingStartedLabel;
     private javax.swing.JLabel gsTitle;
     private javax.swing.JPanel issues;
+    private javax.swing.JEditorPane issuesEditorPane;
     private javax.swing.JLabel issuesLabel;
     private javax.swing.JLabel issuesTitle;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel40;
-    private javax.swing.JLabel jLabel41;
-    private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel44;
-    private javax.swing.JLabel jLabel45;
-    private javax.swing.JLabel jLabel46;
-    private javax.swing.JLabel jLabel47;
-    private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel50;
-    private javax.swing.JLabel jLabel51;
-    private javax.swing.JLabel jLabel52;
-    private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel54;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -1119,7 +821,6 @@ public class HelpFrame extends javax.swing.JFrame {
     private javax.swing.JButton prevButton;
     private javax.swing.JButton returnButton;
     private javax.swing.JLabel scTitle;
-    private javax.swing.JPanel scrapingPanel;
     private javax.swing.JPanel shortcuts;
     private javax.swing.JLabel shortcutsLabel;
     private javax.swing.JTable shortcutsTable;
@@ -1128,9 +829,11 @@ public class HelpFrame extends javax.swing.JFrame {
     private javax.swing.JLabel tocTitle;
     private javax.swing.JPanel troubleshooting;
     private javax.swing.JLabel troubleshootingLabel;
+    private javax.swing.JEditorPane troubleshootiongEditorPane;
     private javax.swing.JLabel tsLabel;
     private javax.swing.JLabel umTitle;
     private javax.swing.JPanel userManual;
+    private javax.swing.JEditorPane userManualEditorPane;
     private javax.swing.JLabel userManualLabel;
     // End of variables declaration//GEN-END:variables
 }

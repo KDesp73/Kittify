@@ -87,7 +87,7 @@
 			<groupId>kdesp73</groupId>
 			<artifactId>DataBridge</artifactId>
 			<version>2.0.7</version>
-<!--			<scope>system</scope>
+			<!--			<scope>system</scope>
 			<systemPath>/home/konstantinos/.m2/repository/kdesp73/DataBridge/2.0.7/DataBridge-2.0.7.jar</systemPath>-->
 		</dependency>
 		
@@ -128,24 +128,6 @@
 			<artifactId>imgscalr-lib</artifactId>
 			<version>4.2</version>
 		</dependency>
-		
-		<!--SVG-->
-		<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-bridge -->
-		<dependency>
-			<groupId>org.apache.xmlgraphics</groupId>
-			<artifactId>batik-bridge</artifactId>
-			<version>1.17</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.xmlgraphics</groupId>
-			<artifactId>batik-gvt</artifactId>
-			<version>1.14</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.xmlgraphics</groupId>
-			<artifactId>batik-svggen</artifactId>
-			<version>1.14</version>
-		</dependency>
 
 		
 		<!--Player-->	
@@ -184,7 +166,13 @@
 			<artifactId>AbsoluteLayout</artifactId>
 			<version>RELEASE160</version>
 		</dependency>
-	</dependencies>
 	
+		<!--Markdown-->
+		<dependency>
+			<groupId>com.github.rjeschke</groupId>
+			<artifactId>txtmark</artifactId>
+			<version>0.13</version>
+		</dependency>
+	</dependencies>
 
 </project>
