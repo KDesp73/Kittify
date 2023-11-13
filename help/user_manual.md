@@ -21,7 +21,7 @@ For mass scraping go to **Api > Scrape All**. The procces will start in
 the background and you will be informed when it finished successfully
 
 If you want to mass scrape at startup you can toggle 
-it at **Api > Scrape at startup**
+it at **Api > Scrape At Startup**
 
 
 ## No Internet Connection

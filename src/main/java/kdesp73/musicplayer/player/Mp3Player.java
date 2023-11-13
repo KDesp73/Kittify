@@ -116,9 +116,9 @@ public class Mp3Player extends AudioPlayer implements BasicPlayerListener {
 		try {
 			player.stop();
 			if (timer != null) {
-				try{
+				try {
 					timer.stop();
-				} catch(UnsupportedOperationException e){
+				} catch (UnsupportedOperationException e) {
 					timer.interrupt();
 					System.err.println("Cant stop TimerThread");
 				}
@@ -222,7 +222,7 @@ AudioSample sample = audioFile.getSampleAt(sampleToRead);
 		} else {
 			this.playingIndex--;
 		}
-		
+
 		play(playingIndex);
 	}
 

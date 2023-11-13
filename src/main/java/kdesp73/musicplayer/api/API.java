@@ -63,7 +63,6 @@ public class API {
 
 	public static String setupString(String s) {
 		try {
-			System.out.println("Encoded string: " + URLEncoder.encode(s, StandardCharsets.UTF_8.toString()));
 			return URLEncoder.encode(s, StandardCharsets.UTF_8.toString()).replaceAll(Pattern.quote("."), "%2E");
 		} catch (UnsupportedEncodingException ex) {
 			Logger.getLogger(API.class.getName()).log(Level.SEVERE, null, ex);

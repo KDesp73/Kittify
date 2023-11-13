@@ -391,11 +391,21 @@ public class Backend {
 
 	public static void updateAdditionalSongInfo(JFrame frame, int index) {
 		if (frame instanceof MainFrame) {
+			if(mainFrame.getArtistNameLabel().getMouseListeners().length > 0){
+				mainFrame.getArtistNameLabel().removeMouseListener(mainFrame.getArtistNameLabel().getMouseListeners()[0]);
+			}
+			if(mainFrame.getAlbumNameLabel().getMouseListeners().length > 0){
+				mainFrame.getAlbumNameLabel().removeMouseListener(mainFrame.getAlbumNameLabel().getMouseListeners()[0]);
+			}
+			
 			String artistName = mainFrame.list.getSongs().get(index).getTrack().getArtist();
 			String albumName = mainFrame.list.getSongs().get(index).getTrack().getAlbum();
 
 			Artist artist = Queries.selectArtist(artistName);
 			Album album = Queries.selectAlbum(albumName, artistName);
+
+			MouseListener artistLabelMouseListener;
+			MouseListener albumLabelMouseListener;
 
 			// ARTIST
 			if (artist != null) {
@@ -404,10 +414,9 @@ public class Backend {
 				String content = artist.getContent();
 
 				if (content != null && !content.isBlank()) {
-
 					String link = content.substring(content.indexOf("<a href=\"") + "<a href=\"".length(), content.indexOf("\"", content.indexOf("<a href=\"") + "<a href=\"".length()));
 
-					mainFrame.getArtistNameLabel().addMouseListener(new MouseAdapter() {
+					artistLabelMouseListener = new MouseAdapter() {
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							try {
@@ -416,7 +425,9 @@ public class Backend {
 								Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 							}
 						}
-					});
+					};
+
+					mainFrame.getArtistNameLabel().addMouseListener(artistLabelMouseListener);
 
 					mainFrame.getArtistNameLabel().setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -454,7 +465,7 @@ public class Backend {
 				if (content != null && !content.isBlank()) {
 					String link = content.substring(content.indexOf("<a href=\"") + "<a href=\"".length(), content.indexOf("\"", content.indexOf("<a href=\"") + "<a href=\"".length()));
 
-					mainFrame.getAlbumNameLabel().addMouseListener(new MouseAdapter() {
+					albumLabelMouseListener = new MouseAdapter() {
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							try {
@@ -463,7 +474,9 @@ public class Backend {
 								Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 							}
 						}
-					});
+					};
+					
+					mainFrame.getAlbumNameLabel().addMouseListener(albumLabelMouseListener);
 					mainFrame.getAlbumNameLabel().setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 					content = content.substring(0, content.indexOf("<a href"));
@@ -674,8 +687,10 @@ public class Backend {
 		} catch (IOException | InterruptedException ex) {
 			return null;
 		}
-		
-		if(response == null) return null;
+
+		if (response == null) {
+			return null;
+		}
 
 		return response.first;
 	}
@@ -717,7 +732,7 @@ public class Backend {
 			Queries.insertAlbum(new Album(response.first));
 			return response.first;
 		}
-		
+
 		return null;
 	}
 
@@ -756,93 +771,32 @@ public class Backend {
 			}
 
 //			scrapeArtist(artist);
-
 			Mp3File song = mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex());
 			song.setArtist(artist);
-			
+
 			song.selfScrape();
-			
+
 //			Queries.updateSong(song);
 //			Queries.updateScraped(true, song.getAbsolutePath());
 			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
 			// UPDATE UI ACCORDINGLY
-			
 			initList(mainFrame);
 			sort(mainFrame);
 			mainFrame.player.playlist = mainFrame.list.getPaths();
 
 			int index = mainFrame.list.searchSongName(song.getTrack().getName());
-			
+
 			mainFrame.getSongsList().setSelectedIndex(index);
 			mainFrame.getSongsList().ensureIndexIsVisible(index);
-			
-			System.out.println("Player song: " + mainFrame.player.getCurrentSong());
-			System.out.println("Scraped song: " + song.getAbsolutePath());
-			System.out.println("Current song: " + mainFrame.currentSong.getAbsolutePath());
-			
+
 			boolean scrapingSelectedSong = mainFrame.currentSong == null || mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
-			
+
 			if (scrapingSelectedSong) {
 				selectSong(mainFrame, index);
 			} else {
 				System.out.println("Scraped song that is not selected");
 			}
-			
-//			String trackResponse = scrapeTrack(title, artist);
-//			Track newTrack;
-//			if(trackResponse == null){
-//				newTrack = new Track();
-//				newTrack.setName(title);
-//				newTrack.setArtist(artist);
-//				newTrack.setAlbum(album);
-//			} else {
-//				newTrack = new Track(trackResponse);
-//			}
-//
-//			boolean trackHasAlbum = newTrack.getAlbum() != null && newTrack.getAlbum().isBlank();
-//			boolean userAddedAlbumExists = album != null && !album.isBlank() && !album.toLowerCase().equals("unknown album");
-//
-//			System.out.println("track has album: " + trackHasAlbum);
-//			System.out.println("user added album exists: " + userAddedAlbumExists);
-//
-//			if (userAddedAlbumExists) {
-//				String r = scrapeAlbum(album, artist);
-//				if (r != null) {
-//					Album a = new Album(r);
-//					newTrack.setAlbum(a.getName());
-//					newTrack.setCover(a.getCoverURL());
-//				}
-//			} else if (trackHasAlbum) {
-//				String r = scrapeAlbum(newTrack.getAlbum(), artist);
-//			} else {}
-//
-//			song.setTrack(newTrack);
-//			System.out.println(song);
-//			
-//			Queries.updateSong(song);
-//			Queries.updateScraped(true, song.getAbsolutePath());
-//			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
-//
-//			initList(mainFrame);
-//			sort(mainFrame);
-//			mainFrame.player.playlist = mainFrame.list.getPaths();
-//
-//			int index = mainFrame.list.searchSongName(newTrack.getName());
-//			
-//			mainFrame.getSongsList().setSelectedIndex(index);
-//			mainFrame.getSongsList().ensureIndexIsVisible(index);
-//			
-//			System.out.println("Current Song: " + mainFrame.player.getCurrentSong());
-//			System.out.println("Scraped Song: " + song.getAbsolutePath());
-//			boolean scrapingSelectedSong = mainFrame.player.getCurrentSong().equals(song.getAbsolutePath()) && mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
-//			
-//			if (scrapingSelectedSong) {
-//				selectSong(mainFrame, index);
-//			} else {
-//				System.out.println("Scraped song that is not selected");
-//			}
-
 		}
 	}
 
