@@ -395,7 +395,7 @@ public class UIFunctionality {
 				JOptionPane.showMessageDialog(mainFrame, "No songs loaded", "Scrape Aborted", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
-			JOptionPane.showMessageDialog(mainFrame, "The scraping process has started in the background", "Scraping Started", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, "The scraping process has started in the background. This may take a while dependending on the number of songs imported", "Scraping Started", JOptionPane.INFORMATION_MESSAGE);
 			mainFrame.list.scrapeSongs();
 		}
 	}
@@ -538,7 +538,9 @@ public class UIFunctionality {
 			Queries.clearDatabase();
 			Backend.updateSongs(frame);
 			mainFrame.player.stop();
+			mainFrame.player.playingIndex = 0;
 			Backend.setDefaultSongInfo(frame);
+			Backend.setDefaultSongAdditionalInfo(frame);
 			Backend.resetSlider(frame);
 			Backend.resetPlayer(frame);
 			JOptionPane.showMessageDialog(frame, "Database Cleared", "Success", JOptionPane.INFORMATION_MESSAGE);

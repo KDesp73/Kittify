@@ -674,6 +674,8 @@ public class Backend {
 		} catch (IOException | InterruptedException ex) {
 			return null;
 		}
+		
+		if(response == null) return null;
 
 		return response.first;
 	}
@@ -725,7 +727,7 @@ public class Backend {
 			API api = new API();
 			String title = mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack().getName();
 			String artist = mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack().getArtist();
-			String album = mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack().getAlbum();
+//			String album = mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack().getAlbum();
 
 			Pair<String, Integer> response = null;
 
@@ -753,90 +755,71 @@ public class Backend {
 				artist = (String) JOptionPane.showInputDialog(mainFrame, "Select Artist", "", JOptionPane.QUESTION_MESSAGE, null, propableArtists.toArray(), 0);
 			}
 
-			scrapeArtist(artist);
+//			scrapeArtist(artist);
 
 			Mp3File song = mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex());
-			Track newTrack = new Track(scrapeTrack(title, artist));
-
-			boolean trackHasAlbum = newTrack.getAlbum() != null && newTrack.getAlbum().isBlank();
-			boolean userAddedAlbumExists = album != null && !album.isBlank() && !album.toLowerCase().equals("unknown album");
-
-			System.out.println("track has album: " + trackHasAlbum);
-			System.out.println("user added album exists: " + userAddedAlbumExists);
-
-			if (userAddedAlbumExists) {
-				String r = scrapeAlbum(album, artist);
-				if (r != null) {
-					Album a = new Album(r);
-					newTrack.setAlbum(a.getName());
-					newTrack.setCover(a.getCoverURL());
-				}
-			} else if (trackHasAlbum) {
-				String r = scrapeAlbum(newTrack.getAlbum(), artist);
-			} else {}
-
-			song.setTrack(newTrack);
-			System.out.println(song);
+			song.getTrack().setArtist(artist);
 			
-			Queries.updateSong(song);
-			Queries.updateScraped(true, song.getAbsolutePath());
+			song.selfScrape();
+			
+//			Queries.updateSong(song);
+//			Queries.updateScraped(true, song.getAbsolutePath());
 			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
+			// UPDATE UI ACCORDINGLY
+			
 			initList(mainFrame);
 			sort(mainFrame);
 			mainFrame.player.playlist = mainFrame.list.getPaths();
 
-			int index = mainFrame.list.searchSongName(newTrack.getName());
+			int index = mainFrame.list.searchSongName(song.getTrack().getName());
 			
 			mainFrame.getSongsList().setSelectedIndex(index);
 			mainFrame.getSongsList().ensureIndexIsVisible(index);
 			
-			System.out.println("Current Song: " + mainFrame.player.getCurrentSong());
-			System.out.println("Scraped Song: " + song.getAbsolutePath());
-			boolean scrapingSelectedSong = mainFrame.player.getCurrentSong().equals(song.getAbsolutePath()) && mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
+			System.out.println("Player song: " + mainFrame.player.getCurrentSong());
+			System.out.println("Scraped song: " + song.getAbsolutePath());
+			System.out.println("Current song: " + mainFrame.currentSong.getAbsolutePath());
+			
+			boolean scrapingSelectedSong = /*mainFrame.player.getCurrentSong().equals(song.getAbsolutePath()) && */mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
 			
 			if (scrapingSelectedSong) {
 				selectSong(mainFrame, index);
 			} else {
 				System.out.println("Scraped song that is not selected");
 			}
-
-//			if (!albumExistsInDB && (trackHasAlbum || userAddedAlbumExists)) {
-//				if (!userAddedAlbumExists) {
-//					album = newTrack.getAlbum();
-//				}
-//				try {
-//					response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, album));
-//				} catch (IOException | InterruptedException ex) {
-//					System.err.println("Album scrape fail");
-//				}
-//
-//				if (response != null) {
-//					albumO = new Album(response.first);
-//					Queries.insertAlbum(albumO);
-//					albumScraped = true;
-//
-//					if (albumO.getName() != null && !albumO.getName().isBlank()) {
-//						newTrack.setAlbum(albumO.getName());
-//					}
-//
-//					if (albumO.getCoverURL() != null && !albumO.getCoverURL().isBlank()) {
-//						newTrack.setCover(albumO.getCoverURL());
-//					}
-//				} else {
-//					System.err.println("No response for album");
-//				}
+			
+//			String trackResponse = scrapeTrack(title, artist);
+//			Track newTrack;
+//			if(trackResponse == null){
+//				newTrack = new Track();
+//				newTrack.setName(title);
+//				newTrack.setArtist(artist);
+//				newTrack.setAlbum(album);
+//			} else {
+//				newTrack = new Track(trackResponse);
 //			}
-//			System.out.println("New track: " + newTrack);
-			// Update the Song
+//
+//			boolean trackHasAlbum = newTrack.getAlbum() != null && newTrack.getAlbum().isBlank();
+//			boolean userAddedAlbumExists = album != null && !album.isBlank() && !album.toLowerCase().equals("unknown album");
+//
+//			System.out.println("track has album: " + trackHasAlbum);
+//			System.out.println("user added album exists: " + userAddedAlbumExists);
+//
+//			if (userAddedAlbumExists) {
+//				String r = scrapeAlbum(album, artist);
+//				if (r != null) {
+//					Album a = new Album(r);
+//					newTrack.setAlbum(a.getName());
+//					newTrack.setCover(a.getCoverURL());
+//				}
+//			} else if (trackHasAlbum) {
+//				String r = scrapeAlbum(newTrack.getAlbum(), artist);
+//			} else {}
+//
 //			song.setTrack(newTrack);
-//
-////			if (!artistScraped && !albumScraped) {
-////				JOptionPane.showMessageDialog(mainFrame, "Scrape Failed. No information Found", "Fail", JOptionPane.INFORMATION_MESSAGE);
-////				return;
-////			}
 //			System.out.println(song);
-//
+//			
 //			Queries.updateSong(song);
 //			Queries.updateScraped(true, song.getAbsolutePath());
 //			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -845,24 +828,21 @@ public class Backend {
 //			sort(mainFrame);
 //			mainFrame.player.playlist = mainFrame.list.getPaths();
 //
-//			int index = mainFrame.list.searchSongName(title);
+//			int index = mainFrame.list.searchSongName(newTrack.getName());
+//			
 //			mainFrame.getSongsList().setSelectedIndex(index);
 //			mainFrame.getSongsList().ensureIndexIsVisible(index);
-//
-//			System.out.println("Player song: " + mainFrame.player.getCurrentSong());
-//			System.out.println("Scraped song: " + song.getAbsolutePath());
-//			if (!mainFrame.player.getCurrentSong().equals(song.getAbsolutePath())) {
-//				return;
-//			}
-//
-//			System.out.println("Current index: " + mainFrame.currentIndex);
-//			System.out.println("Selected index: " + mainFrame.getSongsList().getSelectedIndex());
-//			if (mainFrame.currentIndex == mainFrame.getSongsList().getSelectedIndex()) {
-//				System.out.println("Show Info");
+//			
+//			System.out.println("Current Song: " + mainFrame.player.getCurrentSong());
+//			System.out.println("Scraped Song: " + song.getAbsolutePath());
+//			boolean scrapingSelectedSong = mainFrame.player.getCurrentSong().equals(song.getAbsolutePath()) && mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
+//			
+//			if (scrapingSelectedSong) {
 //				selectSong(mainFrame, index);
-//				Backend.updateAdditionalSongInfo(frame, index);
-//				Backend.updateSongInfo(frame, index);
+//			} else {
+//				System.out.println("Scraped song that is not selected");
 //			}
+
 		}
 	}
 

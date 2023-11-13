@@ -252,6 +252,7 @@ public class Mp3File extends File {
 		API api = new API();
 		String artist = file.getTrack().getArtist();
 		String title = file.getTrack().getName();
+		String album = file.getTrack().getAlbum();
 
 		Pair<String, Integer> response = null;
 
@@ -279,16 +280,20 @@ public class Mp3File extends File {
 		}
 
 		// Update the Song
-		file.setTrack(new Track(response.first));
+		Track track = new Track(response.first);
 
+		if(album != null && !album.isBlank() && (track.getAlbum() == null || track.getAlbum().isBlank())){
+			track.setAlbum(album);
+		}
+		
+		file.setTrack(track);
 		Queries.updateSong(file);
-
+			
 		// Scrape for the Album if not scraped already
 		if (file.getTrack().getAlbum() != null && !file.getTrack().getAlbum().isBlank()) {
-
-			Album album = Queries.selectAlbum(file.getTrack().getAlbum(), artist);
-
-			if (album == null) {
+			Album albumO = Queries.selectAlbum(file.getTrack().getAlbum(), artist);
+			
+			if (albumO == null) {
 				try {
 					response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, file.getTrack().getAlbum()));
 				} catch (IOException | InterruptedException ex) {
@@ -296,8 +301,8 @@ public class Mp3File extends File {
 				}
 
 				if (response != null) {
-					album = new Album(response.first);
-					Queries.insertAlbum(album);
+					albumO = new Album(response.first);
+					Queries.insertAlbum(albumO);
 				}
 			}
 		}
@@ -319,6 +324,7 @@ public class Mp3File extends File {
 		}
 		
 		setScraped(true);
+		Queries.updateScraped(true, file.getAbsolutePath());
 	}
 
 	@Override

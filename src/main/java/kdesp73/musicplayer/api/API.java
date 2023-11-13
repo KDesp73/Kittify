@@ -1,13 +1,16 @@
 package kdesp73.musicplayer.api;
 
+import ealvatag.utils.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -21,7 +24,6 @@ public class API {
 	}
 
 	public Pair<String, Integer> GET(String lastfmMethod, String tags) throws IOException, InterruptedException {
-		tags = setupString(tags);
 		try {
 			String apiKey = getKey("https://users.iee.ihu.gr/~iee2021035/LastFmKey.txt");
 
@@ -59,11 +61,15 @@ public class API {
 		return null;
 	}
 
-	private String setupString(String s) {
-		s = s.replaceAll(Pattern.quote("."), " ");
-		s = s.replaceAll(" ", "%20");
-
-		return s;
+	public static String setupString(String s) {
+		try {
+			System.out.println("Encoded string: " + URLEncoder.encode(s, StandardCharsets.UTF_8.toString()));
+			return URLEncoder.encode(s, StandardCharsets.UTF_8.toString()).replaceAll(Pattern.quote("."), "%2E");
+		} catch (UnsupportedEncodingException ex) {
+			Logger.getLogger(API.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+		return null;
 	}
 
 	public static String getKey(String urlString) {

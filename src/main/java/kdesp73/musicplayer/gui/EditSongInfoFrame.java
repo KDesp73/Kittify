@@ -282,16 +282,15 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		song.setCoverPath(cover);
 
 		this.mainFrame.list.getSongs().set(mainFrame.getSongsList().getSelectedIndex(), song);
-		this.mainFrame.currentSong = song;
+//		this.mainFrame.currentSong = song;
 
 		Queries.updateSong(song);
 		initList(mainFrame);
 		sort(mainFrame);
 
 		int index = mainFrame.list.searchSongName(song.getTrack().getName());
-		this.mainFrame.currentIndex = index;
+//		this.mainFrame.currentIndex = index;
 
-		mainFrame.player.playlist = mainFrame.list.getPaths();
 
 		if (mainFrame.currentIndex == mainFrame.getSongsList().getSelectedIndex()) {
 			Backend.selectSong(mainFrame, index);
@@ -302,6 +301,7 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		Backend.refreshList(mainFrame);
 		mainFrame.getSongsList().setSelectedIndex(index);
 		mainFrame.getSongsList().ensureIndexIsVisible(index);
+		mainFrame.player.playlist = mainFrame.list.getPaths();
 
 		this.dispose();
     }//GEN-LAST:event_applyButtonActionPerformed
