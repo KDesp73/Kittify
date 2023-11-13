@@ -105,6 +105,7 @@ public class Backend {
 			mainFrame.getRootPane().requestFocus();
 
 			mainFrame.setIconImage(new ImageIcon(Images.icon16png).getImage());
+			mainFrame.setTitle(MainFrame.TITLE);
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
 			mainFrame.getSongsList().setFixedCellHeight(35);
 			mainFrame.getAlbumTracksList().setFixedCellHeight(35);

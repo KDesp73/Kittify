@@ -1,0 +1,14 @@
+<assembly>
+    <id>jar-with-icon</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <files>
+        <file>
+        <source>assets/icon.png</source>
+            <outputDirectory>/</outputDirectory>
+            <destName>icon.png</destName>
+        </file>
+    </files>
+</assembly>
+
