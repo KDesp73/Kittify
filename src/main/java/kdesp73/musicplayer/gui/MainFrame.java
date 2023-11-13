@@ -36,7 +36,7 @@ import kdesp73.musicplayer.tray.Tray;
  * @author konstantinos
  */
 public final class MainFrame extends javax.swing.JFrame {
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = false;
 
 	private String accentColor = "2979ff";
 	private String project_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/");
