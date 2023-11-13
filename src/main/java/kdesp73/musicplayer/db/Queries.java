@@ -430,6 +430,9 @@ public class Queries {
 	}
 
 	public static Album selectAlbum(String name, String artist) {
+		if(name == null) return null;
+		if(artist == null) return null;
+		
 		DatabaseConnection db = Database.connection();
 		ResultSet rs = db.executeQuery(new QueryBuilder().select().from("Albums").where("name = \'" + Utils.replaceQuotes(name) + "\' AND artist = \'" + Utils.replaceQuotes(artist) + "\'").build());
 
@@ -462,7 +465,7 @@ public class Queries {
 	public static void insertArtist(Artist artist) {
 		DatabaseConnection db = Database.connection();
 
-		ResultSet rs = db.executeQuery("SELECT EXISTS(SELECT 1 FROM Artists WHERE mbid= \'" + Utils.replaceQuotes(artist.getMbid()) + "\')");
+		ResultSet rs = db.executeQuery("SELECT EXISTS(SELECT 1 FROM Artists WHERE name= \'" + Utils.replaceQuotes(artist.getName()) + "\')");
 
 		try {
 			rs.next();

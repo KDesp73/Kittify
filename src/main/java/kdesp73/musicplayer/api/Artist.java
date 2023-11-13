@@ -110,7 +110,7 @@ public class Artist {
 
 	@Override
 	public String toString() {
-		return "Artist{" + "name=" + name + ", mbid=" + mbid + ", URL=" + URL + ", image=" + image + ", tags=" + tags + ", content=" + content + '}';
+		return "Artist{" + "\n\tname=" + name + ", \n\tmbid=" + mbid + ", \n\tURL=" + URL + ", \n\timage=" + image + ", \n\ttags=" + tags + ", \n\tcontent=" + content + "\n}";
 	}
 
 }

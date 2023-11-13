@@ -117,7 +117,7 @@ public class Track {
 
 	@Override
 	public String toString() {
-		return "Track{" + "name=" + name + ", URL=" + URL + ", duration=" + duration + ", artist=" + artist + ", artistMbid=" + artistMbid + ", album=" + album + ", cover=" + cover + '}';
+		return "Track{" + "\n\tname=" + name + ", \n\tURL=" + URL + ", \n\tduration=" + duration + ", \n\tartist=" + artist + ", \n\tartistMbid=" + artistMbid + ", \n\talbum=" + album + ", \n\tcover=" + cover + "\n}";
 	}
 
 }

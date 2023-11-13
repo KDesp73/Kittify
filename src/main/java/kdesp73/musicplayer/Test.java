@@ -7,6 +7,12 @@ package kdesp73.musicplayer;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.regex.Pattern;
+import kdesp73.musicplayer.api.API;
+import kdesp73.musicplayer.api.Album;
+import kdesp73.musicplayer.api.Artist;
+import kdesp73.musicplayer.api.LastFmMethods;
+import kdesp73.musicplayer.api.Pair;
+import kdesp73.musicplayer.api.Track;
 import kdesp73.musicplayer.db.Queries;
 
 /**
@@ -21,7 +27,26 @@ public class Test {
 
 	static String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 	
-	public static void main(String[] args) throws MalformedURLException, IOException{
-		Queries.clearDatabase();
+	public static void main(String[] args) throws MalformedURLException, IOException, InterruptedException{
+		 Pair<String, Integer> trackResponse = new API().GET(LastFmMethods.Track.getInfo, LastFmMethods.Track.tags("Molchat Doma", "Bedpan (Boris Ryzhy)"));
+		 Pair<String, Integer> artistResponse = new API().GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags("Molchat Doma"));
+		 Pair<String, Integer> albumResponse = new API().GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags("Molchat Doma", "Etazhi"));
+	
+		 Track track = new Track(trackResponse.first);
+		 Artist artist = new Artist(artistResponse.first);
+		 Album album = new Album(albumResponse.first);
+		 
+		 System.out.println(trackResponse.first);
+		 System.out.println(track);
+		 
+		 System.out.println("===========================");
+		 
+		 System.out.println(artistResponse.first);
+		 System.out.println(artist);
+		 
+		 System.out.println("===========================");
+		 
+		 System.out.println(albumResponse.first);
+		 System.out.println(album);
 	}
 }

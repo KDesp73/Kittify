@@ -323,6 +323,7 @@ public class UIFunctionality {
 			JMenuItem edit = new JMenuItem("Edit");
 			JMenuItem scrape = new JMenuItem("Scrape");
 			JMenuItem downloadAlbumCover = new JMenuItem("Download Cover");
+			JMenuItem printTrack = new JMenuItem("Print Track");
 
 			options.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -340,6 +341,9 @@ public class UIFunctionality {
 								Backend.scrapeAction(mainFrame);
 							case "Download Cover" ->
 								Backend.downloadAlbumCoverAction(mainFrame);
+							case "Print Track" -> {
+								System.out.println(mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack());
+							}
 							default -> {
 							}
 						}
@@ -356,9 +360,12 @@ public class UIFunctionality {
 			downloadAlbumCover.addActionListener(menuListener);
 			options.add(downloadAlbumCover);
 
-			if (mainFrame.currentSong != null) {
-				options.show(evt.getComponent(), evt.getX(), evt.getY());
+			if (MainFrame.DEBUG) {
+				printTrack.addActionListener(menuListener);
+				options.add(printTrack);
 			}
+
+			options.show(evt.getComponent(), evt.getX(), evt.getY());
 		}
 	}
 
@@ -388,7 +395,7 @@ public class UIFunctionality {
 				JOptionPane.showMessageDialog(mainFrame, "No songs loaded", "Scrape Aborted", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
-			JOptionPane.showMessageDialog(mainFrame, "The scraping precess has started in the background", "Scraping Started", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, "The scraping process has started in the background", "Scraping Started", JOptionPane.INFORMATION_MESSAGE);
 			mainFrame.list.scrapeSongs();
 		}
 	}
@@ -520,6 +527,21 @@ public class UIFunctionality {
 
 					break;
 			}
+		}
+	}
+
+	public static void resetDatabase(JFrame frame) {
+		int option = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reset your Database? This will erase all imported songs and their data", "Reset DB", JOptionPane.YES_NO_OPTION);
+
+		if (option == 0) {
+			System.out.println("Clearing Database...");
+			Queries.clearDatabase();
+			Backend.updateSongs(frame);
+			mainFrame.player.stop();
+			Backend.setDefaultSongInfo(frame);
+			Backend.resetSlider(frame);
+			Backend.resetPlayer(frame);
+			JOptionPane.showMessageDialog(frame, "Database Cleared", "Success", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 }

@@ -24,12 +24,12 @@ public class API {
 		tags = setupString(tags);
 		try {
 			String apiKey = getKey("https://users.iee.ihu.gr/~iee2021035/LastFmKey.txt");
-				
-			if(apiKey == null){
+
+			if (apiKey == null) {
 				JOptionPane.showMessageDialog(null, "It seems you are not connected to the internet. Scraping aborted", "No Internet Connection", JOptionPane.WARNING_MESSAGE);
 				return null;
 			}
-			
+
 			String apiUrl = "http://ws.audioscrobbler.com/2.0/?method=" + lastfmMethod + tags + "&api_key=" + apiKey + "&format=json";
 
 			URL url = new URL(apiUrl);
@@ -43,7 +43,7 @@ public class API {
 				while ((inputLine = in.readLine()) != null) {
 					response.append(inputLine);
 				}
-			} catch(IOException ex) {
+			} catch (IOException ex) {
 //				JOptionPane.showMessageDialog(null, "It seems you are not connected to the internet. Scraping aborted", "No Internet Connection", JOptionPane.WARNING_MESSAGE);
 				return null;
 			}
@@ -62,11 +62,11 @@ public class API {
 	private String setupString(String s) {
 		s = s.replaceAll(Pattern.quote("."), " ");
 		s = s.replaceAll(" ", "%20");
-		
+
 		return s;
 	}
 
-	public static String getKey(String urlString){
+	public static String getKey(String urlString) {
 		URL url = null;
 		try {
 			url = new URL(urlString);
@@ -83,7 +83,7 @@ public class API {
 		Scanner s = new Scanner(inputStream).useDelimiter("\\A");
 		String key = s.hasNext() ? s.next() : "";
 		s.close();
-		
+
 		return key;
 	}
 

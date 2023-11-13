@@ -36,6 +36,7 @@ import kdesp73.musicplayer.tray.Tray;
  * @author konstantinos
  */
 public final class MainFrame extends javax.swing.JFrame {
+	public static boolean DEBUG = true;
 
 	private String accentColor = "2979ff";
 	private String project_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/");
@@ -50,7 +51,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public boolean shuffleOn = false;
 	public boolean repeatOn = false;
 	public boolean volumeOn = true;
-	
+
 	public int volume = 100;
 
 	public Mp3Player player;
@@ -61,7 +62,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public static EditSongInfoFrame editSongFrame;
 	public static EditFilesFrame editFilesFrame;
 	public static HelpFrame helpFrame;
-	
+
 	public static Tray tray;
 
 	public static MainFrame create() {
@@ -143,7 +144,9 @@ public final class MainFrame extends javax.swing.JFrame {
         ApiMenu = new javax.swing.JMenu();
         scrapeAllMenuItem = new javax.swing.JMenuItem();
         scrapeAtStartMenuItem = new javax.swing.JCheckBoxMenuItem();
-        themesMenu = new javax.swing.JMenu();
+        settingsMenu = new javax.swing.JMenu();
+        themesMenuItem = new javax.swing.JMenuItem();
+        resetDBMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -759,13 +762,33 @@ public final class MainFrame extends javax.swing.JFrame {
 
         menuBar.add(ApiMenu);
 
-        themesMenu.setText("Themes");
-        themesMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+        settingsMenu.setText("Settings");
+        settingsMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                settingsMenuMouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                themesMenuMousePressed(evt);
+                settingsMenuMousePressed(evt);
             }
         });
-        menuBar.add(themesMenu);
+
+        themesMenuItem.setText("Themes");
+        themesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                themesMenuItemActionPerformed(evt);
+            }
+        });
+        settingsMenu.add(themesMenuItem);
+
+        resetDBMenuItem.setText("Reset Database");
+        resetDBMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetDBMenuItemActionPerformed(evt);
+            }
+        });
+        settingsMenu.add(resetDBMenuItem);
+
+        menuBar.add(settingsMenu);
 
         helpMenu.setText("Help");
 
@@ -914,17 +937,9 @@ public final class MainFrame extends javax.swing.JFrame {
 		UIFunctionality.repeat(this);
     }//GEN-LAST:event_repeatLabelMouseClicked
 
-    private void themesMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_themesMenuMousePressed
-		if (evt.getButton() != MouseEvent.BUTTON1) {
-			return;
-		}
+    private void settingsMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsMenuMousePressed
 
-		if (themesFrame.isActive()) {
-			return;
-		}
-
-		themesFrame.setVisible(true);
-    }//GEN-LAST:event_themesMenuMousePressed
+    }//GEN-LAST:event_settingsMenuMousePressed
 
     private void prevLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prevLabelMousePressed
 		if (evt.getButton() != MouseEvent.BUTTON1) {
@@ -994,6 +1009,22 @@ public final class MainFrame extends javax.swing.JFrame {
 		MainFrame.helpFrame = new HelpFrame();
 		helpFrame.setVisible(true);
     }//GEN-LAST:event_helpMenuItemActionPerformed
+
+    private void settingsMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsMenuMouseClicked
+		// TODO add your handling code here:
+    }//GEN-LAST:event_settingsMenuMouseClicked
+
+    private void themesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_themesMenuItemActionPerformed
+		if (themesFrame.isActive()) {
+			return;
+		}
+
+		themesFrame.setVisible(true);
+    }//GEN-LAST:event_themesMenuItemActionPerformed
+
+    private void resetDBMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetDBMenuItemActionPerformed
+		UIFunctionality.resetDatabase(this);
+    }//GEN-LAST:event_resetDBMenuItemActionPerformed
 
 	// Getters
 	public String getProject_path() {
@@ -1260,9 +1291,11 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel playerBackground;
     private javax.swing.JLabel prevLabel;
     private javax.swing.JLabel repeatLabel;
+    private javax.swing.JMenuItem resetDBMenuItem;
     private javax.swing.JMenuItem scrapeAllMenuItem;
     private javax.swing.JCheckBoxMenuItem scrapeAtStartMenuItem;
     private javax.swing.JButton searchButton;
+    private javax.swing.JMenu settingsMenu;
     private javax.swing.JLabel shuffleLabel;
     private javax.swing.JSlider slider;
     private javax.swing.JPanel sliderPanel;
@@ -1271,7 +1304,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel sortbyLabel;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JPanel tagsContainer;
-    private javax.swing.JMenu themesMenu;
+    private javax.swing.JMenuItem themesMenuItem;
     private javax.swing.JLabel timeLabel;
     private javax.swing.JLabel trackLabel;
     private javax.swing.JPanel volumePanel;

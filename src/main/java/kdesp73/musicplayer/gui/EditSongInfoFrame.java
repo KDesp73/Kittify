@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.musicplayer.backend.Backend;
 import static kdesp73.musicplayer.backend.Backend.initList;
-import static kdesp73.musicplayer.backend.Backend.selectSong;
 import static kdesp73.musicplayer.backend.Backend.sort;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.db.Queries;
@@ -282,7 +281,7 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		song.getTrack().setAlbum(album);
 		song.setCoverPath(cover);
 
-		this.mainFrame.list.getSongs().set(mainFrame.currentIndex, song);
+		this.mainFrame.list.getSongs().set(mainFrame.getSongsList().getSelectedIndex(), song);
 		this.mainFrame.currentSong = song;
 
 		Queries.updateSong(song);
@@ -301,6 +300,8 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		}
 
 		Backend.refreshList(mainFrame);
+		mainFrame.getSongsList().setSelectedIndex(index);
+		mainFrame.getSongsList().ensureIndexIsVisible(index);
 
 		this.dispose();
     }//GEN-LAST:event_applyButtonActionPerformed

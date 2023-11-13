@@ -129,7 +129,7 @@ public class Album {
 
 	@Override
 	public String toString() {
-		return "Album{" + "artist=" + artist + ", mbid=" + mbid + ", coverURL=" + coverURL + ", tracks=" + tracks + ", name=" + name + ", URL=" + URL + ", content=" + content + '}';
+		return "Album{" + "\n\tartist=" + artist + ", \n\tmbid=" + mbid + ", \n\tcoverURL=" + coverURL + ", \n\ttracks=" + tracks + ", \n\tname=" + name + ", \n\tURL=" + URL + ", \n\tcontent=" + content + "\n}";
 	}
 
 }
