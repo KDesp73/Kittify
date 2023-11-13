@@ -201,6 +201,21 @@ public class Mp3File extends File {
 	public void setTrack(Track track) {
 		this.track = track;
 	}
+	
+	public void setName(String name){
+		this.track.setName(name);
+		setMetadata(FieldKey.TITLE, name);
+	}
+	
+	public void setArtist(String artist){
+		this.track.setArtist(artist);
+		setMetadata(FieldKey.ARTIST, artist);
+	}
+	
+	public void setAlbum(String album){
+		this.track.setAlbum(album);
+		setMetadata(FieldKey.ALBUM, album);
+	}
 
 	public String getExtension() {
 		return extension;
@@ -283,7 +298,7 @@ public class Mp3File extends File {
 		Track track = new Track(response.first);
 
 		if(album != null && !album.isBlank() && (track.getAlbum() == null || track.getAlbum().isBlank())){
-			track.setAlbum(album);
+			file.setAlbum(album);
 		}
 		
 		file.setTrack(track);

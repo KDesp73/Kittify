@@ -276,9 +276,9 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 			album = "Unknown Album";
 		}
 
-		song.getTrack().setName(title);
-		song.getTrack().setArtist(artist);
-		song.getTrack().setAlbum(album);
+		song.setName(title);
+		song.setArtist(artist);
+		song.setAlbum(album);
 		song.setCoverPath(cover);
 
 		this.mainFrame.list.getSongs().set(mainFrame.getSongsList().getSelectedIndex(), song);

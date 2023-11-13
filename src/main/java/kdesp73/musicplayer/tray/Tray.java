@@ -98,7 +98,12 @@ public class Tray {
 	}
 	
 	public void setPlayPause(){
+		systemTray.setStatus(frame.player.isPlaying() ? "Playing" : "Paused");
 		((MenuItem) systemTray.getMenu().getFirst()).setText(frame.player.isPlaying() ? "Pause" : "Play");
+	}
+	
+	public void setMute(){
+		((MenuItem) systemTray.getMenu().get(3)).setText(frame.volumeOn ? "Mute" : "Unmute");
 	}
 
 }

@@ -758,7 +758,7 @@ public class Backend {
 //			scrapeArtist(artist);
 
 			Mp3File song = mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex());
-			song.getTrack().setArtist(artist);
+			song.setArtist(artist);
 			
 			song.selfScrape();
 			
@@ -781,7 +781,7 @@ public class Backend {
 			System.out.println("Scraped song: " + song.getAbsolutePath());
 			System.out.println("Current song: " + mainFrame.currentSong.getAbsolutePath());
 			
-			boolean scrapingSelectedSong = /*mainFrame.player.getCurrentSong().equals(song.getAbsolutePath()) && */mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
+			boolean scrapingSelectedSong = mainFrame.currentSong == null || mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
 			
 			if (scrapingSelectedSong) {
 				selectSong(mainFrame, index);

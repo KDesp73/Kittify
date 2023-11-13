@@ -205,6 +205,7 @@ public class UIFunctionality {
 			mainFrame.player.play(mainFrame.getSongsList().getSelectedIndex());
 //			mainFrame.getPlayButton().setText("Pause");
 			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(40, 40));
+			MainFrame.tray.setPlayPause();
 
 		}
 	}
@@ -230,6 +231,7 @@ public class UIFunctionality {
 			mainFrame.player.play(index);
 //			mainFrame.getPlayButton().setText("Pause");
 			Backend.loadIcon(mainFrame.getPlayPauseLabel(), assets + ((Queries.selectTheme().equals("Light")) ? "circle-pause-solid.png" : "circle-pause-solid-white.png"), new Dimension(40, 40));
+			MainFrame.tray.setPlayPause();
 
 		}
 	}
@@ -500,6 +502,8 @@ public class UIFunctionality {
 			}
 
 			((MainFrame) frame).volumeOn = !((MainFrame) frame).volumeOn;
+			MainFrame.tray.setMute();
+
 		}
 	}
 
@@ -510,6 +514,7 @@ public class UIFunctionality {
 			if (!((MainFrame) frame).volumeOn) {
 				Backend.loadIcon(((MainFrame) frame).getVolumeToggleLabel(), Images.volumeXMarkBlue, 28, "w");
 				Queries.updateVolume(0);
+
 				return;
 			}
 
@@ -531,7 +536,11 @@ public class UIFunctionality {
 	}
 
 	public static void resetDatabase(JFrame frame) {
-		int option = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reset your Database? This will erase all imported songs and their data", "Reset DB", JOptionPane.YES_NO_OPTION);
+		int option = 0;
+
+		if (!MainFrame.DEBUG) {
+			option = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reset your Database? This will erase all imported songs and their data", "Reset DB", JOptionPane.YES_NO_OPTION);
+		}
 
 		if (option == 0) {
 			System.out.println("Clearing Database...");
