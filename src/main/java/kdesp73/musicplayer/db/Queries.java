@@ -24,12 +24,12 @@ import kdesp73.musicplayer.gui.MainFrame;
  * @author konstantinos
  */
 public class Queries {
-	
-	public static void deleteSong(String path){
+
+	public static void deleteSong(String path) {
 		DatabaseConnection db = Database.connection();
-		
+
 		db.executeUpdate(new QueryBuilder().deleteFrom("Songs").where("path = \'" + Utils.replaceQuotes(path) + "\'").build());
-		
+
 		db.close();
 	}
 
@@ -47,7 +47,7 @@ public class Queries {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		db.close();
-		
+
 		return paths;
 	}
 
