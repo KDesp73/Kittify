@@ -103,34 +103,26 @@ public class Backend {
 
 	public static void setup(JFrame frame) {
 		if (frame instanceof MainFrame) {
-
+			// Frame settings
 			mainFrame.setLocationRelativeTo(null);
 			mainFrame.getRootPane().requestFocus();
-
 			mainFrame.setIconImage(new ImageIcon(Images.icon16png).getImage());
 			mainFrame.setTitle(MainFrame.TITLE);
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
+			
+			// Component settings
 			mainFrame.getSongsList().setFixedCellHeight(35);
 			mainFrame.getAlbumTracksList().setFixedCellHeight(35);
 			mainFrame.getAlbumTracksList().setFocusable(false);
 			mainFrame.getSortComboBox().setSelectedItem(Queries.selectSortBy());
-
-			mainFrame.addWindowListener(new WindowAdapter() {
-
-				@Override
-				public void windowClosing(WindowEvent e) {
-					if (mainFrame.currentSong != null) {
-						Queries.updateLastPlayed(mainFrame.currentSong.getAbsolutePath());
-
-					}
-					Queries.updateVolume(mainFrame.getVolumeSlider().getValue());
-
-				}
-			});
-
+			mainFrame.getBackgroundSplitPane().setPreferredSize(new Dimension(mainFrame.getPreferredSize().width, mainFrame.getPreferredSize().height - 24));
+			mainFrame.getCentralPanel().setBackground(mainFrame.getCentralPanel().getParent().getBackground());
+			setupTagsPanel(mainFrame.getTagsContainer());
+			
+			
 			updateSongs(frame);
-
 			sort(frame);
+			
 			if (!mainFrame.list.getSongs().isEmpty()) {
 				mainFrame.currentIndex = (mainFrame.list.searchSongPath(Queries.selectLastPlayed()) < 0) ? 0 : mainFrame.list.searchSongPath(Queries.selectLastPlayed());
 				mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
@@ -138,7 +130,7 @@ public class Backend {
 				setDefaultSongInfo(frame);
 				setDefaultSongAdditionalInfo(frame);
 			}
-
+			
 			mainFrame.player = new Mp3Player(mainFrame.currentIndex, mainFrame.list.getPaths());
 			mainFrame.player.setFrame(mainFrame);
 
@@ -151,7 +143,8 @@ public class Backend {
 				mainFrame.list.scrapeSongs();
 			}
 
-			Timer timer = new Timer(100, new ActionListener() {
+			// Timers
+			Timer checkSliderTimer = new Timer(100, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (mainFrame.getSlider().getValue() == mainFrame.getSlider().getMaximum()) {
@@ -162,19 +155,39 @@ public class Backend {
 			});
 
 			mainFrame.getSlider().addChangeListener((ChangeEvent e) -> {
-				if (!timer.isRunning()) {
-					timer.start();
+				if (!checkSliderTimer.isRunning()) {
+					checkSliderTimer.start();
 				}
 			});
-			String mode = Queries.selectMode();
-			setMode(mainFrame, mode);
-//			setTheme(mainFrame, Queries.selectTheme());
 
-			setupTagsPanel(mainFrame.getTagsContainer());
+			// Every 2 seconds check for updates in any of the imported directories
+			Timer refreshTimer = new Timer(2000, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					UIFunctionality.refreshDirectories(frame);
+				}
+			});
 
-			GUIMethods.setFontFamilyRecursively(mainFrame, "sans-serif", Font.PLAIN);
+			refreshTimer.start();
+			
+			// Before closing
+			mainFrame.addWindowListener(new WindowAdapter() {
 
-			mainFrame.getRootPane().addKeyListener(new KeyAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					if (mainFrame.currentSong != null) {
+						Queries.updateLastPlayed(mainFrame.currentSong.getAbsolutePath());
+
+					}
+					Queries.updateVolume(mainFrame.getVolumeSlider().getValue());
+					
+					refreshTimer.stop();
+
+				}
+			});
+
+			// Key Listeners
+			mainFrame.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyTyped(KeyEvent e) {
 					if (e.getKeyChar() == ' ') {
@@ -195,18 +208,22 @@ public class Backend {
 				}
 			});
 
-			mainFrame.getBackgroundSplitPane().setPreferredSize(new Dimension(mainFrame.getPreferredSize().width, mainFrame.getPreferredSize().height - 24));
-			mainFrame.getCentralPanel().setBackground(mainFrame.getCentralPanel().getParent().getBackground());
+			// Set mode
+			String mode = Queries.selectMode();
+			setMode(mainFrame, mode);
+			GUIMethods.setFontFamilyRecursively(mainFrame, "sans-serif", Font.PLAIN);
 
+			// Set volume
 			mainFrame.volume = Queries.selectVolume();
 			mainFrame.getVolumeSlider().setValue(mainFrame.volume);
 			mainFrame.player.setVolume(mainFrame.volume, mainFrame.getVolumeSlider().getMaximum());
 
+			// Load icons as necessary
 			loadIcons(frame);
 
 			mainFrame.shuffleOn = Queries.selectShuffle();
 			mainFrame.repeatOn = Queries.selectRepeat();
-
+			
 			if (mainFrame.shuffleOn) {
 				loadIcon(mainFrame.getShuffleLabel(), Images.shuffleBlue, new Dimension(20, 20));
 			} else {
@@ -1005,8 +1022,6 @@ public class Backend {
 		ArrayList<String> directories = Queries.selectDirectories();
 		ArrayList<String> databasePaths = Queries.selectPaths();
 		ArrayList<String> localPaths = new ArrayList<>();
-		
-		System.out.println("dire");
 
 		for (String dir : directories) {
 			ArrayList<String> dirFIles = null;
@@ -1022,19 +1037,17 @@ public class Backend {
 		}
 
 		if (databasePaths.size() == localPaths.size()) {
-			System.out.println("No changes");
 			return;
 		}
 
 //		Collections.sort(databasePaths);
 //		Collections.sort(localPaths);
-
 		List<String> extraPathsInDatabase = findMissingFiles(databasePaths, localPaths);
 
 		if (!extraPathsInDatabase.isEmpty()) {
 			for (String extraPath : extraPathsInDatabase) {
-				System.out.println("Deleted \"" + extraPath + "\" from Database");
 				Queries.deleteSong(extraPath);
+				System.out.println("Deleted \"" + extraPath + "\" from Database");
 			}
 		}
 //		
