@@ -1050,14 +1050,6 @@ public class Backend {
 				System.out.println("Deleted \"" + extraPath + "\" from Database");
 			}
 		}
-//		
-//		List<String> extraLocalPaths = findMissingFiles(databasePaths, localPaths);
-//		
-//		if(extraLocalPaths.size() > 0){
-//			for(String extraPath : extraLocalPaths){
-//				Queries.insertFile(extraPath);
-//			}
-//		}
 
 	}
 
