@@ -206,7 +206,13 @@ public class SongsList {
 	}
 
 	public void sortByTime() {
-		list.sort((o1, o2) -> o2.getTimeOfImport().compareTo(o1.getTimeOfImport()));
+		list.sort((o1, o2) -> {
+			if(o1.getTimeOfImport() == null || o2.getTimeOfImport() == null) {
+				return SORTING_ERROR;
+			}
+			
+			return o2.getTimeOfImport().compareTo(o1.getTimeOfImport());
+		});
 	}
 	
 	public int searchSongName(String search){
