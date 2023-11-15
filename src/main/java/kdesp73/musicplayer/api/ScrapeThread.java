@@ -5,6 +5,8 @@
 package kdesp73.musicplayer.api;
 
 import javax.swing.JOptionPane;
+import kdesp73.musicplayer.backend.Backend;
+import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.songs.Mp3File;
 import kdesp73.musicplayer.songs.SongsList;
 
@@ -26,6 +28,10 @@ public class ScrapeThread extends Thread {
 	public void run() {
 		for(Mp3File file : list.getSongs()){
 			file.selfScrape();
+			
+			if(Queries.selectDownloadCoverByDefault()){
+				Backend.downloadAlbumCoverAction(file);
+			}
 		}
 		
 		JOptionPane.showMessageDialog(null, "Scrape Completed!");

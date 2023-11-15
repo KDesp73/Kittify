@@ -139,7 +139,7 @@ public class Backend {
 			mainFrame.getScrapeAtStartMenuItem().setSelected(mainFrame.scrapeAtStart);
 			mainFrame.downloadCovers = Queries.selectDownloadCoverByDefault();
 			mainFrame.getDownloadCoverMenuItem().setSelected(mainFrame.downloadCovers);
-			
+
 			if (mainFrame.scrapeAtStart) {
 				mainFrame.list.scrapeSongs();
 			}
@@ -706,6 +706,36 @@ public class Backend {
 
 	}
 
+	public static void downloadAlbumCoverAction(Mp3File file) {
+		String localCover = Queries.selectLocalCoverPath(file.getTrack().getAlbum(), file.getTrack().getArtist());
+		String coverURL = Queries.selectAlbumCover(file.getTrack().getAlbum(), file.getTrack().getArtist());
+
+		if (localCover != null && !localCover.isBlank()) {
+			File coverFile = new File(localCover);
+
+			if (coverFile.exists()) {
+				JOptionPane.showMessageDialog(mainFrame, "Album already has a local image");
+				return;
+			}
+		}
+
+		// Download image
+		String imagePath = mainFrame.getProject_path() + "/covers/" + file.getTrack().getAlbum() + " - " + file.getTrack().getArtist() + ".png";
+		try {
+			GUIMethods.downloadImage(new URL(coverURL), imagePath);
+		} catch (MalformedURLException ex) {
+			Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+			System.err.println("Invalid URL");
+		} catch (IOException ex) {
+			Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+			System.err.println("Downloading image failed");
+		}
+
+		Queries.updateLocalCoverPath(file.getTrack().getAlbum(), file.getTrack().getArtist(), imagePath);
+//		JOptionPane.showMessageDialog(mainFrame, "Downloaded image at covers/ directory");
+
+	}
+
 	public static void editAction(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			if (!MainFrame.editSongFrame.isShowing()) {
@@ -785,8 +815,10 @@ public class Backend {
 			if (artist == null || "unknown artist".equals(artist.toLowerCase())) {
 				try {
 					response = api.GET(LastFmMethods.Track.search, LastFmMethods.Track.tags(title));
+
 				} catch (IOException | InterruptedException ex) {
-					Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.getLogger(MainFrame.class
+							.getName()).log(Level.SEVERE, null, ex);
 					return;
 				}
 
@@ -845,8 +877,10 @@ public class Backend {
 				try {
 					UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
 					setTheme(frame, System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/" + "light.yml");
+
 				} catch (UnsupportedLookAndFeelException ex) {
-					Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.getLogger(Backend.class
+							.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
 
@@ -855,8 +889,10 @@ public class Backend {
 //					UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
 					UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkIJTheme());
 					setTheme(frame, System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/" + "dark.yml");
+
 				} catch (UnsupportedLookAndFeelException ex) {
-					Logger.getLogger(ThemesFrame.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.getLogger(ThemesFrame.class
+							.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
 			default -> {
@@ -916,8 +952,10 @@ public class Backend {
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(new File(path));
+
 		} catch (IOException ex) {
-			Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Backend.class
+					.getName()).log(Level.SEVERE, null, ex);
 		}
 
 		GUIMethods.loadImage(label, GUIMethods.resizeImage(image, dimension.width, dimension.height));
@@ -927,8 +965,10 @@ public class Backend {
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(new File(path));
+
 		} catch (IOException ex) {
-			Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Backend.class
+					.getName()).log(Level.SEVERE, null, ex);
 		}
 
 		if (dim.equals("w")) {
@@ -1020,8 +1060,10 @@ public class Backend {
 		if (frame instanceof MainFrame) {
 			try {
 				GUIMethods.loadImage(mainFrame.getPlayPauseLabel(), GUIMethods.resizeImage(ImageIO.read(new File((Queries.selectMode()).equals("Dark") ? Images.playWhite : Images.play)), 40, 40));
+
 			} catch (IOException ex) {
-				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(Backend.class
+						.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 	}
@@ -1050,8 +1092,10 @@ public class Backend {
 			ArrayList<String> dirFIles = null;
 			try {
 				dirFIles = (ArrayList<String>) FileOperations.findFiles(dir);
+
 			} catch (IOException ex) {
-				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(Backend.class
+						.getName()).log(Level.SEVERE, null, ex);
 			}
 
 			if (dirFIles != null) {
