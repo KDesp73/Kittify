@@ -50,6 +50,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public SongsList list;
 
 	public boolean scrapeAtStart = false;
+	public boolean downloadCovers = false;
 	public boolean shuffleOn = false;
 	public boolean repeatOn = false;
 	public boolean volumeOn = true;
@@ -146,6 +147,7 @@ public final class MainFrame extends javax.swing.JFrame {
         ApiMenu = new javax.swing.JMenu();
         scrapeAllMenuItem = new javax.swing.JMenuItem();
         scrapeAtStartMenuItem = new javax.swing.JCheckBoxMenuItem();
+        downloadCoverMenuItem = new javax.swing.JCheckBoxMenuItem();
         settingsMenu = new javax.swing.JMenu();
         themesMenuItem = new javax.swing.JMenuItem();
         resetDBMenuItem = new javax.swing.JMenuItem();
@@ -607,7 +609,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
         leftPanel.setName("bg"); // NOI18N
 
-        sortComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "Artist", "Album" }));
+        sortComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "Artist", "Album", "Newest" }));
         sortComboBox.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         sortComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -761,6 +763,15 @@ public final class MainFrame extends javax.swing.JFrame {
             }
         });
         ApiMenu.add(scrapeAtStartMenuItem);
+
+        downloadCoverMenuItem.setSelected(true);
+        downloadCoverMenuItem.setText("Download Cover By Default");
+        downloadCoverMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downloadCoverMenuItemActionPerformed(evt);
+            }
+        });
+        ApiMenu.add(downloadCoverMenuItem);
 
         menuBar.add(ApiMenu);
 
@@ -1028,6 +1039,10 @@ public final class MainFrame extends javax.swing.JFrame {
 		UIFunctionality.resetDatabase(this);
     }//GEN-LAST:event_resetDBMenuItemActionPerformed
 
+    private void downloadCoverMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadCoverMenuItemActionPerformed
+		
+    }//GEN-LAST:event_downloadCoverMenuItemActionPerformed
+
 	// Getters
 	public String getProject_path() {
 		return project_path;
@@ -1249,7 +1264,12 @@ public final class MainFrame extends javax.swing.JFrame {
 		return volumeSlider;
 	}
 
+	public JCheckBoxMenuItem getDownloadCoverMenuItem() {
+		return downloadCoverMenuItem;
+	}
 
+	
+	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ApiMenu;
     private javax.swing.JMenuItem aboutMenuItem;
@@ -1273,6 +1293,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel centralPanel;
     private javax.swing.JPanel controlsPanel;
     private javax.swing.JLayeredPane controlsParentPanel;
+    private javax.swing.JCheckBoxMenuItem downloadCoverMenuItem;
     private javax.swing.JLabel durationLabel;
     private javax.swing.JMenuItem editDirectoriesMenuItem;
     private javax.swing.JMenuItem editFilesMenuItem;

@@ -25,6 +25,51 @@ import kdesp73.musicplayer.gui.MainFrame;
  */
 public class Queries {
 
+	public static void updateTimeOfImport(Mp3File song) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder()
+				.update("Songs")
+				.set("time_of_import", Utils.replaceQuotes(song.getTimeOfImport()))
+				.where("path = \'" + Utils.replaceQuotes(song.getAbsolutePath()) + "\'")
+				.build()
+		);
+
+		db.close();
+	}
+
+	public static String selectTimeOfImport(String path) {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder()
+				.select("time_of_import")
+				.from("Songs")
+				.where("path = \'" + Utils.replaceQuotes(path) + "\'")
+				.build()
+		);
+
+		String timeOfImport = null;
+
+		try {
+			rs.next();
+			timeOfImport = rs.getString(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+		db.close();
+		
+		return timeOfImport;
+	}
+
+	public static void updateDownloadCoversByDefault(boolean flag) {
+		DatabaseConnection db = Database.connection();
+
+		db.executeUpdate(new QueryBuilder().update("Settings").set("download_covers", flag).build());
+
+		db.close();
+	}
+
 	public static void deleteSong(String path) {
 		DatabaseConnection db = Database.connection();
 
@@ -391,6 +436,7 @@ public class Queries {
 				+ "SET title = \'" + Utils.replaceQuotes(file.getTrack().getName())
 				+ "\', artist = \'" + Utils.replaceQuotes(file.getTrack().getArtist())
 				+ "\', album = \'" + Utils.replaceQuotes(file.getTrack().getAlbum())
+				+ "\', time_of_import = \'" + Utils.replaceQuotes(file.getTimeOfImport())
 				+ "\' WHERE path = \'" + Utils.replaceQuotes(file.getAbsolutePath()) + "\'";
 
 		db.executeUpdate(query);
@@ -641,7 +687,7 @@ public class Queries {
 		Mp3File file = null;
 		try {
 			rs.next();
-			file = new Mp3File(rs.getString("title"), rs.getString("artist"), rs.getString("album"), rs.getString("path"));
+			file = new Mp3File(rs.getString("title"), rs.getString("artist"), rs.getString("album"), rs.getString("time_of_import"), rs.getString("path"));
 		} catch (SQLException ex) {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
 		}

@@ -411,6 +411,15 @@ public class UIFunctionality {
 		}
 	}
 
+	public static void toggleDownloadCoverByDefault(JFrame frame){
+		if (frame instanceof MainFrame) {
+			boolean flag = mainFrame.getDownloadCoverMenuItem().isSelected();
+			
+			Queries.updateDownloadCoversByDefault(flag);
+			mainFrame.downloadCovers = flag;
+		}
+	}
+	
 	public static void shuffle(JFrame frame) {
 		if (frame instanceof MainFrame) {
 

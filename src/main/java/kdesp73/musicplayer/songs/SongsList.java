@@ -124,7 +124,7 @@ public class SongsList {
 
 		try {
 			while (rs.next()) {
-				Mp3File file = new Mp3File(rs.getString("title"), rs.getString("artist"), rs.getString("album"), rs.getString("path"));
+				Mp3File file = new Mp3File(rs.getString("title"), rs.getString("artist"), rs.getString("album"), rs.getString("time_of_import"), rs.getString("path"));
 
 				dbSongs.add(file);
 				paths.add(rs.getString("path"));
@@ -154,7 +154,7 @@ public class SongsList {
 			}
 
 			if (!dontAdd) {
-				db.executeUpdate(builder.insertInto("Songs").columns("path", "title", "scraped").values(file.getAbsolutePath().replaceAll(Pattern.quote("\'"), "\'\'"), file.getTrack().getName().replaceAll(Pattern.quote("\'"), "\'\'"), false).build());
+				db.executeUpdate(builder.insertInto("Songs").columns("path", "title", "scraped", "time_of_import").values(file.getAbsolutePath().replaceAll(Pattern.quote("\'"), "\'\'"), file.getTrack().getName().replaceAll(Pattern.quote("\'"), "\'\'"), false, file.getTimeOfImport()).build());
 			}
 		}
 		db.close();

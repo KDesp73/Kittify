@@ -90,6 +90,45 @@ public class Mp3File extends File {
 			}
 		}
 	}
+	public Mp3File(String title, String artist, String album, String time_of_import, String path) {
+		super(path);
+
+		this.track.setName(title);
+		this.track.setArtist(artist);
+		this.track.setAlbum(album);
+		this.metadata = getMetadata();
+		this.coverPath = null;
+		this.timeOfImport = time_of_import;
+		this.extension = FileOperations.getExtensionFromPath(this.getAbsolutePath());
+
+		if (metadata == null) {
+			return;
+		}
+
+		if (title == null || title.isBlank()) {
+
+			String metadataTitle = (String) metadata.get("title");
+			if (metadataTitle != null && !metadataTitle.isBlank()) {
+				this.track.setName(metadataTitle);
+			}
+		}
+
+		if (artist == null || artist.isBlank() || artist.toLowerCase().equals("unknown artist") || artist.toLowerCase().equals("άγνωστος καλλιτέχνης")) {
+
+			String metadataArtist = (String) metadata.get("artist");
+			if (metadataArtist != null && !metadataArtist.isBlank()) {
+				this.track.setArtist(metadataArtist);
+			}
+		}
+
+		if (album == null || album.isBlank() || album.toLowerCase().equals("unknown album") || album.toLowerCase().equals("άγνωστο άλμπουμ")) {
+
+			String metadataAlbum = (String) metadata.get("album");
+			if (metadataAlbum != null && !metadataAlbum.isBlank()) {
+				this.track.setAlbum(metadataAlbum);
+			}
+		}
+	}
 
 	public Mp3File(String pathname) {
 		super(pathname);

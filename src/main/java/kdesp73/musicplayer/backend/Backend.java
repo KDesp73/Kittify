@@ -109,7 +109,7 @@ public class Backend {
 			mainFrame.setIconImage(new ImageIcon(Images.icon16png).getImage());
 			mainFrame.setTitle(MainFrame.TITLE);
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
-			
+
 			// Component settings
 			mainFrame.getSongsList().setFixedCellHeight(35);
 			mainFrame.getAlbumTracksList().setFixedCellHeight(35);
@@ -118,11 +118,10 @@ public class Backend {
 			mainFrame.getBackgroundSplitPane().setPreferredSize(new Dimension(mainFrame.getPreferredSize().width, mainFrame.getPreferredSize().height - 24));
 			mainFrame.getCentralPanel().setBackground(mainFrame.getCentralPanel().getParent().getBackground());
 			setupTagsPanel(mainFrame.getTagsContainer());
-			
-			
+
 			updateSongs(frame);
 			sort(frame);
-			
+
 			if (!mainFrame.list.getSongs().isEmpty()) {
 				mainFrame.currentIndex = (mainFrame.list.searchSongPath(Queries.selectLastPlayed()) < 0) ? 0 : mainFrame.list.searchSongPath(Queries.selectLastPlayed());
 				mainFrame.currentSong = mainFrame.list.getSongs().get(mainFrame.currentIndex);
@@ -130,7 +129,7 @@ public class Backend {
 				setDefaultSongInfo(frame);
 				setDefaultSongAdditionalInfo(frame);
 			}
-			
+
 			mainFrame.player = new Mp3Player(mainFrame.currentIndex, mainFrame.list.getPaths());
 			mainFrame.player.setFrame(mainFrame);
 
@@ -169,7 +168,7 @@ public class Backend {
 			});
 
 			refreshTimer.start();
-			
+
 			// Before closing
 			mainFrame.addWindowListener(new WindowAdapter() {
 
@@ -180,7 +179,7 @@ public class Backend {
 
 					}
 					Queries.updateVolume(mainFrame.getVolumeSlider().getValue());
-					
+
 					refreshTimer.stop();
 
 				}
@@ -223,7 +222,7 @@ public class Backend {
 
 			mainFrame.shuffleOn = Queries.selectShuffle();
 			mainFrame.repeatOn = Queries.selectRepeat();
-			
+
 			if (mainFrame.shuffleOn) {
 				loadIcon(mainFrame.getShuffleLabel(), Images.shuffleBlue, new Dimension(20, 20));
 			} else {
@@ -295,6 +294,11 @@ public class Backend {
 					refreshList(mainFrame, "Album");
 					return "Album";
 				}
+				case 3 -> {
+					mainFrame.list.sortByTime();
+					refreshList(mainFrame, "Newest");
+					return "Newest";
+				}
 				default -> {
 					return null;
 				}
@@ -335,14 +339,21 @@ public class Backend {
 			for (Mp3File song : mainFrame.list.getSongs()) {
 				String listText = "";
 				switch (sortBy) {
-					case "Name" ->
+					case "Name":
+					case "Newest":
 						listText = (song.getTrack().getArtist() == null || song.getTrack().getArtist().isBlank())
 								? song.getTrack().getName()
 								: song.getTrack().getName() + " - " + song.getTrack().getArtist();
-					case "Artist" ->
+						break;
+					case "Artist":
 						listText = song.getTrack().getArtist() + " - " + song.getTrack().getName();
-					case "Album" ->
+						break;
+					case "Album":
 						listText = song.getTrack().getAlbum() + " - " + song.getTrack().getName();
+						break;
+					default:
+						System.err.println("Invalid Input");
+						break;
 
 				}
 				listModel.addElement(listText);
@@ -357,13 +368,19 @@ public class Backend {
 			DefaultListModel listModel = new DefaultListModel();
 			for (Mp3File song : mainFrame.list.getSongs()) {
 				switch (sortBy) {
-					case "Name" ->
+					case "Name":
+					case "Newest":
 						listModel.addElement(song.getTrack().getName() + " - " + song.getTrack().getArtist());
-					case "Artist" ->
+						break;
+					case "Artist":
 						listModel.addElement(song.getTrack().getArtist() + " - " + song.getTrack().getName());
-					case "Album" ->
+						break;
+					case "Album":
 						listModel.addElement(song.getTrack().getAlbum() + " - " + song.getTrack().getName());
-
+						break;
+					default:
+						System.err.println("Invalid input");
+						break;
 				}
 			}
 			mainFrame.getSongsList().setModel(listModel);
@@ -812,6 +829,10 @@ public class Backend {
 				selectSong(mainFrame, index);
 			} else {
 				System.out.println("Scraped song that is not selected");
+			}
+
+			if (mainFrame.downloadCovers) {
+				Backend.downloadAlbumCoverAction(frame);
 			}
 		}
 	}
