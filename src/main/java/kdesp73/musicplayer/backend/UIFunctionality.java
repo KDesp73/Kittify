@@ -567,10 +567,13 @@ public class UIFunctionality {
 	
 	public static void refreshDirectories(JFrame frame){
 		if (frame instanceof MainFrame) {
+			int selectedIndex = mainFrame.getSongsList().getSelectedIndex();
+			if(Queries.selectDirectories().isEmpty()) return;
+			
 			Backend.checkDirectoriesForChanges();
 			Backend.updateSongs(frame);	
 			mainFrame.player.playlist = mainFrame.list.getPaths();
-			
+			mainFrame.getSongsList().setSelectedIndex(selectedIndex);
 		}
 	}
 }
