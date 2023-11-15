@@ -56,9 +56,9 @@ public class Queries {
 		} catch (SQLException ex) {
 			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
+
 		db.close();
-		
+
 		return timeOfImport;
 	}
 
@@ -68,6 +68,29 @@ public class Queries {
 		db.executeUpdate(new QueryBuilder().update("Settings").set("download_covers", flag).build());
 
 		db.close();
+	}
+
+	public static boolean selectDownloadCoverByDefault() {
+		DatabaseConnection db = Database.connection();
+
+		ResultSet rs = db.executeQuery(new QueryBuilder()
+				.select("download_covers")
+				.from("Settings")
+				.build()
+		);
+
+		boolean flag = false;
+
+		try {
+			rs.next();
+			flag = rs.getBoolean(1);
+		} catch (SQLException ex) {
+			Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		db.close();
+
+		return flag;
 	}
 
 	public static void deleteSong(String path) {

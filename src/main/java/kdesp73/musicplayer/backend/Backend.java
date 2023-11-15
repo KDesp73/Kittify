@@ -137,7 +137,9 @@ public class Backend {
 
 			mainFrame.scrapeAtStart = Queries.selectScrapeAtStart();
 			mainFrame.getScrapeAtStartMenuItem().setSelected(mainFrame.scrapeAtStart);
-
+			mainFrame.downloadCovers = Queries.selectDownloadCoverByDefault();
+			mainFrame.getDownloadCoverMenuItem().setSelected(mainFrame.downloadCovers);
+			
 			if (mainFrame.scrapeAtStart) {
 				mainFrame.list.scrapeSongs();
 			}
