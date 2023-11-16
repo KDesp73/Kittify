@@ -1040,7 +1040,7 @@ public final class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_resetDBMenuItemActionPerformed
 
     private void downloadCoverMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadCoverMenuItemActionPerformed
-		
+		UIFunctionality.toggleDownloadCoverByDefault(this);
     }//GEN-LAST:event_downloadCoverMenuItemActionPerformed
 
 	// Getters

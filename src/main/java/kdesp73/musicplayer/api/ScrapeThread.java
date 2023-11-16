@@ -30,7 +30,7 @@ public class ScrapeThread extends Thread {
 			file.selfScrape();
 			
 			if(Queries.selectDownloadCoverByDefault()){
-				Backend.downloadAlbumCoverAction(file);
+				Backend.downloadAlbumCover(file);
 			}
 		}
 		

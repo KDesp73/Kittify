@@ -281,7 +281,7 @@ public class Queries {
 	public static void updateLocalCoverPath(String album, String artist, String path) {
 		DatabaseConnection db = Database.connection();
 
-		db.executeUpdate(new QueryBuilder().update("Albums").set("local_cover_path", path).where("name = \'" + Utils.replaceQuotes(album) + "\' AND artist = \'" + Utils.replaceQuotes(artist) + "\'").build());
+		db.executeUpdate(new QueryBuilder().update("Albums").set("local_cover_path", Utils.replaceQuotes(path)).where("name = \'" + Utils.replaceQuotes(album) + "\' AND artist = \'" + Utils.replaceQuotes(artist) + "\'").build());
 
 		db.close();
 	}

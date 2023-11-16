@@ -42,6 +42,9 @@ public class GUIMethods {
 			} catch (java.net.MalformedURLException e) {
 				System.err.println("Issue with url");
 				return null;
+			} catch (java.lang.IllegalArgumentException e){
+				System.err.println("I dont know why this happened");
+				return null;
 			}
 
 			BufferedImage image = null;

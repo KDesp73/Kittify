@@ -342,7 +342,7 @@ public class UIFunctionality {
 							case "Scrape" ->
 								Backend.scrapeAction(mainFrame);
 							case "Download Cover" ->
-								Backend.downloadAlbumCoverAction(mainFrame);
+								Backend.downloadAlbumCover(mainFrame);
 							case "Print Track" -> {
 								System.out.println(mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack());
 							}

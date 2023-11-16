@@ -30,6 +30,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -645,8 +646,18 @@ public class Backend {
 				if (coverPath != null && !coverPath.isBlank()) {
 					try {
 						GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(coverPath)), 420, 420));
+					} catch (IIOException ex) {
+						try {
+							GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(Images.albumPlaceholder)), 420, 420));
+						} catch (IOException ex1) {
+							Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex1);
+						}
 					} catch (IOException ex) {
-						Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+						try {
+							GUIMethods.loadImage(mainFrame.getAlbumImageLabel(), GUIMethods.resizeImage(ImageIO.read(new File(Images.albumPlaceholder)), 420, 420));
+						} catch (IOException ex1) {
+							Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex1);
+						}
 					}
 					return;
 				} else if (coverURL != null && !coverURL.isBlank()) {
@@ -672,7 +683,7 @@ public class Backend {
 		}
 	}
 
-	public static void downloadAlbumCoverAction(JFrame frame) {
+	public static void downloadAlbumCover(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			Mp3File selectedSong = ((MainFrame) frame).list.getSongs().get(((MainFrame) frame).getSongsList().getSelectedIndex());
 
@@ -706,7 +717,7 @@ public class Backend {
 
 	}
 
-	public static void downloadAlbumCoverAction(Mp3File file) {
+	public static void downloadAlbumCover(Mp3File file) {
 		String localCover = Queries.selectLocalCoverPath(file.getTrack().getAlbum(), file.getTrack().getArtist());
 		String coverURL = Queries.selectAlbumCover(file.getTrack().getAlbum(), file.getTrack().getArtist());
 
@@ -714,7 +725,8 @@ public class Backend {
 			File coverFile = new File(localCover);
 
 			if (coverFile.exists()) {
-				JOptionPane.showMessageDialog(mainFrame, "Album already has a local image");
+//				JOptionPane.showMessageDialog(mainFrame, "Album already has a local image");
+				System.err.println("Album already has a local image");
 				return;
 			}
 		}
@@ -724,11 +736,12 @@ public class Backend {
 		try {
 			GUIMethods.downloadImage(new URL(coverURL), imagePath);
 		} catch (MalformedURLException ex) {
-			Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 			System.err.println("Invalid URL");
-		} catch (IOException ex) {
-			Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 			System.err.println("Downloading image failed");
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			System.err.println("Downloading image failed");
+			ex.printStackTrace();
 		}
 
 		Queries.updateLocalCoverPath(file.getTrack().getAlbum(), file.getTrack().getArtist(), imagePath);
@@ -866,7 +879,8 @@ public class Backend {
 			}
 
 			if (mainFrame.downloadCovers) {
-				Backend.downloadAlbumCoverAction(frame);
+				System.out.println("Downloading cover...");
+				Backend.downloadAlbumCover(song);
 			}
 		}
 	}
