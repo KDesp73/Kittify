@@ -346,6 +346,9 @@ public class UIFunctionality {
 							case "Print Track" -> {
 								System.out.println(mainFrame.list.getSongs().get(mainFrame.getSongsList().getSelectedIndex()).getTrack());
 							}
+							case "Delete Info" -> {
+								// TODO
+							}
 							default -> {
 							}
 						}

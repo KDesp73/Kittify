@@ -698,6 +698,11 @@ public class Backend {
 					return;
 				}
 			}
+			
+			if(coverURL == null){
+				System.err.println("Null URL");
+				return;
+			}
 
 			// Download image
 			String imagePath = mainFrame.getProject_path() + "/covers/" + selectedSong.getTrack().getAlbum() + " - " + selectedSong.getTrack().getArtist() + ".png";
@@ -705,7 +710,7 @@ public class Backend {
 				GUIMethods.downloadImage(new URL(coverURL), imagePath);
 			} catch (MalformedURLException ex) {
 				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
-				System.err.println("Invalid URL");
+				System.err.println("Invalid URL:" + coverURL);
 			} catch (IOException ex) {
 				Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
 				System.err.println("Downloading image failed");
@@ -736,12 +741,12 @@ public class Backend {
 		try {
 			GUIMethods.downloadImage(new URL(coverURL), imagePath);
 		} catch (MalformedURLException ex) {
-			System.err.println("Invalid URL");
+			System.err.println("Invalid URL: " + coverURL);
 			System.err.println("Downloading image failed");
-			ex.printStackTrace();
+//			ex.printStackTrace();
 		} catch (IOException ex) {
 			System.err.println("Downloading image failed");
-			ex.printStackTrace();
+//			ex.printStackTrace();
 		}
 
 		Queries.updateLocalCoverPath(file.getTrack().getAlbum(), file.getTrack().getArtist(), imagePath);
@@ -1101,6 +1106,7 @@ public class Backend {
 		ArrayList<String> directories = Queries.selectDirectories();
 		ArrayList<String> databasePaths = Queries.selectPaths();
 		ArrayList<String> localPaths = new ArrayList<>();
+		List<String> individualFiles = Queries.selectFiles();
 
 		for (String dir : directories) {
 			ArrayList<String> dirFIles = null;
@@ -1116,6 +1122,8 @@ public class Backend {
 				localPaths.addAll(dirFIles);
 			}
 		}
+		
+		localPaths.addAll(individualFiles);
 
 		if (databasePaths.size() == localPaths.size()) {
 			return;

@@ -25,7 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import kdesp73.musicplayer.files.FileOperations;
 import com.github.rjeschke.txtmark.Processor;
-		
+
 public class GUIMethods {
 
 	public static void renderMarkdown(JEditorPane editor, String path) {
@@ -42,8 +42,8 @@ public class GUIMethods {
 			} catch (java.net.MalformedURLException e) {
 				System.err.println("Issue with url");
 				return null;
-			} catch (java.lang.IllegalArgumentException e){
-				System.err.println("I dont know why this happened");
+			} catch (java.lang.IllegalArgumentException e) {
+				System.err.println("Image is JPEG");
 				return null;
 			}
 
@@ -53,6 +53,9 @@ public class GUIMethods {
 
 			} catch (javax.imageio.IIOException e) {
 				System.err.println("No internet Connection. Can't Download image from URL");
+				return null;
+			} catch (java.lang.IllegalArgumentException e) {
+				System.err.println("Image is JPEG");
 				return null;
 			}
 
@@ -64,6 +67,8 @@ public class GUIMethods {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
+		} catch (java.lang.IllegalArgumentException e) {
 			return null;
 		}
 	}

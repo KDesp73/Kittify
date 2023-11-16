@@ -19,6 +19,8 @@ import ealvatag.tag.TagException;
 import ealvatag.tag.UnsupportedFieldException;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import kdesp73.musicplayer.files.FileOperations;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -356,6 +358,17 @@ public class Mp3File extends File {
 
 				if (response != null) {
 					albumO = new Album(response.first);
+					
+					
+					try {
+						if(!FileOperations.getExtensionFromPath(new URL(albumO.getCoverURL()).getFile()).equals("png")){
+							albumO.setCoverURL(track.getCover());
+							System.out.println("Updated cover: " + track.getCover());
+						}
+					} catch (MalformedURLException ex) {
+						Logger.getLogger(Mp3File.class.getName()).log(Level.SEVERE, null, ex);
+					}
+					
 					Queries.insertAlbum(albumO);
 				}
 			}
