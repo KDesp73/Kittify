@@ -114,7 +114,10 @@ public class UIFunctionality {
 	public static void editDirectories(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
-
+			Backend.setDefaultSongInfo(frame);
+			Backend.resetSlider(frame);
+			Backend.setDefaultSongAdditionalInfo(frame);
+			
 			if (!MainFrame.editDirectoriesFrame.isShowing()) {
 				MainFrame.editDirectoriesFrame = new EditDirectoriesFrame(mainFrame);
 				MainFrame.editDirectoriesFrame.setVisible(true);
@@ -125,6 +128,10 @@ public class UIFunctionality {
 	public static void editFiles(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			mainFrame.player.stop();
+			Backend.setDefaultSongInfo(frame);
+			Backend.resetSlider(frame);
+			Backend.setDefaultSongAdditionalInfo(frame);
+			
 			if (!MainFrame.editFilesFrame.isShowing()) {
 				MainFrame.editFilesFrame = new EditFilesFrame(mainFrame);
 				MainFrame.editFilesFrame.setVisible(true);
@@ -389,7 +396,7 @@ public class UIFunctionality {
 				return;
 			}
 
-//			Backend.selectSong(mainFrame, index);
+			mainFrame.getSongsList().setSelectedIndex(index);
 			mainFrame.getSongsList().ensureIndexIsVisible(index);
 		}
 	}
