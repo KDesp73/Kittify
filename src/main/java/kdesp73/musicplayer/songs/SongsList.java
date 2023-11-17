@@ -31,6 +31,7 @@ public class SongsList {
 
 	private ArrayList<Mp3File> list = new ArrayList<>();
 
+	public SongsList() {}
 	public SongsList(SongsList copy) {
 		this.list = copy.list;
 	}

@@ -1141,5 +1141,32 @@ public class Backend {
 		}
 
 	}
+	
+	public static SongsList advancedSearch(SongsList list, String text) {
+		text = text.toLowerCase();
+
+		HashSet<Mp3File> matchingFiles = new HashSet<>();
+		SongsList newList = new SongsList();
+
+		for (Mp3File file : list.getSongs()) {
+			String title = file.getTrack().getName().toLowerCase();
+			String artist = file.getTrack().getArtist().toLowerCase();
+			String album = file.getTrack().getAlbum().toLowerCase();
+
+			if (title.contains(text)) {
+				matchingFiles.add(file);
+			}
+			if (artist.contains(text)) {
+				matchingFiles.add(file);
+			}
+			if (album.contains(text)) {
+				matchingFiles.add(file);
+			}
+		}
+
+		newList.getSongs().addAll(matchingFiles);
+
+		return newList;
+	}
 
 }
