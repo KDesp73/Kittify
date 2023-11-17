@@ -43,6 +43,7 @@ import kdesp73.musicplayer.gui.MainFrame;
  * @author konstantinos
  */
 public class Mp3File extends File {
+
 	// File
 	private int durationSeconds;
 	private String timeOfImport;
@@ -92,6 +93,7 @@ public class Mp3File extends File {
 			}
 		}
 	}
+
 	public Mp3File(String title, String artist, String album, String time_of_import, String path) {
 		super(path);
 
@@ -242,18 +244,18 @@ public class Mp3File extends File {
 	public void setTrack(Track track) {
 		this.track = track;
 	}
-	
-	public void setName(String name){
+
+	public void setName(String name) {
 		this.track.setName(name);
 		setMetadata(FieldKey.TITLE, name);
 	}
-	
-	public void setArtist(String artist){
+
+	public void setArtist(String artist) {
 		this.track.setArtist(artist);
 		setMetadata(FieldKey.ARTIST, artist);
 	}
-	
-	public void setAlbum(String album){
+
+	public void setAlbum(String album) {
 		this.track.setAlbum(album);
 		setMetadata(FieldKey.ALBUM, album);
 	}
@@ -289,8 +291,8 @@ public class Mp3File extends File {
 	public boolean isScraped() {
 		return Queries.selectScraped(this.getAbsolutePath());
 	}
-	
-	public void setScraped(boolean scraped){
+
+	public void setScraped(boolean scraped) {
 		Queries.updateScraped(scraped, this.getAbsolutePath());
 	}
 
@@ -301,8 +303,10 @@ public class Mp3File extends File {
 	}
 
 	public void selfScrape() {
-		if(isScraped()) return;
-		
+		if (isScraped()) {
+			return;
+		}
+
 		Mp3File file = this;
 
 		API api = new API();
@@ -338,17 +342,16 @@ public class Mp3File extends File {
 		// Update the Song
 		Track track = new Track(response.first);
 
-		if(album != null && !album.isBlank() && (track.getAlbum() == null || track.getAlbum().isBlank())){
+		if (album != null && !album.isBlank() && (track.getAlbum() == null || track.getAlbum().isBlank())) {
 			file.setAlbum(album);
 		}
-		
+
 		file.setTrack(track);
-		Queries.updateSong(file);
-			
+
 		// Scrape for the Album if not scraped already
 		if (file.getTrack().getAlbum() != null && !file.getTrack().getAlbum().isBlank()) {
 			Album albumO = Queries.selectAlbum(file.getTrack().getAlbum(), artist);
-			
+
 			if (albumO == null) {
 				try {
 					response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, file.getTrack().getAlbum()));
@@ -358,18 +361,16 @@ public class Mp3File extends File {
 
 				if (response != null) {
 					albumO = new Album(response.first);
-					
-					
-					try {
-						if(!FileOperations.getExtensionFromPath(new URL(albumO.getCoverURL()).getFile()).equals("png")){
-							albumO.setCoverURL(track.getCover());
-							System.out.println("Updated cover: " + track.getCover());
-						}
-					} catch (MalformedURLException ex) {
-						Logger.getLogger(Mp3File.class.getName()).log(Level.SEVERE, null, ex);
+
+					if (albumO.getCoverURL() == null || !FileOperations.getExtensionFromPath(albumO.getCoverURL()).equals("png")) {
+						albumO.setCoverURL(track.getCover());
+						System.out.println("Updated cover: " + track.getCover());
 					}
-					
+
 					Queries.insertAlbum(albumO);
+					if (albumO.getName() != null) {
+						file.setAlbum(albumO.getName());
+					}
 				}
 			}
 		}
@@ -387,9 +388,13 @@ public class Mp3File extends File {
 			if (response != null) {
 				artistO = new Artist(response.first);
 				Queries.insertArtist(artistO);
+				if (artistO.getName() != null) {
+					file.setArtist(artistO.getName());
+				}
 			}
 		}
-		
+
+		Queries.updateSong(file);
 		setScraped(true);
 		Queries.updateScraped(true, file.getAbsolutePath());
 	}
@@ -399,5 +404,4 @@ public class Mp3File extends File {
 		return "Mp3File{" + "durationSeconds=" + durationSeconds + ", timeOfImport=" + timeOfImport + ", extension=" + extension + ", coverPath=" + coverPath + ", metadata=" + metadata + ", track=" + track + '}';
 	}
 
-	
 }

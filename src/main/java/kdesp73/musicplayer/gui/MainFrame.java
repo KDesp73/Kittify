@@ -36,7 +36,7 @@ import kdesp73.musicplayer.tray.Tray;
  * @author konstantinos
  */
 public final class MainFrame extends javax.swing.JFrame {
-	public static boolean DEBUG = false;
+	public static boolean DEBUG = true;
 	
 	public static String TITLE = "MusicPlayer";
 

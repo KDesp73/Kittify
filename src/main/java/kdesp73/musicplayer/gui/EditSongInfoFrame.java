@@ -308,6 +308,8 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 
     private void removeAlbumCoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAlbumCoverButtonActionPerformed
 		Queries.updateLocalCoverPath(song.getTrack().getAlbum(), song.getTrack().getArtist(), "");
+//		JOptionPane.showMessageDialog(mainFrame, "Album Cover removed from database", "Cover Removed", JOptionPane.INFORMATION_MESSAGE);
+		this.albumCoverTextField.setText("");
     }//GEN-LAST:event_removeAlbumCoverButtonActionPerformed
 
 
