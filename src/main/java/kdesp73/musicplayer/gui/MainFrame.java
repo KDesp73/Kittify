@@ -1267,7 +1267,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public JCheckBoxMenuItem getDownloadCoverMenuItem() {
 		return downloadCoverMenuItem;
 	}
-
+	
 	
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -116,8 +116,11 @@ public class Backend {
 			mainFrame.getAlbumTracksList().setFixedCellHeight(35);
 			mainFrame.getAlbumTracksList().setFocusable(false);
 			mainFrame.getSortComboBox().setSelectedItem(Queries.selectSortBy());
-			mainFrame.getBackgroundSplitPane().setPreferredSize(new Dimension(mainFrame.getPreferredSize().width, mainFrame.getPreferredSize().height - 24));
 			mainFrame.getCentralPanel().setBackground(mainFrame.getCentralPanel().getParent().getBackground());
+			mainFrame.getBackgroundSplitPane().setPreferredSize(new Dimension(mainFrame.getPreferredSize().width, mainFrame.getPreferredSize().height - 24));
+			mainFrame.getBackgroundSplitPane().setDividerLocation(0.4);
+			mainFrame.getBackgroundSplitPane().setOneTouchExpandable(true);
+			mainFrame.getBackgroundSplitPane().setResizeWeight(0.5);
 			setupTagsPanel(mainFrame.getTagsContainer());
 
 			updateSongs(frame);
