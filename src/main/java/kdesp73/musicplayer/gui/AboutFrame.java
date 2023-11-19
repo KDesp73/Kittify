@@ -7,10 +7,12 @@ package kdesp73.musicplayer.gui;
 import dorkbox.desktop.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.db.Queries;
@@ -28,6 +30,8 @@ public class AboutFrame extends javax.swing.JFrame {
 
 	String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 
+	LogoFrame logoFrame;
+	
 	public AboutFrame() {
 		initComponents();
 
@@ -62,6 +66,14 @@ public class AboutFrame extends javax.swing.JFrame {
 		Backend.loadIcon(nameLabel, (mode.equals("Dark") ? Images.developerWhite : Images.developer), new Dimension(size, size));
 		Backend.loadIcon(emailLabel, (mode.equals("Dark") ? Images.mailWhite : Images.mail), new Dimension(size, size));
 		Backend.loadIcon(githubLabel, (mode.equals("Dark") ? Images.githubWhite : Images.github), new Dimension(size, size));
+		
+		try {
+			GUIMethods.loadImage(this.logoLabel, GUIMethods.resizeImageHeight(ImageIO.read(new File(Images.kittifyLogo)), 123));
+		} catch (IOException ex) {
+			Logger.getLogger(AboutFrame.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+		logoFrame = new LogoFrame();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -82,13 +94,14 @@ public class AboutFrame extends javax.swing.JFrame {
         githubLabel = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        logoLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         background.setName("bg"); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
-        jLabel1.setText("MusicPlayer");
+        jLabel1.setText("Kittify");
         jLabel1.setName("fg"); // NOI18N
 
         jLabel2.setText("v1.0.0");
@@ -141,27 +154,35 @@ public class AboutFrame extends javax.swing.JFrame {
         jLabel6.setText("Description");
         jLabel6.setName("fg"); // NOI18N
 
+        logoLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logoLabelMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);
         backgroundLayout.setHorizontalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addContainerGap(18, Short.MAX_VALUE)
-                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel6)
                     .addComponent(jLabel5)
                     .addComponent(githubLabel)
                     .addComponent(emailLabel)
                     .addComponent(jLabel4)
-                    .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
+                    .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel3)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
                         .addGroup(backgroundLayout.createSequentialGroup()
                             .addComponent(jLabel1)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jLabel2))
-                        .addComponent(jScrollPane2))
-                    .addComponent(nameLabel))
+                            .addComponent(jLabel2)))
+                    .addComponent(nameLabel)
+                    .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         backgroundLayout.setVerticalGroup(
@@ -171,15 +192,17 @@ public class AboutFrame extends javax.swing.JFrame {
                 .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(nameLabel)
@@ -187,7 +210,7 @@ public class AboutFrame extends javax.swing.JFrame {
                 .addComponent(emailLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(githubLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18))
         );
@@ -214,6 +237,12 @@ public class AboutFrame extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_githubLabelMouseClicked
 
+    private void logoLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoLabelMouseClicked
+		if(!logoFrame.isShowing()){
+			logoFrame.setVisible(true);
+		}
+    }//GEN-LAST:event_logoLabelMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel background;
     private javax.swing.JTextArea descriptionTextArea;
@@ -228,6 +257,7 @@ public class AboutFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea licenseTextArea;
+    private javax.swing.JLabel logoLabel;
     private javax.swing.JLabel nameLabel;
     // End of variables declaration//GEN-END:variables
 }

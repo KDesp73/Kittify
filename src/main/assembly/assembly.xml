@@ -5,7 +5,7 @@
     </formats>
     <files>
         <file>
-        <source>assets/icon.png</source>
+        <source>assets/icon32.png</source>
             <outputDirectory>/</outputDirectory>
             <destName>icon.png</destName>
         </file>

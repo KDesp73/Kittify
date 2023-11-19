@@ -66,8 +66,8 @@ public class Images {
 	public static String note = assets + "itunes-note.png";
 	public static String noteWhite = assets + "itunes-note-white.png";
 	
-	public static String icon32 = assets + "icon32.ico";
-	public static String icon16 = assets + "icon16.ico";
 	public static String icon32png = assets + "icon32.png";
 	public static String icon16png = assets + "icon16.png";
+	
+	public static String kittifyLogo = assets + "kittify_logo.png";
 }
