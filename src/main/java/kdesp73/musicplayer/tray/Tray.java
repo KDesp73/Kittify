@@ -31,7 +31,7 @@ public class Tray {
 		}
 
 		systemTray.setTooltip("Music Player");
-		systemTray.setImage(Images.icon32png);
+		systemTray.setImage(Images.kittifyLogo);
 		systemTray.setStatus("Stopped");
 
 		actionListener = e -> {

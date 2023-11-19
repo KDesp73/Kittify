@@ -5,7 +5,7 @@
     </formats>
     <files>
         <file>
-        <source>assets/icon32.png</source>
+        <source>assets/kittify_logo.png</source>
             <outputDirectory>/</outputDirectory>
             <destName>icon.png</destName>
         </file>

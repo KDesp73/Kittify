@@ -107,7 +107,7 @@ public class Backend {
 			// Frame settings
 			mainFrame.setLocationRelativeTo(null);
 			mainFrame.getRootPane().requestFocus();
-			mainFrame.setIconImage(new ImageIcon(Images.icon32png).getImage());
+			mainFrame.setIconImage(new ImageIcon(Images.kittifyLogo).getImage());
 			mainFrame.setTitle(MainFrame.TITLE);
 			mainFrame.setMinimumSize(mainFrame.getPreferredSize());
 
