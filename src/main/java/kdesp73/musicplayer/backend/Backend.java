@@ -312,7 +312,7 @@ public class Backend {
 		}
 
 		if (mainFrame.player != null) {
-			mainFrame.player.setPlaylist(mainFrame.list.getPaths());
+			mainFrame.player.playlist = mainFrame.list.getPaths();
 		}
 
 		return null;

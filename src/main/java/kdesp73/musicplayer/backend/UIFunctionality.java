@@ -67,6 +67,7 @@ public class UIFunctionality {
 			Backend.updateSongs(mainFrame);
 			Backend.refreshList(mainFrame);
 
+			mainFrame.player.playlist = mainFrame.list.getPaths();
 		}
 	}
 
