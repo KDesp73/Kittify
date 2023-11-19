@@ -362,8 +362,6 @@ public class Mp3File extends File {
 				if (response != null) {
 					albumO = new Album(response.first);
 					
-					System.out.println("Album: " + albumO.getCoverURL());
-
 					if (albumO.getCoverURL() == null || albumO.getCoverURL().isBlank() || (albumO.getCoverURL() != null && !albumO.getCoverURL().isBlank() && !FileOperations.getExtensionFromPath(albumO.getCoverURL()).equals("png"))) {
 						albumO.setCoverURL(track.getCover());
 						System.out.println("Updated cover: " + track.getCover());
