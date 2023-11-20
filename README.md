@@ -36,6 +36,10 @@ See [pom.xml](https://github.com/KDesp73/Kittify/blob/main/pom.xml) for the rest
 
 [MIT](https://github.com/KDesp73/Swing-Themes-Library/blob/main/LICENSE)
 
+## Acknowledgments
+
+A special thank you to my girlfriend for drawing the cute cat
+
 
 
 
