@@ -38,7 +38,7 @@ See [pom.xml](https://github.com/KDesp73/Kittify/blob/main/pom.xml) for the rest
 
 ## Acknowledgments
 
-A special thank you to my girlfriend for drawing the cute cat
+A special thank you to my girlfriend for drawing the cute cat and coming up with the name of the program
 
 
 
