@@ -4,6 +4,7 @@
  */
 package kdesp73.musicplayer.gui;
 
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -29,6 +30,8 @@ import static kdesp73.musicplayer.backend.UIFunctionality.playSong;
 import static kdesp73.musicplayer.backend.UIFunctionality.showOptionsPopup;
 import kdesp73.musicplayer.player.Mp3Player;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.Timer;
 import kdesp73.musicplayer.tray.Tray;
 
 /**
@@ -36,8 +39,9 @@ import kdesp73.musicplayer.tray.Tray;
  * @author konstantinos
  */
 public final class MainFrame extends javax.swing.JFrame {
+
 	public static boolean DEBUG = false;
-	
+
 	public static String TITLE = "Kittify";
 
 	private String accentColor = "2979ff";
@@ -65,6 +69,8 @@ public final class MainFrame extends javax.swing.JFrame {
 	public static EditSongInfoFrame editSongFrame;
 	public static EditFilesFrame editFilesFrame;
 	public static HelpFrame helpFrame;
+
+	public Timer refreshTimer;
 
 	public static Tray tray;
 
@@ -133,10 +139,10 @@ public final class MainFrame extends javax.swing.JFrame {
         leftPanel = new javax.swing.JPanel();
         sortComboBox = new javax.swing.JComboBox<>();
         sortbyLabel = new javax.swing.JLabel();
-        searchButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         songsList = new javax.swing.JList<>();
+        searchTextbox = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         addFileMenuItem = new javax.swing.JMenuItem();
@@ -620,14 +626,6 @@ public final class MainFrame extends javax.swing.JFrame {
         sortbyLabel.setText("Sort By:");
         sortbyLabel.setName("fg"); // NOI18N
 
-        searchButton.setText("Search");
-        searchButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                searchButtonMouseClicked(evt);
-            }
-        });
-
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         songsList.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -654,6 +652,19 @@ public final class MainFrame extends javax.swing.JFrame {
 
         jScrollPane3.setViewportView(jScrollPane2);
 
+        searchTextbox.setText("Search");
+        searchTextbox.setName("textbox"); // NOI18N
+        searchTextbox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchTextboxMouseClicked(evt);
+            }
+        });
+        searchTextbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchTextboxKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
         leftPanel.setLayout(leftPanelLayout);
         leftPanelLayout.setHorizontalGroup(
@@ -662,8 +673,8 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(leftPanelLayout.createSequentialGroup()
-                        .addComponent(searchButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addComponent(searchTextbox, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(sortbyLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(sortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -677,7 +688,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sortbyLabel)
                     .addComponent(sortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton))
+                    .addComponent(searchTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3))
         );
@@ -879,14 +890,6 @@ public final class MainFrame extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_songsListKeyPressed
 
-    private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
-		if (evt.getButton() != MouseEvent.BUTTON1) {
-			return;
-		}
-
-		UIFunctionality.search(this);
-    }//GEN-LAST:event_searchButtonMouseClicked
-
     private void scrapeAllMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrapeAllMenuItemActionPerformed
 		UIFunctionality.scrapeAll(this);
     }//GEN-LAST:event_scrapeAllMenuItemActionPerformed
@@ -1043,6 +1046,35 @@ public final class MainFrame extends javax.swing.JFrame {
 		UIFunctionality.toggleDownloadCoverByDefault(this);
     }//GEN-LAST:event_downloadCoverMenuItemActionPerformed
 
+    private void searchTextboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchTextboxKeyReleased
+		switch (evt.getKeyCode()) {
+			case KeyEvent.VK_DOWN:
+			case KeyEvent.VK_UP:
+				this.getSongsList().requestFocus();
+				this.getSongsList().setSelectedIndex(0);
+				return;
+			case KeyEvent.VK_ESCAPE:
+				UIFunctionality.stopSearching(this);
+				break;
+			case KeyEvent.VK_BACK_SPACE:
+				Backend.initList(this);
+			default:
+				UIFunctionality.search(this);
+				break;
+		}
+
+    }//GEN-LAST:event_searchTextboxKeyReleased
+
+    private void searchTextboxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchTextboxMouseClicked
+		if (evt.getButton() != MouseEvent.BUTTON1) {
+			return;
+		}
+
+		if (this.getSearchTextbox().getText().equals("Search")) {
+			this.getSearchTextbox().setText("");
+		}
+    }//GEN-LAST:event_searchTextboxMouseClicked
+
 	// Getters
 	public String getProject_path() {
 		return project_path;
@@ -1140,8 +1172,8 @@ public final class MainFrame extends javax.swing.JFrame {
 		return scrapeAtStartMenuItem;
 	}
 
-	public JButton getSearchButton() {
-		return searchButton;
+	public JTextField getSearchTextbox() {
+		return searchTextbox;
 	}
 
 	public JSlider getSlider() {
@@ -1267,9 +1299,8 @@ public final class MainFrame extends javax.swing.JFrame {
 	public JCheckBoxMenuItem getDownloadCoverMenuItem() {
 		return downloadCoverMenuItem;
 	}
-	
-	
-	
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ApiMenu;
     private javax.swing.JMenuItem aboutMenuItem;
@@ -1317,7 +1348,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem resetDBMenuItem;
     private javax.swing.JMenuItem scrapeAllMenuItem;
     private javax.swing.JCheckBoxMenuItem scrapeAtStartMenuItem;
-    private javax.swing.JButton searchButton;
+    private javax.swing.JTextField searchTextbox;
     private javax.swing.JMenu settingsMenu;
     private javax.swing.JLabel shuffleLabel;
     private javax.swing.JSlider slider;
