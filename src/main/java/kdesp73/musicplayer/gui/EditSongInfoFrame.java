@@ -41,8 +41,10 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 		this.setTitle("Edit Song Information");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        if(frame.list.getSongs().isEmpty()) return;
-        
+		if (frame.list.getSongs().isEmpty()) {
+			return;
+		}
+
 		this.song = frame.list.getSongs().get(frame.getSongsList().getSelectedIndex());
 		this.mainFrame = frame;
 
@@ -285,12 +287,13 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 //		this.mainFrame.currentSong = song;
 
 		Queries.updateSong(song);
-		initList(mainFrame);
-		sort(mainFrame);
+		if (!mainFrame.searching) {
+			initList(mainFrame);
+			sort(mainFrame);
+		}
 
 		int index = mainFrame.list.searchSongName(song.getTrack().getName());
 //		this.mainFrame.currentIndex = index;
-
 
 		if (mainFrame.currentIndex == mainFrame.getSongsList().getSelectedIndex()) {
 			Backend.selectSong(mainFrame, index);
@@ -298,10 +301,12 @@ public class EditSongInfoFrame extends javax.swing.JFrame {
 			Backend.updateAdditionalSongInfo(mainFrame, mainFrame.list.searchSongName(song.getTrack().getName()));
 		}
 
-		Backend.refreshList(mainFrame);
-		mainFrame.getSongsList().setSelectedIndex(index);
-		mainFrame.getSongsList().ensureIndexIsVisible(index);
-		mainFrame.player.playlist = mainFrame.list.getPaths();
+		if (!mainFrame.searching) {
+			Backend.refreshList(mainFrame);
+			mainFrame.getSongsList().setSelectedIndex(index);
+			mainFrame.getSongsList().ensureIndexIsVisible(index);
+			mainFrame.player.playlist = mainFrame.list.getPaths();
+		}
 
 		this.dispose();
     }//GEN-LAST:event_applyButtonActionPerformed

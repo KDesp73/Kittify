@@ -879,23 +879,21 @@ public class Backend {
 			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
 			// UPDATE UI ACCORDINGLY
+			int index = mainFrame.list.searchSongName(song.getTrack().getName());
 			if (!mainFrame.searching) {
 				initList(mainFrame);
 				sort(mainFrame);
 				mainFrame.player.playlist = mainFrame.list.getPaths();
 
-				int index = mainFrame.list.searchSongName(song.getTrack().getName());
-
 				mainFrame.getSongsList().setSelectedIndex(index);
 				mainFrame.getSongsList().ensureIndexIsVisible(index);
+			}
 
-				boolean scrapingSelectedSong = mainFrame.currentSong == null || mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
-
-				if (scrapingSelectedSong) {
-					selectSong(mainFrame, index);
-				} else {
-					System.out.println("Scraped song that is not selected");
-				}
+			boolean scrapingSelectedSong = mainFrame.currentSong == null || mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
+			if (scrapingSelectedSong) {
+				selectSong(mainFrame, index);
+			} else {
+				System.out.println("Scraped song that is not selected");
 			}
 
 			if (mainFrame.downloadCovers) {
