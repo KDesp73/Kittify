@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -880,21 +879,23 @@ public class Backend {
 			JOptionPane.showMessageDialog(mainFrame, "Scrape Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 
 			// UPDATE UI ACCORDINGLY
-			initList(mainFrame);
-			sort(mainFrame);
-			mainFrame.player.playlist = mainFrame.list.getPaths();
+			if (!mainFrame.searching) {
+				initList(mainFrame);
+				sort(mainFrame);
+				mainFrame.player.playlist = mainFrame.list.getPaths();
 
-			int index = mainFrame.list.searchSongName(song.getTrack().getName());
+				int index = mainFrame.list.searchSongName(song.getTrack().getName());
 
-			mainFrame.getSongsList().setSelectedIndex(index);
-			mainFrame.getSongsList().ensureIndexIsVisible(index);
+				mainFrame.getSongsList().setSelectedIndex(index);
+				mainFrame.getSongsList().ensureIndexIsVisible(index);
 
-			boolean scrapingSelectedSong = mainFrame.currentSong == null || mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
+				boolean scrapingSelectedSong = mainFrame.currentSong == null || mainFrame.currentSong.getAbsolutePath().equals(song.getAbsolutePath());
 
-			if (scrapingSelectedSong) {
-				selectSong(mainFrame, index);
-			} else {
-				System.out.println("Scraped song that is not selected");
+				if (scrapingSelectedSong) {
+					selectSong(mainFrame, index);
+				} else {
+					System.out.println("Scraped song that is not selected");
+				}
 			}
 
 			if (mainFrame.downloadCovers) {

@@ -597,6 +597,7 @@ public class UIFunctionality {
 
 	public static void search(JFrame frame) {
 		if (frame instanceof MainFrame) {
+			mainFrame.searching = true;
 			String text = mainFrame.getSearchTextbox().getText().toLowerCase().strip();
 
 			HashSet<Mp3File> results = new HashSet<>();
@@ -641,6 +642,7 @@ public class UIFunctionality {
 
 	public static void stopSearching(JFrame frame) {
 		if (frame instanceof MainFrame) {
+			mainFrame.searching = false;
 			Backend.initList(frame);
 			Backend.refreshList(frame);
 			Backend.sort(frame);

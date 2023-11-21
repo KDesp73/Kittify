@@ -58,6 +58,7 @@ public final class MainFrame extends javax.swing.JFrame {
 	public boolean shuffleOn = false;
 	public boolean repeatOn = false;
 	public boolean volumeOn = true;
+	public boolean searching = false;
 
 	public int volume = 100;
 
