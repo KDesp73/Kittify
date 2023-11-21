@@ -30,4 +30,7 @@ If you computer is not connected to the internet scraping for information
 will not be possible. Information of already scraped songs will appear 
 except for album covers that haven't been downloaded locally
 
+## Search
 
+While typing in the search-bar the list will filter anything irrelevant. 
+To exit search mode press `ESC` while being focused on the search-bar

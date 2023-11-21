@@ -653,7 +653,7 @@ public final class MainFrame extends javax.swing.JFrame {
         jScrollPane3.setViewportView(jScrollPane2);
 
         searchTextbox.setText("Search");
-        searchTextbox.setMaximumSize(new java.awt.Dimension(300, 23));
+        searchTextbox.setMaximumSize(new java.awt.Dimension(200, 23));
         searchTextbox.setName("textbox"); // NOI18N
         searchTextbox.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

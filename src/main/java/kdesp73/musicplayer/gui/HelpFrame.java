@@ -4,22 +4,13 @@
  */
 package kdesp73.musicplayer.gui;
 
-import dorkbox.desktop.Desktop;
 import java.awt.CardLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.themeLib.Theme;
 import kdesp73.themeLib.ThemeCollection;
@@ -61,6 +52,9 @@ public class HelpFrame extends javax.swing.JFrame {
 		loadShortcuts();
 		
 		faqsEditorPane.setCaretPosition(0);
+		this.issuesEditorPane.setCaretPosition(0);
+		this.troubleshootiongEditorPane.setCaretPosition(0);
+		this.userManualEditorPane.setCaretPosition(0);
 		GUIMethods.renderMarkdown(this.gettingStartedEditorPane, project_path + "help/getting_started.md");
 		GUIMethods.renderMarkdown(this.userManualEditorPane, project_path + "help/user_manual.md");
 		GUIMethods.renderMarkdown(this.faqsEditorPane, project_path + "help/faqs.md");
