@@ -11,10 +11,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -22,11 +26,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import kdesp73.musicplayer.db.Queries;
+import kdesp73.musicplayer.files.FileOperations;
 import kdesp73.musicplayer.files.Images;
 import kdesp73.musicplayer.gui.EditDirectoriesFrame;
 import kdesp73.musicplayer.gui.EditFilesFrame;
 import kdesp73.musicplayer.gui.GUIMethods;
 import kdesp73.musicplayer.gui.MainFrame;
+import kdesp73.musicplayer.songs.Mp3File;
 
 /**
  *
@@ -118,7 +124,7 @@ public class UIFunctionality {
 			Backend.setDefaultSongInfo(frame);
 			Backend.resetSlider(frame);
 			Backend.setDefaultSongAdditionalInfo(frame);
-			
+
 			if (!MainFrame.editDirectoriesFrame.isShowing()) {
 				MainFrame.editDirectoriesFrame = new EditDirectoriesFrame(mainFrame);
 				MainFrame.editDirectoriesFrame.setVisible(true);
@@ -132,7 +138,7 @@ public class UIFunctionality {
 			Backend.setDefaultSongInfo(frame);
 			Backend.resetSlider(frame);
 			Backend.setDefaultSongAdditionalInfo(frame);
-			
+
 			if (!MainFrame.editFilesFrame.isShowing()) {
 				MainFrame.editFilesFrame = new EditFilesFrame(mainFrame);
 				MainFrame.editFilesFrame.setVisible(true);
@@ -382,26 +388,25 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void search(JFrame frame) {
-		if (frame instanceof MainFrame) {
-			String search = JOptionPane.showInputDialog(mainFrame, "Search Song");
-
-			if (search == null || search.isBlank()) {
-				return;
-			}
-
-			int index = mainFrame.list.searchSongName(search);
-
-			if (index < 0) {
-				JOptionPane.showMessageDialog(mainFrame, "Song not found");
-				return;
-			}
-
-			mainFrame.getSongsList().setSelectedIndex(index);
-			mainFrame.getSongsList().ensureIndexIsVisible(index);
-		}
-	}
-
+//	public static void search(JFrame frame) {
+//		if (frame instanceof MainFrame) {
+//			String search = JOptionPane.showInputDialog(mainFrame, "Search Song");
+//
+//			if (search == null || search.isBlank()) {
+//				return;
+//			}
+//
+//			int index = mainFrame.list.searchSongName(search);
+//
+//			if (index < 0) {
+//				JOptionPane.showMessageDialog(mainFrame, "Song not found");
+//				return;
+//			}
+//
+//			mainFrame.getSongsList().setSelectedIndex(index);
+//			mainFrame.getSongsList().ensureIndexIsVisible(index);
+//		}
+//	}
 	public static void scrapeAll(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			if (mainFrame.list.getSongs().isEmpty()) {
@@ -422,15 +427,15 @@ public class UIFunctionality {
 		}
 	}
 
-	public static void toggleDownloadCoverByDefault(JFrame frame){
+	public static void toggleDownloadCoverByDefault(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			boolean flag = mainFrame.getDownloadCoverMenuItem().isSelected();
-			
+
 			Queries.updateDownloadCoversByDefault(flag);
 			mainFrame.downloadCovers = flag;
 		}
 	}
-	
+
 	public static void shuffle(JFrame frame) {
 		if (frame instanceof MainFrame) {
 
@@ -575,16 +580,73 @@ public class UIFunctionality {
 			JOptionPane.showMessageDialog(frame, "Database Cleared", "Success", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
-	
-	public static void refreshDirectories(JFrame frame){
+
+	public static void refreshDirectories(JFrame frame) {
 		if (frame instanceof MainFrame) {
 			int selectedIndex = mainFrame.getSongsList().getSelectedIndex();
-			if(Queries.selectDirectories().isEmpty()) return;
-			
+			if (Queries.selectDirectories().isEmpty()) {
+				return;
+			}
+
 			Backend.checkDirectoriesForChanges();
-			Backend.updateSongs(frame);	
+			Backend.updateSongs(frame);
 			mainFrame.player.playlist = mainFrame.list.getPaths();
 			mainFrame.getSongsList().setSelectedIndex(selectedIndex);
+		}
+	}
+
+	public static void search(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			String text = mainFrame.getSearchTextbox().getText().toLowerCase().strip();
+
+			HashSet<Mp3File> results = new HashSet<>();
+
+			for (Mp3File file : mainFrame.list.getSongs()) {
+				String title = file.getTrack().getName().toLowerCase();
+				String artist = file.getTrack().getArtist().toLowerCase();
+				String album = file.getTrack().getAlbum().toLowerCase();
+				String filename = FileOperations.getFilenameFromPath(file.getAbsolutePath()).toLowerCase();
+
+				if (title.contains(text)) {
+					results.add(file);
+				}
+				if (artist.contains(text)) {
+					results.add(file);
+				}
+				if (album.contains(text)) {
+					results.add(file);
+				}
+				if (filename.contains(text)) {
+					results.add(file);
+				}
+			}
+
+			DefaultListModel model = new DefaultListModel();
+
+			mainFrame.list.getSongs().clear();
+			mainFrame.list.getSongs().addAll(results);
+			mainFrame.player.playlist = new ArrayList<>();
+			for (Mp3File file : results) {
+				mainFrame.player.playlist.add(file.getAbsolutePath());
+				model.addElement(file.getTrack().getName() + " - " + file.getTrack().getArtist() + " - " + file.getTrack().getAlbum());
+			}
+
+			if (mainFrame.refreshTimer.isRunning()) {
+				mainFrame.refreshTimer.stop();
+			}
+
+			mainFrame.getSongsList().setModel(model);
+		}
+	}
+
+	public static void stopSearching(JFrame frame) {
+		if (frame instanceof MainFrame) {
+			Backend.initList(frame);
+			Backend.refreshList(frame);
+			Backend.sort(frame);
+			mainFrame.refreshTimer.start();
+			mainFrame.getSearchTextbox().setText("Search");
+			mainFrame.getSongsList().requestFocus();
 		}
 	}
 }

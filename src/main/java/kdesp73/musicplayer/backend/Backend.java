@@ -166,14 +166,14 @@ public class Backend {
 			});
 
 			// Every 2 seconds check for updates in any of the imported directories
-			Timer refreshTimer = new Timer(2000, new ActionListener() {
+			mainFrame.refreshTimer = new Timer(2000, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					UIFunctionality.refreshDirectories(frame);
 				}
 			});
 
-			refreshTimer.start();
+			mainFrame.refreshTimer.start();
 
 			// Before closing
 			mainFrame.addWindowListener(new WindowAdapter() {
@@ -186,7 +186,7 @@ public class Backend {
 					}
 					Queries.updateVolume(mainFrame.getVolumeSlider().getValue());
 
-					refreshTimer.stop();
+					mainFrame.refreshTimer.stop();
 
 				}
 			});
@@ -331,6 +331,17 @@ public class Backend {
 				mainFrame.player.setPlaylist(mainFrame.list.getPaths());
 			}
 		}
+	}
+
+	public static SongsList initList() {
+		SongsList list = null;
+		try {
+			list = new SongsList(Queries.selectDirectories(), Queries.selectFiles());
+		} catch (java.lang.StringIndexOutOfBoundsException e) {
+			e.printStackTrace();
+		}
+
+		return list;
 	}
 
 	public static void refreshList(JFrame frame) {
@@ -701,8 +712,8 @@ public class Backend {
 					return;
 				}
 			}
-			
-			if(coverURL == null){
+
+			if (coverURL == null) {
 				System.err.println("Null URL");
 				return;
 			}
@@ -1125,7 +1136,7 @@ public class Backend {
 				localPaths.addAll(dirFIles);
 			}
 		}
-		
+
 		localPaths.addAll(individualFiles);
 
 		if (databasePaths.size() == localPaths.size()) {
@@ -1144,7 +1155,7 @@ public class Backend {
 		}
 
 	}
-	
+
 	public static SongsList advancedSearch(SongsList list, String text) {
 		text = text.toLowerCase();
 
