@@ -646,6 +646,7 @@ public class UIFunctionality {
 			Backend.initList(frame);
 			Backend.refreshList(frame);
 			Backend.sort(frame);
+			mainFrame.player.playlist = mainFrame.list.getPaths();
 			mainFrame.refreshTimer.start();
 			mainFrame.getSearchTextbox().setText("Search");
 			mainFrame.getSongsList().requestFocus();
