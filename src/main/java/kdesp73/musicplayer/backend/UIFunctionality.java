@@ -106,6 +106,8 @@ public class UIFunctionality {
 
 	public static void sortComboBoxActionPerformed(JFrame frame) {
 		if (frame instanceof MainFrame) {
+			if(mainFrame.searching) return;
+			
 			String sortedBy = Backend.sort(mainFrame);
 
 			if (sortedBy == null) {
