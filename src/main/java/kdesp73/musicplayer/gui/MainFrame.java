@@ -149,9 +149,11 @@ public final class MainFrame extends javax.swing.JFrame {
         addFileMenuItem = new javax.swing.JMenuItem();
         addDirectoryMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
+        editCurrentSongMenuItem = new javax.swing.JMenuItem();
         editFilesMenuItem = new javax.swing.JMenuItem();
         editDirectoriesMenuItem = new javax.swing.JMenuItem();
         ApiMenu = new javax.swing.JMenu();
+        scrapeCurrentSongMenuItem = new javax.swing.JMenuItem();
         scrapeAllMenuItem = new javax.swing.JMenuItem();
         scrapeAtStartMenuItem = new javax.swing.JCheckBoxMenuItem();
         downloadCoverMenuItem = new javax.swing.JCheckBoxMenuItem();
@@ -738,6 +740,14 @@ public final class MainFrame extends javax.swing.JFrame {
 
         editMenu.setText("Edit");
 
+        editCurrentSongMenuItem.setText("Edit Selected Song");
+        editCurrentSongMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editCurrentSongMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(editCurrentSongMenuItem);
+
         editFilesMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
         editFilesMenuItem.setText("Edit Files");
         editFilesMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -759,6 +769,14 @@ public final class MainFrame extends javax.swing.JFrame {
         menuBar.add(editMenu);
 
         ApiMenu.setText("Api");
+
+        scrapeCurrentSongMenuItem.setText("Scrape Selected Song");
+        scrapeCurrentSongMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scrapeCurrentSongMenuItemActionPerformed(evt);
+            }
+        });
+        ApiMenu.add(scrapeCurrentSongMenuItem);
 
         scrapeAllMenuItem.setText("Scrape All");
         scrapeAllMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1077,6 +1095,14 @@ public final class MainFrame extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_searchTextboxMouseClicked
 
+    private void editCurrentSongMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCurrentSongMenuItemActionPerformed
+        Backend.editAction(this);
+    }//GEN-LAST:event_editCurrentSongMenuItemActionPerformed
+
+    private void scrapeCurrentSongMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrapeCurrentSongMenuItemActionPerformed
+        Backend.scrapeAction(this);
+    }//GEN-LAST:event_scrapeCurrentSongMenuItemActionPerformed
+
 	// Getters
 	public String getProject_path() {
 		return project_path;
@@ -1328,6 +1354,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLayeredPane controlsParentPanel;
     private javax.swing.JCheckBoxMenuItem downloadCoverMenuItem;
     private javax.swing.JLabel durationLabel;
+    private javax.swing.JMenuItem editCurrentSongMenuItem;
     private javax.swing.JMenuItem editDirectoriesMenuItem;
     private javax.swing.JMenuItem editFilesMenuItem;
     private javax.swing.JMenu editMenu;
@@ -1350,6 +1377,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem resetDBMenuItem;
     private javax.swing.JMenuItem scrapeAllMenuItem;
     private javax.swing.JCheckBoxMenuItem scrapeAtStartMenuItem;
+    private javax.swing.JMenuItem scrapeCurrentSongMenuItem;
     private javax.swing.JTextField searchTextbox;
     private javax.swing.JMenu settingsMenu;
     private javax.swing.JLabel shuffleLabel;

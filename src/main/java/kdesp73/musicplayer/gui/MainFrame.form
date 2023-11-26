@@ -40,6 +40,14 @@
             <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="editCurrentSongMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Edit Selected Song"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editCurrentSongMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="editFilesMenuItem">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
@@ -69,6 +77,14 @@
             <Property name="text" type="java.lang.String" value="Api"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="scrapeCurrentSongMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Scrape Selected Song"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scrapeCurrentSongMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="scrapeAllMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Scrape All"/>
