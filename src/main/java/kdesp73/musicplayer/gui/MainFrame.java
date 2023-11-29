@@ -1016,6 +1016,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
     private void volumeSliderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeSliderMouseDragged
 		Backend.changeVolume(this);
+		this.getVolumeSlider().setToolTipText(this.getVolumeSlider().getValue() + "%");
     }//GEN-LAST:event_volumeSliderMouseDragged
 
     private void volumeToggleLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volumeToggleLabelMousePressed

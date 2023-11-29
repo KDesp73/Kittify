@@ -83,29 +83,29 @@
 			<systemPath>/home/konstantinos/.m2/repository/kdesp73/DataBridge/2.0.7/DataBridge-2.0.7.jar</systemPath>-->
 		</dependency>
 		
-		<!--JSON-->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.8</version> 
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>2.10.0</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.10.0</version>
-			<type>jar</type>
-		</dependency>
+		<!--JSON not used-->
+		<!-- <dependency> -->
+		<!-- 	<groupId>com.google.code.gson</groupId> -->
+		<!-- 	<artifactId>gson</artifactId> -->
+		<!-- 	<version>2.8.8</version>  -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- 	<groupId>com.fasterxml.jackson.core</groupId> -->
+		<!-- 	<artifactId>jackson-core</artifactId> -->
+		<!-- 	<version>2.1.1</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- 	<groupId>com.fasterxml.jackson.core</groupId> -->
+		<!-- 	<artifactId>jackson-annotations</artifactId> -->
+		<!-- 	<version>2.10.0</version> -->
+		<!-- 	<type>jar</type> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- 	<groupId>com.fasterxml.jackson.core</groupId> -->
+		<!-- 	<artifactId>jackson-databind</artifactId> -->
+		<!-- 	<version>2.10.0</version> -->
+		<!-- 	<type>jar</type> -->
+		<!-- </dependency> -->
 		
 		<!--Tray-->
 		<dependency>

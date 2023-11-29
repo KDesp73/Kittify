@@ -239,6 +239,8 @@ public class Backend {
 			} else {
 				loadIcon(mainFrame.getRepeatLabel(), (mode.equals("Dark") ? Images.repeatWhite : Images.repeat), new Dimension(20, 20));
 			}
+			
+			mainFrame.getVolumeSlider().setToolTipText(mainFrame.getVolumeSlider().getValue() + "%");
 		}
 	}
 
