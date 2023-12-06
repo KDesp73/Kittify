@@ -106,8 +106,10 @@ public class UIFunctionality {
 
 	public static void sortComboBoxActionPerformed(JFrame frame) {
 		if (frame instanceof MainFrame) {
-			if(mainFrame.searching) return;
-			
+			if (mainFrame.searching) {
+				return;
+			}
+
 			String sortedBy = Backend.sort(mainFrame);
 
 			if (sortedBy == null) {
@@ -415,7 +417,8 @@ public class UIFunctionality {
 				JOptionPane.showMessageDialog(mainFrame, "No songs loaded", "Scrape Aborted", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
-			JOptionPane.showMessageDialog(mainFrame, "The scraping process has started in the background. This may take a while dependending on the number of songs imported", "Scraping Started", JOptionPane.INFORMATION_MESSAGE);
+//			JOptionPane.showMessageDialog(mainFrame, "The scraping process has started in the background. This may take a while dependending on the number of songs imported", "Scraping Started", JOptionPane.INFORMATION_MESSAGE);
+
 			mainFrame.list.scrapeSongs();
 		}
 	}

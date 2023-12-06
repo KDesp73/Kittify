@@ -241,6 +241,13 @@ public class Backend {
 			}
 			
 			mainFrame.getVolumeSlider().setToolTipText(mainFrame.getVolumeSlider().getValue() + "%");
+		} else {
+			frame.setLocationRelativeTo(null);
+			frame.getRootPane().requestFocus();
+			frame.setMinimumSize(frame.getPreferredSize());
+			String mode = Queries.selectMode();
+			setMode(frame, mode);
+			GUIMethods.setFontFamilyRecursively(frame, "sans-serif", Font.PLAIN);
 		}
 	}
 
