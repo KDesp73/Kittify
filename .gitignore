@@ -6,3 +6,4 @@ data/*.mp3
 /target/
 covers/
 *.jar
+nohup.out
