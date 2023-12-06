@@ -28,7 +28,6 @@ public class API {
 			String apiKey = getKey("https://users.iee.ihu.gr/~iee2021035/LastFmKey.txt");
 
 			if (apiKey == null) {
-				JOptionPane.showMessageDialog(null, "It seems you are not connected to the internet. Scraping aborted", "No Internet Connection", JOptionPane.WARNING_MESSAGE);
 				return null;
 			}
 

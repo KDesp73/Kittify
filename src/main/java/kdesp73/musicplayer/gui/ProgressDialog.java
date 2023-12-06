@@ -22,7 +22,6 @@ public class ProgressDialog extends javax.swing.JFrame {
 		this.setTitle("Progress");
 		this.setResizable(false);
 		this.setAlwaysOnTop(true);
-//		this.setUndecorated(true);
 		Backend.setup(this);
 
 	}
@@ -40,7 +39,9 @@ public class ProgressDialog extends javax.swing.JFrame {
         progressBar = new javax.swing.JProgressBar();
         percentageLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
+        setType(java.awt.Window.Type.UTILITY);
 
         jPanel1.setName("bg"); // NOI18N
 

@@ -5,6 +5,7 @@
 package kdesp73.musicplayer.api;
 
 import javax.swing.JOptionPane;
+import static kdesp73.musicplayer.api.API.getKey;
 import kdesp73.musicplayer.backend.Backend;
 import kdesp73.musicplayer.db.Queries;
 import kdesp73.musicplayer.gui.ProgressDialog;
@@ -19,7 +20,7 @@ public class ScrapeThread extends Thread {
 
 	private SongsList list;
 	private int count = 0;
-	
+
 	public ScrapeThread(SongsList list) {
 		super();
 
@@ -29,25 +30,33 @@ public class ScrapeThread extends Thread {
 	@Override
 	public void run() {
 		int listSize = list.getSongs().size();
-		
+
+		// FIXME: temporary solution to check whether there is an internet connection
+		String apiKey = getKey("https://users.iee.ihu.gr/~iee2021035/LastFmKey.txt");
+		if (apiKey == null) {
+			JOptionPane.showMessageDialog(null, "It seems you are not connected to the internet. Scraping aborted", "No Internet Connection", JOptionPane.WARNING_MESSAGE);
+
+			return;
+		}
+
 		ProgressDialog progressDialog = new ProgressDialog();
-		progressDialog.progressBar.setMaximum(listSize-1);
+		progressDialog.progressBar.setMaximum(listSize - 1);
 		progressDialog.setVisible(true);
-		
-		for(Mp3File file : list.getSongs()){
+
+		for (Mp3File file : list.getSongs()) {
 			file.selfScrape();
-			
-			if(Queries.selectDownloadCoverByDefault()){
+
+			if (Queries.selectDownloadCoverByDefault()) {
 				Backend.downloadAlbumCover(file);
 			}
-			
+
 			progressDialog.progressBar.setValue(count);
-			String percentage = String.format("%.2f", count*1.0 / listSize * 100) + "%";
+			String percentage = String.format("%.2f", count * 1.0 / listSize * 100) + "%";
 			progressDialog.percentageLabel.setText(percentage);
-			
+
 			count++;
 		}
-		
+
 		progressDialog.dispose();
 		JOptionPane.showMessageDialog(null, "Scrape Completed!");
 	}

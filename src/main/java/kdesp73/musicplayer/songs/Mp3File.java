@@ -328,7 +328,7 @@ public class Mp3File extends File {
 			return;
 		}
 
-		if (response.second != 200) {
+		if (response == null || response.second != 200) {
 			return;
 		}
 
