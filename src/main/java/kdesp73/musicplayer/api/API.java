@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -66,7 +67,7 @@ public class API {
 		} catch (UnsupportedEncodingException ex) {
 			Logger.getLogger(API.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
+
 		return null;
 	}
 
@@ -91,6 +92,18 @@ public class API {
 		return key;
 	}
 
+	public static boolean checkInternetConnection(){
+		try { 
+            URL url = new URL("https://www.google.com/"); 
+            URLConnection connection = url.openConnection(); 
+            connection.connect(); 
+			return true;
+        } 
+        catch (Exception e) { 
+			return false;
+		} 
+	}
+	
 	private static String readFile(String path) {
 		BufferedReader reader;
 		String data = "";

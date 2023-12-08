@@ -842,6 +842,11 @@ public class Backend {
 	}
 
 	public static void scrapeAction(JFrame frame) {
+		if(!API.checkInternetConnection()){
+			JOptionPane.showMessageDialog(null, "It seems you are not connected to the internet. Scraping aborted", "No Internet Connection", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		
 		if (frame instanceof MainFrame) {
 
 			API api = new API();
