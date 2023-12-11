@@ -30,9 +30,9 @@ public class Test {
 	static String themes_path = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/";
 	
 	public static void main(String[] args) throws MalformedURLException, IOException, InterruptedException{
-		 /*Pair<String, Integer> trackResponse = new API().GET(LastFmMethods.Track.getInfo, LastFmMethods.Track.tags("PVRIS", "My House"));
-		 Pair<String, Integer> artistResponse = new API().GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags("PVRIS"));
-		 Pair<String, Integer> albumResponse = new API().GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags("PVRIS", "White Noise"));
+		 Pair<String, Integer> trackResponse = new API().GET(LastFmMethods.Track.getInfo, LastFmMethods.Track.tags("Nick Cave & The Bad Seeds", "O Children"));
+		 Pair<String, Integer> artistResponse = new API().GET(LastFmMethods.Artist.getInfo, LastFmMethods.Artist.tags("Nick Cave & The Bad Seeds"));
+		 Pair<String, Integer> albumResponse = new API().GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags("Nick Cave & The Bad Seeds", "Abattoir Blues/The Lyre of Orpheus"));
 	
 		 Track track = new Track(trackResponse.first);
 		 Artist artist = new Artist(artistResponse.first);
@@ -50,9 +50,7 @@ public class Test {
 		 
 		 System.out.println(albumResponse.first);
 		 System.out.println(album);
-		 */
-		 BufferedImage image = GUIMethods.imageFromURL("https://lastfm.freetls.fastly.net/i/u/300x300/0a9ea273847446a3c6733a0b4b92f18b.png");
 		 
-		 System.out.println("Image height: " + image.getHeight());
+
 	}
 }

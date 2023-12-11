@@ -42,10 +42,10 @@ public class GUIMethods {
 			} catch (java.net.MalformedURLException e) {
 				System.err.println("Issue with url");
 				return null;
-			} catch (java.lang.IllegalArgumentException e) {
+			} /*catch (java.lang.IllegalArgumentException e) {
 				System.err.println("Image is JPEG");
 				return null;
-			}
+			}*/
 
 			BufferedImage image = null;
 			try {
@@ -54,10 +54,10 @@ public class GUIMethods {
 			} catch (javax.imageio.IIOException e) {
 				System.err.println("No internet Connection. Can't Download image from URL");
 				return null;
-			} catch (java.lang.IllegalArgumentException e) {
+			} /*catch (java.lang.IllegalArgumentException e) {
 				System.err.println("Image is JPEG");
 				return null;
-			}
+			}*/
 
 			if (image != null) {
 				return image;

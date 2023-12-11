@@ -302,10 +302,14 @@ public class Mp3File extends File {
 		return formatter.format(date);
 	}
 
+	private boolean checkString(String str) {
+		return str != null && !str.isBlank() && !str.isEmpty();
+	}
+
 	public void selfScrape() {
-		if (isScraped()) {
-			return;
-		}
+//		if (isScraped()) {
+//			return;
+//		}
 
 		Mp3File file = this;
 
@@ -342,7 +346,7 @@ public class Mp3File extends File {
 		// Update the Song
 		Track track = new Track(response.first);
 
-		if (album != null && !album.isBlank() && (track.getAlbum() == null || track.getAlbum().isBlank())) {
+		if (checkString(album) && !checkString(track.getAlbum())) {
 			file.setAlbum(album);
 		}
 
@@ -352,25 +356,22 @@ public class Mp3File extends File {
 		if (file.getTrack().getAlbum() != null && !file.getTrack().getAlbum().isBlank()) {
 			Album albumO = Queries.selectAlbum(file.getTrack().getAlbum(), artist);
 
-			if (albumO == null) {
-				try {
-					response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, file.getTrack().getAlbum()));
-				} catch (IOException | InterruptedException ex) {
-					System.err.println("Album scrape fail");
+			try {
+				response = api.GET(LastFmMethods.Album.getInfo, LastFmMethods.Album.tags(artist, file.getTrack().getAlbum()));
+			} catch (IOException | InterruptedException ex) {
+				System.err.println("Album scrape fail");
+			}
+
+			if (response != null) {
+				albumO = new Album(response.first);
+
+				if ((checkString(albumO.getCoverURL()) && !FileOperations.getExtensionFromPath(albumO.getCoverURL()).equals("png"))){
+					albumO.setCoverURL(albumO.getCoverURL().replace(".jpg", ".png"));
 				}
 
-				if (response != null) {
-					albumO = new Album(response.first);
-					
-					if (albumO.getCoverURL() == null || albumO.getCoverURL().isBlank() || (albumO.getCoverURL() != null && !albumO.getCoverURL().isBlank() && !FileOperations.getExtensionFromPath(albumO.getCoverURL()).equals("png"))) {
-						albumO.setCoverURL(track.getCover());
-						System.out.println("Updated cover: " + track.getCover());
-					}
-
-					Queries.insertAlbum(albumO);
-					if (albumO.getName() != null) {
-						file.setAlbum(albumO.getName());
-					}
+				Queries.insertAlbum(albumO);
+				if (albumO.getName() != null) {
+					file.setAlbum(albumO.getName());
 				}
 			}
 		}

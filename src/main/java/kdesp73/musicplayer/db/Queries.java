@@ -466,6 +466,22 @@ public class Queries {
 		db.close();
 	}
 
+	public static void updateAlbum(Album album) {
+		DatabaseConnection db = Database.connection();
+
+		String updateQuery = "UPDATE Albums SET "
+				+ "artist = '" + Utils.replaceQuotes(album.getArtist()) + "', "
+				+ "cover_url = '" + Utils.replaceQuotes(album.getCoverURL()) + "', "
+				+ "name = '" + Utils.replaceQuotes(album.getName()) + "', "
+				+ "url = '" + Utils.replaceQuotes(album.getURL()) + "', "
+				+ "content = '" + Utils.replaceQuotes(album.getContent()) + "', "
+				+ "tracks = '" + Utils.replaceQuotes(Utils.arrayToList(album.getTracks())) + "' "
+				+ "WHERE mbid = '" + Utils.replaceQuotes(album.getMbid()) + "'";
+
+		db.executeUpdate(updateQuery);
+		db.close();
+	}
+
 	public static void insertAlbum(Album album) {
 		DatabaseConnection db = Database.connection();
 
@@ -474,8 +490,8 @@ public class Queries {
 		try {
 			rs.next();
 			if (rs.getInt(1) == 1) {
-				System.out.println("Album exists in DB");
 				db.close();
+				updateAlbum(album);
 				return;
 			}
 		} catch (SQLException ex) {
