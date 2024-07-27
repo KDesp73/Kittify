@@ -15,7 +15,26 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>kdesp73.musicplayer.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>		
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -39,87 +58,87 @@
 							<goal>single</goal>
 						</goals>
 					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-	
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>kdesp73</groupId>
-	<artifactId>MusicPlayer</artifactId>
-	<version>1.0.0</version>
-	<packaging>jar</packaging>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
-		<exec.mainClass>kdesp73.musicplayer.Main</exec.mainClass>
-	</properties>
-    
-	<dependencies>
-		<!--Themes-->
-		<dependency> 
-			<groupId>kdesp73</groupId>
-			<artifactId>SwingThemesLibrary</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.formdev</groupId>
-			<artifactId>flatlaf-intellij-themes</artifactId>
-			<version>3.2.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.formdev</groupId>
-			<artifactId>flatlaf</artifactId>
-			<version>3.2.5</version>
-		</dependency>
-		
-		<!--Database-->	
-		<dependency>
-			<groupId>kdesp73</groupId>
-			<artifactId>DataBridge</artifactId>
-			<version>2.0.7</version>
-			<!--			<scope>system</scope>
-			<systemPath>/home/konstantinos/.m2/repository/kdesp73/DataBridge/2.0.7/DataBridge-2.0.7.jar</systemPath>-->
-		</dependency>
-		
-		<!--JSON not used-->
-		<!-- <dependency> -->
-		<!-- 	<groupId>com.google.code.gson</groupId> -->
-		<!-- 	<artifactId>gson</artifactId> -->
-		<!-- 	<version>2.8.8</version>  -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- 	<groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- 	<artifactId>jackson-core</artifactId> -->
-		<!-- 	<version>2.1.1</version> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- 	<groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- 	<artifactId>jackson-annotations</artifactId> -->
-		<!-- 	<version>2.10.0</version> -->
-		<!-- 	<type>jar</type> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- 	<groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- 	<artifactId>jackson-databind</artifactId> -->
-		<!-- 	<version>2.10.0</version> -->
-		<!-- 	<type>jar</type> -->
-		<!-- </dependency> -->
-		
-		<!--Tray-->
-		<dependency>
-			<groupId>com.dorkbox</groupId>
-			<artifactId>SystemTray</artifactId>
-			<version>4.2.1</version>
-		</dependency>
-		
-		<!--Images-->
-		<dependency>
-			<groupId>org.imgscalr</groupId>
-			<artifactId>imgscalr-lib</artifactId>
-			<version>4.2</version>
-		</dependency>
+                    </executions>
+                    </plugin>
+                    </plugins>
+                    </build>
+
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>kdesp73</groupId>
+                    <artifactId>MusicPlayer</artifactId>
+                    <version>1.0.0</version>
+                    <packaging>jar</packaging>
+                    <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <maven.compiler.source>17</maven.compiler.source>
+                    <maven.compiler.target>17</maven.compiler.target>
+                    <exec.mainClass>kdesp73.musicplayer.Main</exec.mainClass>
+                    </properties>
+
+                    <dependencies>
+                    <!--Themes-->
+                    <dependency> 
+                    <groupId>kdesp73</groupId>
+                    <artifactId>SwingThemesLibrary</artifactId>
+                    <version>1.0.1-SNAPSHOT</version>
+                    </dependency>
+                    <dependency>
+                    <groupId>com.formdev</groupId>
+                    <artifactId>flatlaf-intellij-themes</artifactId>
+                    <version>3.2.5</version>
+                    </dependency>
+                    <dependency>
+                    <groupId>com.formdev</groupId>
+                    <artifactId>flatlaf</artifactId>
+                    <version>3.2.5</version>
+                    </dependency>
+
+                    <!--Database-->	
+                    <dependency>
+                    <groupId>kdesp73</groupId>
+                    <artifactId>DataBridge</artifactId>
+                    <version>2.0.7</version>
+                    <!--			<scope>system</scope>
+                    <systemPath>/home/konstantinos/.m2/repository/kdesp73/DataBridge/2.0.7/DataBridge-2.0.7.jar</systemPath>-->
+                    </dependency>
+
+                    <!--JSON not used-->
+                    <!-- <dependency> -->
+                    <!-- 	<groupId>com.google.code.gson</groupId> -->
+                    <!-- 	<artifactId>gson</artifactId> -->
+                    <!-- 	<version>2.8.8</version>  -->
+                    <!-- </dependency> -->
+                    <!-- <dependency> -->
+                    <!-- 	<groupId>com.fasterxml.jackson.core</groupId> -->
+                    <!-- 	<artifactId>jackson-core</artifactId> -->
+                    <!-- 	<version>2.1.1</version> -->
+                    <!-- </dependency> -->
+                    <!-- <dependency> -->
+                    <!-- 	<groupId>com.fasterxml.jackson.core</groupId> -->
+                    <!-- 	<artifactId>jackson-annotations</artifactId> -->
+                    <!-- 	<version>2.10.0</version> -->
+                    <!-- 	<type>jar</type> -->
+                    <!-- </dependency> -->
+                    <!-- <dependency> -->
+                    <!-- 	<groupId>com.fasterxml.jackson.core</groupId> -->
+                    <!-- 	<artifactId>jackson-databind</artifactId> -->
+                    <!-- 	<version>2.10.0</version> -->
+                    <!-- 	<type>jar</type> -->
+                    <!-- </dependency> -->
+
+                    <!--Tray-->
+                    <dependency>
+                    <groupId>com.dorkbox</groupId>
+                    <artifactId>SystemTray</artifactId>
+                    <version>4.2.1</version>
+                    </dependency>
+
+                    <!--Images-->
+                    <dependency>
+                    <groupId>org.imgscalr</groupId>
+                    <artifactId>imgscalr-lib</artifactId>
+                    <version>4.2</version>
+                    </dependency>
 
 		
 		<!--Player-->	

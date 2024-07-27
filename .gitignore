@@ -7,3 +7,6 @@ data/*.mp3
 covers/
 *.jar
 nohup.out
+dependency-reduced-pom.xml
+hs_err_pid465832.log
+run
